@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Moodle Workshop Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f6fb;color:#333;min-height:100vh}
+.dash{max-width:960px;margin:0 auto;padding:24px 20px}
+
+/* Header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:22px;background:#6C4BCC;border-radius:12px;padding:18px 22px}
+.logo{width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;flex-shrink:0}
+.header h1{font-size:19px;font-weight:700;color:#fff;margin-bottom:3px}
+.header p{font-size:12px;color:rgba(255,255,255,.82)}
+
+/* Phase nav */
+.phase-track{display:flex;margin-bottom:22px;border-radius:10px;overflow:hidden;border:1px solid #ddd;background:#fff}
+.phase-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 6px;cursor:pointer;border:none;border-right:1px solid #e0e0e0;background:#fff;transition:background .15s;position:relative}
+.phase-btn:last-child{border-right:none}
+.phase-btn:hover{background:#f0f4ff}
+.phase-btn.active{background:#E6F1FB}
+.phase-btn.done{background:#f0faf3}
+.pnum{width:26px;height:26px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#888}
+.phase-btn.active .pnum{background:#185FA5;color:#fff}
+.phase-btn.done .pnum{background:#3B6D11;color:#fff}
+.pname{font-size:11px;font-weight:700;color:#444;text-align:center;line-height:1.3}
+.phase-btn.active .pname{color:#185FA5}
+.phase-btn.done .pname{color:#3B6D11}
+.psub{font-size:10px;color:#888;text-align:center}
+.active-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:#185FA5;border-radius:2px 2px 0 0}
+
+/* Cards */
+.card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card-title{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+
+/* Metric cards */
+.metric-card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:14px 16px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.metric-card .label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.metric-card .val{font-size:28px;font-weight:700;line-height:1}
+.metric-card .sub{font-size:11px;color:#999;margin-top:4px}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.b-purple{background:#EEEDFE;color:#3C3489}
+.b-green{background:#EAF3DE;color:#27500A}
+.b-blue{background:#E6F1FB;color:#0C447C}
+.b-amber{background:#FAEEDA;color:#633806}
+.b-red{background:#FCEBEB;color:#A32D2D}
+.b-gray{background:#f0f0f0;color:#555}
+.b-active{background:#185FA5;color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:700}
+
+/* Steps */
+.step-list{list-style:none}
+.step-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.step-list li:last-child{border-bottom:none}
+.sdot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.sd-blue{background:#E6F1FB;color:#185FA5}
+.sd-green{background:#EAF3DE;color:#3B6D11}
+.sd-amber{background:#FAEEDA;color:#BA7517}
+.sd-purple{background:#EEEDFE;color:#3C3489}
+
+/* Progress bars */
+.pb-wrap{margin-bottom:7px}
+.pb-labels{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:3px}
+.pb-bg{height:9px;border-radius:5px;background:#eee;overflow:hidden}
+.pb-fill{height:100%;border-radius:5px;transition:width .5s ease}
+
+/* Rubric / tables */
+.rtable{width:100%;border-collapse:collapse;font-size:13px}
+.rtable th{padding:8px 10px;text-align:left;color:#555;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid #e0e0e0;background:#f9f9f9}
+.rtable td{padding:8px 10px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+.rtable tr:last-child td{border-bottom:none}
+.rtable tr:hover td{background:#fafcff}
+
+/* Weight pills */
+.wpill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+.wp-green{background:#E1F5EE;color:#085041}
+.wp-blue{background:#E6F1FB;color:#0C447C}
+.wp-amber{background:#FAEEDA;color:#633806}
+
+/* Formula */
+.formula{display:flex;align-items:center;gap:6px;padding:10px 14px;background:#f5f0ff;border:1px solid #d8d0f5;border-radius:8px;font-size:12px;margin-top:10px;flex-wrap:wrap}
+.ftag{background:#fff;border:1px solid #c8bef5;border-radius:4px;padding:3px 9px;font-size:12px;font-weight:700;color:#3C3489}
+.fop{color:#9370cc;font-weight:700}
+
+/* Dual grade boxes */
+.dual-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.dbox{border-radius:10px;padding:14px 16px;text-align:center;position:relative}
+.dbox-green{background:#E1F5EE;border:1px solid #9FE1CB}
+.dbox-blue{background:#E6F1FB;border:1px solid #B5D4F4}
+.dbox h3{font-size:12px;font-weight:700;margin-bottom:6px}
+.dbox-green h3{color:#085041}
+.dbox-blue h3{color:#0C447C}
+.dbox .dval{font-size:24px;font-weight:700;margin-bottom:2px}
+.dbox-green .dval{color:#085041}
+.dbox-blue .dval{color:#0C447C}
+.dbox .dsub{font-size:10px;opacity:.7;margin-bottom:6px}
+.dbox .dwt{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block}
+.dbox-green .dwt{background:rgba(8,80,65,.12);color:#085041}
+.dbox-blue .dwt{background:rgba(12,68,124,.12);color:#0C447C}
+.dbox .info-btn{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;border:1px solid rgba(0,0,0,.15);background:rgba(255,255,255,.6);font-size:10px;cursor:pointer;color:inherit;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:700}
+
+/* Skills */
+.skill-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.skill-name{font-size:12px;color:#666;width:120px;flex-shrink:0}
+.skill-bg{flex:1;height:11px;border-radius:6px;background:#eee;overflow:hidden}
+.skill-fill{height:100%;border-radius:6px;transition:width .6s ease}
+.skill-val{font-size:12px;font-weight:700;width:34px;text-align:right}
+
+/* Tab buttons */
+.tabs{display:flex;gap:5px;margin-bottom:12px}
+.tab{padding:5px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid #ddd;background:#fff;color:#888;transition:all .15s;font-family:Arial,sans-serif}
+.tab.active{background:#185FA5;color:#fff;border-color:#185FA5}
+
+/* Timeline */
+.tl-item{display:flex;gap:12px;margin-bottom:0}
+.tl-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.tl-dot{width:12px;height:12px;border-radius:50%;margin-top:3px;flex-shrink:0}
+.tl-line{width:2px;flex:1;min-height:22px;background:#e8e8e8;margin:4px 0}
+.tl-body{padding-bottom:14px;flex:1}
+.tl-title{font-size:13px;font-weight:700;color:#333;margin-bottom:2px}
+.tl-desc{font-size:12px;color:#777;line-height:1.45}
+
+/* Info callout */
+.callout{border-radius:8px;padding:11px 14px;font-size:12px;line-height:1.55;margin-top:10px}
+.callout-purple{background:#f5f0ff;border:1px solid #d8d0f5;color:#3C3489}
+.callout-blue{background:#EBF4FF;border:1px solid #b5d4f4;color:#0C447C}
+.callout-amber{background:#fffbe6;border:1px solid #f5d87a;color:#5a4500}
+.callout-green{background:#EAF3DE;border:1px solid #c0dd97;color:#27500A}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:300;align-items:flex-start;justify-content:center;padding-top:80px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:22px 24px;max-width:380px;width:92%;position:relative;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+.modal h2{font-size:16px;font-weight:700;color:#333;margin-bottom:10px;padding-right:24px}
+.modal p{font-size:13px;color:#555;line-height:1.6;margin-bottom:8px}
+.modal p:last-child{margin-bottom:0}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#999;line-height:1;font-family:Arial,sans-serif}
+.modal-close:hover{color:#333}
+
+/* Panel */
+.phase-panel{display:none}
+.phase-panel.active{display:block}
+
+/* Tooltip */
+.tip-wrap{position:relative;display:inline-flex;align-items:center;vertical-align:middle}
+.tip-btn{width:16px;height:16px;border-radius:50%;background:#eee;border:1px solid #ddd;font-size:9px;cursor:pointer;color:#888;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:700;margin-left:5px;flex-shrink:0}
+.tip-box{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#333;color:#fff;border-radius:8px;padding:9px 12px;min-width:210px;max-width:260px;font-size:11px;line-height:1.5;z-index:200;pointer-events:none}
+.tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#333}
+.tip-wrap:hover .tip-box{display:block}
+
+/* Inline key-value rows */
+.kv{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5}
+.kv:last-child{border-bottom:none}
+.kv-key{color:#777}
+
+/* Action btn */
+.action-btn{display:inline-block;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;border-radius:7px;border:1px solid #d0c8f8;background:#f5f0ff;color:#6C4BCC;font-family:Arial,sans-serif;transition:background .15s;margin-top:10px;width:100%;text-align:center}
+.action-btn:hover{background:#ede6ff}
+
+@media(max-width:600px){
+  .grid2,.grid3{grid-template-columns:1fr}
+  .phase-track{flex-wrap:wrap}
+  .phase-btn{min-width:80px}
+  .dual-wrap{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="dash">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">W</div>
+    <div>
+      <h1>Moodle Workshop Activity Dashboard</h1>
+      <p>Dual Grading System &nbsp;·&nbsp; Accumulative Grading &nbsp;·&nbsp; Questioning Skills Tracker</p>
+    </div>
+  </div>
+
+  <!-- Phase navigation -->
+  <div class="phase-track">
+    <button class="phase-btn done" onclick="goPhase(0)">
+      <div class="pnum">✓</div>
+      <div class="pname">Setup</div>
+      <div class="psub">Configuration</div>
+    </button>
+    <button class="phase-btn done" onclick="goPhase(1)">
+      <div class="pnum">✓</div>
+      <div class="pname">Submission</div>
+      <div class="psub">Students submit</div>
+    </button>
+    <button class="phase-btn active" onclick="goPhase(2)">
+      <div class="pnum">3</div>
+      <div class="pname">Assessment</div>
+      <div class="psub">Peer review</div>
+      <div class="active-bar"></div>
+    </button>
+    <button class="phase-btn" onclick="goPhase(3)">
+      <div class="pnum">4</div>
+      <div class="pname">Grading</div>
+      <div class="psub">Teacher grades</div>
+    </button>
+    <button class="phase-btn" onclick="goPhase(4)">
+      <div class="pnum">5</div>
+      <div class="pname">Closed</div>
+      <div class="psub">Results published</div>
+    </button>
+  </div>
+
+  <!-- ════════════════════════════════ -->
+  <!-- PANEL 0: SETUP -->
+  <!-- ════════════════════════════════ -->
+  <div id="panel-0" class="phase-panel">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Workshop configuration
+          <span class="tip-wrap"><button class="tip-btn">?</button><div class="tip-box">Teachers configure the workshop before students can access it — grading strategy, deadlines, rubric criteria, and peer count.</div></span>
+        </div>
+        <ul class="step-list">
+          <li><div class="sdot sd-blue">1</div><div><strong>Grading strategy</strong> — Select Accumulative grading for weighted criterion scoring</div></li>
+          <li><div class="sdot sd-blue">2</div><div><strong>Submission types</strong> — Online text, file attachments, or both</div></li>
+          <li><div class="sdot sd-blue">3</div><div><strong>Peer assessments</strong> — Set how many peers each student reviews (typically 3)</div></li>
+          <li><div class="sdot sd-blue">4</div><div><strong>Deadlines</strong> — Submission phase end &amp; assessment phase end</div></li>
+          <li><div class="sdot sd-blue">5</div><div><strong>Grading weights</strong> — Submission grade weight vs assessment grade weight</div></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Current settings</div>
+        <div class="kv"><span class="kv-key">Grading strategy</span><span class="badge b-purple">Accumulative</span></div>
+        <div class="kv"><span class="kv-key">Submission max grade</span><strong>80 pts</strong></div>
+        <div class="kv"><span class="kv-key">Assessment max grade</span><strong>20 pts</strong></div>
+        <div class="kv"><span class="kv-key">Assessments per student</span><strong>3 peers</strong></div>
+        <div class="kv"><span class="kv-key">Self-assessment</span><span class="badge b-green">Enabled</span></div>
+        <div class="kv"><span class="kv-key">Anonymous reviews</span><span class="badge b-blue">Yes</span></div>
+        <button class="action-btn" onclick="openModal('setup')">View accumulative grading explained →</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Phase timeline</div>
+      <div style="padding:6px 0">
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot" style="background:#3B6D11"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Phase 1 — Setup complete</div><div class="tl-desc">Teacher configured the workshop, built the rubric with 5 criteria, and published student instructions.</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot" style="background:#3B6D11"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Phase 2 — Submission closed (Apr 18)</div><div class="tl-desc">28 of 30 students submitted. 2 overdue pending teacher decision.</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot" style="background:#185FA5"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Phase 3 — Assessment in progress ◀</div><div class="tl-desc">Peer reviews underway. Each student reviews 3 peers using the accumulative rubric.</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot" style="background:#ccc"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Phase 4 — Grading evaluation (Apr 26)</div><div class="tl-desc">Teacher evaluates peer assessment quality and assigns assessment grades.</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot" style="background:#ccc"></div></div><div class="tl-body"><div class="tl-title">Phase 5 — Closed, results published</div><div class="tl-desc">Final grades (submission + assessment) visible in student gradebooks.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ -->
+  <!-- PANEL 1: SUBMISSION -->
+  <!-- ════════════════════════════════ -->
+  <div id="panel-1" class="phase-panel">
+    <div class="grid3">
+      <div class="metric-card"><div class="label">Total students</div><div class="val">30</div><div class="sub">enrolled</div></div>
+      <div class="metric-card"><div class="label">Submitted</div><div class="val" style="color:#3B6D11">28</div><div class="sub">93% rate</div></div>
+      <div class="metric-card"><div class="label">Overdue</div><div class="val" style="color:#993C1D">2</div><div class="sub">teacher action needed</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Quality distribution
+          <span class="tip-wrap"><button class="tip-btn">?</button><div class="tip-box">Estimated quality based on word count, attachments, and self-assessment scores.</div></span>
+        </div>
+        <div class="pb-wrap"><div class="pb-labels"><span>Excellent (70–80)</span><span>8 students</span></div><div class="pb-bg"><div class="pb-fill" style="width:27%;background:#1D9E75"></div></div></div>
+        <div class="pb-wrap"><div class="pb-labels"><span>Good (55–69)</span><span>13 students</span></div><div class="pb-bg"><div class="pb-fill" style="width:43%;background:#378ADD"></div></div></div>
+        <div class="pb-wrap"><div class="pb-labels"><span>Average (40–54)</span><span>5 students</span></div><div class="pb-bg"><div class="pb-fill" style="width:17%;background:#EF9F27"></div></div></div>
+        <div class="pb-wrap"><div class="pb-labels"><span>Needs work (&lt;40)</span><span>2 students</span></div><div class="pb-bg"><div class="pb-fill" style="width:7%;background:#E24B4A"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Submission types</div>
+        <div class="kv"><span class="kv-key">Online text only</span><strong>12</strong></div>
+        <div class="kv"><span class="kv-key">File attachment only</span><strong>9</strong></div>
+        <div class="kv"><span class="kv-key">Text + file</span><strong>7</strong></div>
+        <div class="kv"><span class="kv-key">Avg word count</span><strong>482 words</strong></div>
+        <div class="kv"><span class="kv-key">Avg file size</span><strong>1.2 MB</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ -->
+  <!-- PANEL 2: ASSESSMENT (active) -->
+  <!-- ════════════════════════════════ -->
+  <div id="panel-2" class="phase-panel active">
+    <div class="grid3">
+      <div class="metric-card"><div class="label">Reviews completed</div><div class="val">54</div><div class="sub">of 84 total (64%)</div></div>
+      <div class="metric-card"><div class="label">Avg peer score</div><div class="val" style="color:#185FA5">61.4</div><div class="sub">out of 80 pts</div></div>
+      <div class="metric-card"><div class="label">Reviews pending</div><div class="val" style="color:#BA7517">30</div><div class="sub">due Apr 23</div></div>
+    </div>
+
+    <div class="grid2">
+      <!-- Rubric -->
+      <div class="card">
+        <div class="card-title">Accumulative grading rubric
+          <span class="tip-wrap"><button class="tip-btn">?</button><div class="tip-box">Each criterion has its own weight. Final submission grade = Σ(criterion score × weight). Reviewers score each criterion independently.</div></span>
+          <button onclick="openModal('rubric')" style="margin-left:auto;padding:3px 10px;font-size:11px;border-radius:5px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#185FA5;font-family:Arial,sans-serif;font-weight:700">Full rubric</button>
+        </div>
+        <table class="rtable">
+          <thead><tr><th>Criterion</th><th>Weight</th><th>Max</th><th>Avg</th></tr></thead>
+          <tbody>
+            <tr><td>Clarity of argument</td><td><span class="wpill wp-green">25%</span></td><td style="text-align:center;color:#888">20</td><td style="text-align:center;font-weight:700;color:#185FA5">14.2</td></tr>
+            <tr><td>Use of evidence</td><td><span class="wpill wp-green">25%</span></td><td style="text-align:center;color:#888">20</td><td style="text-align:center;font-weight:700;color:#185FA5">13.8</td></tr>
+            <tr><td>Question quality</td><td><span class="wpill wp-blue">20%</span></td><td style="text-align:center;color:#888">16</td><td style="text-align:center;font-weight:700;color:#EF9F27">9.4</td></tr>
+            <tr><td>Critical thinking</td><td><span class="wpill wp-blue">20%</span></td><td style="text-align:center;color:#888">16</td><td style="text-align:center;font-weight:700;color:#185FA5">11.2</td></tr>
+            <tr><td>Structure &amp; format</td><td><span class="wpill wp-amber">10%</span></td><td style="text-align:center;color:#888">8</td><td style="text-align:center;font-weight:700;color:#1D9E75">6.1</td></tr>
+          </tbody>
+        </table>
+        <div class="formula">
+          <span class="ftag">Submission grade</span>
+          <span class="fop">=</span>
+          <span class="ftag">Σ (criterion × weight)</span>
+          <span class="fop">/</span>
+          <span class="ftag">max 80 pts</span>
+        </div>
+      </div>
+
+      <!-- Dual grading -->
+      <div class="card">
+        <div class="card-title">Dual grading system
+          <span class="tip-wrap"><button class="tip-btn">?</button><div class="tip-box">Every Workshop student gets TWO grades: Submission grade (quality of their work) + Assessment grade (accuracy of their reviews). Both go to the gradebook.</div></span>
+          <button onclick="openModal('dual')" style="margin-left:auto;padding:3px 10px;font-size:11px;border-radius:5px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#185FA5;font-family:Arial,sans-serif;font-weight:700">How it works</button>
+        </div>
+        <div class="dual-wrap">
+          <div class="dbox dbox-green">
+            <button class="info-btn" onclick="openModal('sub-grade')">?</button>
+            <h3>① Submission Grade</h3>
+            <div class="dval">80 pts</div>
+            <div class="dsub">peer-averaged</div>
+            <span class="dwt">weight: 80%</span>
+          </div>
+          <div class="dbox dbox-blue">
+            <button class="info-btn" onclick="openModal('assess-grade')">?</button>
+            <h3>② Assessment Grade</h3>
+            <div class="dval">20 pts</div>
+            <div class="dsub">accuracy-based</div>
+            <span class="dwt">weight: 20%</span>
+          </div>
+        </div>
+        <div class="formula">
+          <span class="ftag">Final grade</span>
+          <span class="fop">=</span>
+          <span class="ftag">Sub × 0.8</span>
+          <span class="fop">+</span>
+          <span class="ftag">Assess × 0.2</span>
+        </div>
+        <div class="callout callout-blue" style="margin-top:10px;font-size:12px">
+          Assessment grade is calculated by comparing peer scores against the <strong>teacher's reference scores</strong> — closer match = higher grade.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ -->
+  <!-- PANEL 3: GRADING EVAL -->
+  <!-- ════════════════════════════════ -->
+  <div id="panel-3" class="phase-panel">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Grade results
+          <span class="tip-wrap"><button class="tip-btn">?</button><div class="tip-box">Assessment accuracy = how closely each student's peer review scores match the teacher's own scores.</div></span>
+        </div>
+        <table class="rtable">
+          <thead><tr><th>Student</th><th style="text-align:center">Submission</th><th style="text-align:center">Assessment</th><th style="text-align:center">Final</th></tr></thead>
+          <tbody>
+            <tr><td>Aisha M.</td><td style="text-align:center">74/80</td><td style="text-align:center">18/20</td><td style="text-align:center"><strong style="color:#3B6D11">91%</strong></td></tr>
+            <tr><td>Carlos R.</td><td style="text-align:center">68/80</td><td style="text-align:center">17/20</td><td style="text-align:center"><strong style="color:#3B6D11">85%</strong></td></tr>
+            <tr><td>Priya S.</td><td style="text-align:center">71/80</td><td style="text-align:center">15/20</td><td style="text-align:center"><strong style="color:#185FA5">85%</strong></td></tr>
+            <tr><td>David L.</td><td style="text-align:center">55/80</td><td style="text-align:center">19/20</td><td style="text-align:center"><strong style="color:#EF9F27">72%</strong></td></tr>
+            <tr><td>Fatima K.</td><td style="text-align:center">60/80</td><td style="text-align:center">12/20</td><td style="text-align:center"><strong style="color:#EF9F27">72%</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">How assessment grade is computed</div>
+        <ul class="step-list">
+          <li><div class="sdot sd-green">1</div><div>Teacher records <strong>reference scores</strong> per criterion for each submission</div></li>
+          <li><div class="sdot sd-green">2</div><div>Each peer's scores are compared criterion-by-criterion against the reference</div></li>
+          <li><div class="sdot sd-green">3</div><div>Deviation calculated — smaller deviation = higher assessment grade</div></li>
+          <li><div class="sdot sd-amber">4</div><div>Teacher can <strong>override</strong> any grade manually for exceptional cases</div></li>
+        </ul>
+        <button class="action-btn" onclick="openModal('override')">About grade overrides →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ -->
+  <!-- PANEL 4: CLOSED -->
+  <!-- ════════════════════════════════ -->
+  <div id="panel-4" class="phase-panel">
+    <div class="grid3">
+      <div class="metric-card"><div class="label">Avg submission grade</div><div class="val" style="color:#185FA5">63.4</div><div class="sub">out of 80 pts</div></div>
+      <div class="metric-card"><div class="label">Avg assessment grade</div><div class="val" style="color:#1D9E75">15.8</div><div class="sub">out of 20 pts</div></div>
+      <div class="metric-card"><div class="label">Final avg grade</div><div class="val" style="color:#6C4BCC">81.9%</div><div class="sub">combined</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Questioning skills — improvement tracker
+        <span class="tip-wrap"><button class="tip-btn">?</button><div class="tip-box">Workshop's write-review-reflect cycle improves questioning skills by forcing students to articulate criteria, defend scores, and compare judgments with peers.</div></span>
+      </div>
+      <div class="tabs">
+        <button class="tab active" onclick="switchSkillTab(this,'before')">Before workshop</button>
+        <button class="tab" onclick="switchSkillTab(this,'after')">After workshop</button>
+      </div>
+      <div id="skills-before">
+        <div class="skill-row"><div class="skill-name">Posing questions</div><div class="skill-bg"><div class="skill-fill" style="width:42%;background:#378ADD"></div></div><div class="skill-val" style="color:#378ADD">42%</div></div>
+        <div class="skill-row"><div class="skill-name">Evaluating answers</div><div class="skill-bg"><div class="skill-fill" style="width:38%;background:#378ADD"></div></div><div class="skill-val" style="color:#378ADD">38%</div></div>
+        <div class="skill-row"><div class="skill-name">Using evidence</div><div class="skill-bg"><div class="skill-fill" style="width:45%;background:#378ADD"></div></div><div class="skill-val" style="color:#378ADD">45%</div></div>
+        <div class="skill-row"><div class="skill-name">Peer feedback</div><div class="skill-bg"><div class="skill-fill" style="width:30%;background:#378ADD"></div></div><div class="skill-val" style="color:#378ADD">30%</div></div>
+        <div class="skill-row"><div class="skill-name">Self-reflection</div><div class="skill-bg"><div class="skill-fill" style="width:35%;background:#378ADD"></div></div><div class="skill-val" style="color:#378ADD">35%</div></div>
+      </div>
+      <div id="skills-after" style="display:none">
+        <div class="skill-row"><div class="skill-name">Posing questions</div><div class="skill-bg"><div class="skill-fill" style="width:74%;background:#1D9E75"></div></div><div class="skill-val" style="color:#1D9E75">74%</div></div>
+        <div class="skill-row"><div class="skill-name">Evaluating answers</div><div class="skill-bg"><div class="skill-fill" style="width:71%;background:#1D9E75"></div></div><div class="skill-val" style="color:#1D9E75">71%</div></div>
+        <div class="skill-row"><div class="skill-name">Using evidence</div><div class="skill-bg"><div class="skill-fill" style="width:79%;background:#1D9E75"></div></div><div class="skill-val" style="color:#1D9E75">79%</div></div>
+        <div class="skill-row"><div class="skill-name">Peer feedback</div><div class="skill-bg"><div class="skill-fill" style="width:68%;background:#1D9E75"></div></div><div class="skill-val" style="color:#1D9E75">68%</div></div>
+        <div class="skill-row"><div class="skill-name">Self-reflection</div><div class="skill-bg"><div class="skill-fill" style="width:72%;background:#1D9E75"></div></div><div class="skill-val" style="color:#1D9E75">72%</div></div>
+      </div>
+      <div class="callout callout-purple" style="margin-top:12px">
+        <strong>How Workshop builds questioning skills:</strong> Writing a submission forces clear, evidence-backed arguments. Reviewing peers requires applying rubric criteria critically. Reading peer assessments of your own work reveals blind spots. Over 3+ cycles, scores on "Posing questions" and "Peer feedback" typically rise 30–40 percentile points.
+      </div>
+    </div>
+  </div>
+
+</div><!-- end dash -->
+
+<!-- ════════ MODAL ════════ -->
+<div class="modal-bg" id="modal-bg" onclick="closeModalBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// Phase switching
+const phases=document.querySelectorAll('.phase-btn');
+const panels=document.querySelectorAll('.phase-panel');
+function goPhase(i){
+  phases.forEach((b,j)=>{
+    b.classList.remove('active');
+    const bar=b.querySelector('.active-bar');
+    if(bar)bar.remove();
+    if(j<i){b.classList.add('done');b.querySelector('.pnum').textContent='✓';}
+    else if(j>i){b.classList.remove('done');b.querySelector('.pnum').textContent=j+1;}
+  });
+  phases[i].classList.add('active');
+  phases[i].classList.remove('done');
+  phases[i].querySelector('.pnum').textContent=i+1;
+  const bar=document.createElement('div');
+  bar.className='active-bar';
+  phases[i].appendChild(bar);
+  panels.forEach((p,j)=>p.classList.toggle('active',j===i));
+}
+
+// Tab switching (skills)
+function switchSkillTab(btn,tab){
+  btn.closest('.card').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('skills-before').style.display=tab==='before'?'block':'none';
+  document.getElementById('skills-after').style.display=tab==='after'?'block':'none';
+}
+
+// Modals
+const modalData={
+  setup:{
+    title:'Accumulative grading explained',
+    body:`<p>Accumulative grading is Moodle's default Workshop strategy. Each criterion in the rubric has its own grade scale and weight.</p><p>The final submission grade = weighted sum of all criteria scores. This is ideal when different aspects have different importance — e.g. "critical thinking" counts more than "formatting".</p><p>Each reviewer scores every criterion independently, and those criterion-level scores are later compared against the teacher's reference for the assessment grade.</p>`
+  },
+  rubric:{
+    title:'Full assessment rubric',
+    body:`<p><strong>5 criteria, each with a 5-level scale:</strong><br>Poor / Acceptable / Good / Very Good / Excellent</p>
+    <p>① <strong>Clarity of argument</strong> — 25%, max 20 pts<br>Is the main argument clearly stated and consistently supported?</p>
+    <p>② <strong>Use of evidence</strong> — 25%, max 20 pts<br>Are claims backed by relevant, credible sources?</p>
+    <p>③ <strong>Question quality</strong> — 20%, max 16 pts<br>Are questions precise, open-ended, and intellectually challenging?</p>
+    <p>④ <strong>Critical thinking</strong> — 20%, max 16 pts<br>Does the work demonstrate analysis beyond surface-level observations?</p>
+    <p>⑤ <strong>Structure &amp; format</strong> — 10%, max 8 pts<br>Is the submission well organised, readable, and correctly formatted?</p>`
+  },
+  dual:{
+    title:'The dual grading system',
+    body:`<p>Every student in a Moodle Workshop receives <strong>two separate grades</strong> in the gradebook:</p>
+    <p><strong>① Submission grade</strong> — the quality of their submitted work, averaged from all peer reviews (weighted by each reviewer's own assessment accuracy).</p>
+    <p><strong>② Assessment grade</strong> — how well they reviewed their peers. Moodle measures this by comparing their criterion-level scores to the teacher's reference, computing a "grading grade" from the deviation.</p>
+    <p>Both combine into a final grade using the teacher-set weight ratio (default 80/20).</p>`
+  },
+  'sub-grade':{
+    title:'Submission grade (80 pts)',
+    body:`<p>The submission grade is the <strong>weighted average of all peer assessment scores</strong> received, weighted by each reviewer's assessment accuracy.</p>
+    <p>A reviewer who scores close to the consensus gets more influence on your submission grade. This reduces the impact of outlier reviewers who are either too harsh or too generous.</p>
+    <p><strong>Formula:</strong> Submission grade = weighted average of peer scores across all rubric criteria, scaled to the maximum of 80 pts.</p>`
+  },
+  'assess-grade':{
+    title:'Assessment grade (20 pts)',
+    body:`<p>The assessment (grading) grade measures <strong>how accurately a student evaluated their peers</strong>.</p>
+    <p>Moodle compares the student's criterion-level scores against the teacher's reference scores. Small deviation = high grading grade.</p>
+    <p>This incentivises students to engage seriously with the rubric and not just give everyone top marks. It rewards careful, calibrated peer reviewing.</p>`
+  },
+  override:{
+    title:'Grade overrides',
+    body:`<p>Teachers can manually override any assessment grade in the grading evaluation phase.</p>
+    <p><strong>When to use overrides:</strong></p>
+    <p>• A peer gave consistently biased high or low scores<br>• A student missed the assessment phase but submitted good work<br>• The automated comparison unfairly penalised an outlier who was actually correct</p>
+    <p>Overrides are logged and visible only to the teacher. The override replaces the calculated assessment grade in the gradebook.</p>`
+  }
+};
+
+function openModal(key){
+  const m=modalData[key];
+  if(!m)return;
+  document.getElementById('modal-body').innerHTML=`<h2>${m.title}</h2>${m.body}`;
+  document.getElementById('modal-bg').classList.add('open');
+}
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');}
+function closeModalBg(e){if(e.target===document.getElementById('modal-bg'))closeModal();}
+</script>
+</body>
+</html>
