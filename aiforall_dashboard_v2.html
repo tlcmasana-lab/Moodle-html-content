@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI For All – Ajman University VCAA Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;color:#1a2733;min-height:100vh}
+
+.topbar{background:linear-gradient(135deg,#0d7a58 0%,#1D9E75 60%,#24b886 100%);padding:20px 28px;display:flex;align-items:center;gap:16px}
+.logo-circle{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.3)}
+.topbar-title h1{font-size:18px;font-weight:700;color:#fff;margin-bottom:2px}
+.topbar-title p{font-size:11px;color:rgba(255,255,255,.82)}
+.topbar-right{margin-left:auto;text-align:right;color:rgba(255,255,255,.9);font-size:11px}
+.topbar-badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:600;color:#fff;margin-top:3px}
+
+/* NAV TABS */
+.nav-tabs{display:flex;background:#fff;border-bottom:2px solid #e8e8e8;padding:0 20px;gap:0;overflow-x:auto}
+.nav-tab{padding:13px 20px;font-size:13px;font-weight:600;color:#7a8fa6;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;border:none;background:none;font-family:inherit;transition:color .15s}
+.nav-tab:hover{color:#1D9E75}
+.nav-tab.active{color:#1D9E75;border-bottom:3px solid #1D9E75}
+.nav-tab.active-blue{color:#185FA5;border-bottom:3px solid #185FA5}
+.nav-tab.active-purple{color:#6C4BCC;border-bottom:3px solid #6C4BCC}
+.nav-tab.active-amber{color:#EF9F27;border-bottom:3px solid #EF9F27}
+
+.page{max-width:1100px;margin:0 auto;padding:22px 18px}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:#fff;border-radius:12px;padding:16px 18px;border-left:4px solid #1D9E75;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.kpi.blue{border-left-color:#185FA5}
+.kpi.amber{border-left-color:#EF9F27}
+.kpi.purple{border-left-color:#6C4BCC}
+.kpi.teal{border-left-color:#0d7a58}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#7a8fa6;margin-bottom:5px}
+.kpi-val{font-size:28px;font-weight:700;color:#1a2733;line-height:1}
+.kpi-sub{font-size:11px;color:#7a8fa6;margin-top:3px}
+
+/* CARDS */
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 6px rgba(0,0,0,.06);margin-bottom:16px}
+.card-title{font-size:13px;font-weight:700;color:#1a2733;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.dot-green{background:#1D9E75}
+.dot-blue{background:#185FA5}
+.dot-purple{background:#6C4BCC}
+.dot-amber{background:#EF9F27}
+.dot-red{background:#E24B4A}
+.dot-gray{background:#aaa}
+.card-sub{font-size:11px;color:#7a8fa6;margin-left:auto;font-weight:400}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+
+/* CHARTS */
+.chart-wrap{position:relative;width:100%}
+.ch240{height:240px}
+.ch300{height:300px}
+.ch320{height:320px}
+.ch200{height:200px}
+.ch160{height:160px}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#7a8fa6;border-bottom:2px solid #f0f4f8;background:#fafbfc}
+.tbl td{padding:8px 10px;border-bottom:1px solid #f5f5f5;vertical-align:middle}
+.tbl tr:hover td{background:#f7fbf9}
+.tbl th.rc,.tbl td.rc{text-align:center}
+
+.rank-badge{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin:0 auto}
+.r1{background:#FFD700;color:#7a5a00}
+.r2{background:#C0C0C0;color:#555}
+.r3{background:#CD7F32;color:#fff}
+.rn{background:#f0f4f8;color:#7a8fa6}
+
+.chip{padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;display:inline-block}
+.chip-high{background:#e6f9f2;color:#0d7a58}
+.chip-mid{background:#faeeda;color:#9a5e00}
+.chip-low{background:#fcebeb;color:#a32d2d}
+.chip-blue{background:#e6f1fb;color:#0C447C}
+.chip-purple{background:#eeedfe;color:#3C3489}
+.chip-gray{background:#f0f4f8;color:#555}
+
+.bar-cell{display:flex;align-items:center;gap:6px}
+.bar-bg{height:8px;border-radius:4px;background:#eee;overflow:hidden;flex:1;min-width:40px}
+.bar-fill-g{height:100%;border-radius:4px;background:#1D9E75}
+.bar-fill-b{height:100%;border-radius:4px;background:#185FA5}
+.bar-fill-p{height:100%;border-radius:4px;background:#6C4BCC}
+.bar-fill-a{height:100%;border-radius:4px;background:#EF9F27}
+
+/* CALLOUT / INFO BOXES */
+.info-box{border-radius:8px;padding:11px 14px;font-size:12px;line-height:1.55;margin-bottom:12px}
+.info-green{background:#e6f9f2;border:1px solid #9FE1CB;color:#085041}
+.info-blue{background:#e6f1fb;border:1px solid #b5d4f4;color:#0C447C}
+.info-amber{background:#faeeda;border:1px solid #f5d87a;color:#5a4500}
+.info-purple{background:#eeedfe;border:1px solid #c8bef5;color:#3C3489}
+.info-gray{background:#f5f5f5;border:1px solid #e0e0e0;color:#555}
+
+/* PERSON PILLS */
+.person-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.person-pill{background:#f0f4f8;border-radius:20px;padding:3px 10px;font-size:11px;color:#444;display:flex;align-items:center;gap:5px}
+.person-pill .badge-course{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* SECTION DIVIDER */
+.section-divider{height:1px;background:#eee;margin:18px 0}
+
+/* METRIC MINI */
+.metric-mini{background:#f7fbf9;border-radius:8px;padding:10px 14px;text-align:center;border-left:3px solid #1D9E75}
+.metric-mini.blue{background:#f0f5ff;border-left-color:#185FA5}
+.metric-mini.purple{background:#f5f0ff;border-left-color:#6C4BCC}
+.metric-mini.amber{background:#fffbe6;border-left-color:#EF9F27}
+.metric-mini .mv{font-size:22px;font-weight:700}
+.metric-mini .ml{font-size:10px;color:#7a8fa6;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;margin-bottom:10px}
+.leg{display:flex;align-items:center;gap:4px;color:#555}
+.leg-sw{width:11px;height:11px;border-radius:2px;flex-shrink:0}
+
+.footer{text-align:center;font-size:10px;color:#aaa;padding:18px 0 6px}
+
+@media(max-width:680px){
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .grid2,.grid3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="topbar">
+  <div class="logo-circle">AU</div>
+  <div class="topbar-title">
+    <h1>AI For All — Competition Dashboard</h1>
+    <p>Ajman University · VCAA Office · Feb–Aug 2025 · All 9 Colleges · DEC × AU Initiative</p>
+  </div>
+  <div class="topbar-right">
+    <div>Data: DEC Completion Report</div>
+    <div class="topbar-badge">Live Report</div>
+  </div>
+</div>
+
+<!-- TAB NAV -->
+<div class="nav-tabs" id="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab(this,'tab-overview')">📊 Overview</button>
+  <button class="nav-tab" onclick="switchTab(this,'tab-students')">🎓 Students</button>
+  <button class="nav-tab" onclick="switchTab(this,'tab-faculty')">🏛️ Faculty</button>
+  <button class="nav-tab" onclick="switchTab(this,'tab-admin')">🏢 Admin Staff</button>
+  <button class="nav-tab" onclick="switchTab(this,'tab-leaders')">👑 Leaders</button>
+</div>
+
+<div class="page">
+
+<!-- ══════════════════════════════════════════ -->
+<!-- TAB: OVERVIEW -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-overview" class="tab-pane active">
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Total participants</div><div class="kpi-val">8,336</div><div class="kpi-sub">across 9 colleges</div></div>
+    <div class="kpi blue"><div class="kpi-label">Student submissions</div><div class="kpi-val">952</div><div class="kpi-sub">11.4% overall rate</div></div>
+    <div class="kpi amber"><div class="kpi-label">Faculty + Admin total</div><div class="kpi-val">112</div><div class="kpi-sub">combined completions</div></div>
+    <div class="kpi purple"><div class="kpi-label">Top college rate</div><div class="kpi-val">29.9%</div><div class="kpi-sub">College of Medicine</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="dot dot-green"></div>Participant groups — all cohorts<div class="card-sub">totals from report</div></div>
+      <div class="chart-wrap ch240"><canvas id="overviewDoughnut" role="img" aria-label="Doughnut chart of all participant groups"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-blue"></div>Course completions by type<div class="card-sub">faculty + admin combined</div></div>
+      <div class="chart-wrap ch240"><canvas id="overviewCourse" role="img" aria-label="Bar chart of course completions by type"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>College rankings — student submissions</div>
+    <table class="tbl">
+      <thead><tr><th style="width:36px">Rank</th><th>College</th><th class="rc">Participants</th><th class="rc">Student subs</th><th>Rate bar</th><th class="rc">Rate %</th><th class="rc">Faculty subs</th></tr></thead>
+      <tbody id="overviewRankTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- TAB: STUDENTS -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-students" class="tab-pane">
+  <div class="info-box info-green">All students enrolled in the DEC × Ajman University <strong>AI Literacy for All</strong> course. The report does not provide per-college breakdowns for knowledge checks or reflections — those metrics are university-wide totals only.</div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Total student submissions</div><div class="kpi-val">952</div><div class="kpi-sub">across all colleges</div></div>
+    <div class="kpi blue"><div class="kpi-label">Highest submission count</div><div class="kpi-val">160</div><div class="kpi-sub">Engineering & IT</div></div>
+    <div class="kpi amber"><div class="kpi-label">Highest rate</div><div class="kpi-val">29.9%</div><div class="kpi-sub">College of Medicine</div></div>
+    <div class="kpi purple"><div class="kpi-label">Lowest rate</div><div class="kpi-val">3.9%</div><div class="kpi-sub">College of Dentistry</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="dot dot-green"></div>Student submissions per college</div>
+      <div class="chart-wrap ch320"><canvas id="studentBar" role="img" aria-label="Horizontal bar chart of student submissions per college"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-green"></div>Submission rate % by college
+        <div class="card-sub">color = performance tier</div>
+      </div>
+      <div class="legend">
+        <span class="leg"><span class="leg-sw" style="background:#1D9E75"></span>High ≥20%</span>
+        <span class="leg"><span class="leg-sw" style="background:#EF9F27"></span>Mid 10–19%</span>
+        <span class="leg"><span class="leg-sw" style="background:#E24B4A"></span>Low &lt;10%</span>
+      </div>
+      <div class="chart-wrap ch300"><canvas id="rateBar" role="img" aria-label="Bar chart of submission rates per college"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Student course completion metrics — university-wide<div class="card-sub">from Students sheet</div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px">
+      <div class="metric-mini"><div class="mv" style="color:#1D9E75">1,104</div><div class="ml">100% complete (progress)</div></div>
+      <div class="metric-mini"><div class="mv" style="color:#1D9E75">1,079</div><div class="ml">100% complete (engagement)</div></div>
+      <div class="metric-mini amber"><div class="mv" style="color:#EF9F27">795</div><div class="ml">Reflection completed</div></div>
+      <div class="metric-mini blue"><div class="mv" style="color:#185FA5">1,030</div><div class="ml">Knowledge check 1</div></div>
+      <div class="metric-mini blue"><div class="mv" style="color:#185FA5">856</div><div class="ml">Knowledge check 2</div></div>
+      <div class="metric-mini blue"><div class="mv" style="color:#185FA5">1,035</div><div class="ml">Knowledge check 3</div></div>
+      <div class="metric-mini blue"><div class="mv" style="color:#185FA5">931</div><div class="ml">Knowledge check 4</div></div>
+      <div class="metric-mini purple"><div class="mv" style="color:#6C4BCC">793</div><div class="ml">Reflection prompt 1</div></div>
+      <div class="metric-mini purple"><div class="mv" style="color:#6C4BCC">888</div><div class="ml">Reflection prompt 2</div></div>
+    </div>
+    <div class="info-box info-amber" style="margin-top:12px;margin-bottom:0"><strong>Note:</strong> Knowledge Check 5 data was not available in the report at time of extraction.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- TAB: FACULTY -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-faculty" class="tab-pane">
+  <div class="kpi-grid">
+    <div class="kpi blue"><div class="kpi-label">Total faculty submissions</div><div class="kpi-val">103</div><div class="kpi-sub">across 9 colleges</div></div>
+    <div class="kpi blue"><div class="kpi-label">AI for Faculty</div><div class="kpi-val">61</div><div class="kpi-sub">highest course uptake</div></div>
+    <div class="kpi blue"><div class="kpi-label">Top college</div><div class="kpi-val">27</div><div class="kpi-sub">College of Dentistry</div></div>
+    <div class="kpi blue"><div class="kpi-label">Multi-course completers</div><div class="kpi-val">~18</div><div class="kpi-sub">est. took 2+ courses</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="dot dot-blue"></div>Faculty submissions per college<div class="card-sub">all courses combined</div></div>
+      <div class="chart-wrap ch320"><canvas id="facultyBar" role="img" aria-label="Horizontal bar of faculty submissions per college"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-blue"></div>Faculty by course type<div class="card-sub">per college breakdown</div></div>
+      <div class="chart-wrap ch300"><canvas id="facultyCourseStacked" role="img" aria-label="Stacked bar of faculty by course type per college"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Faculty submissions — full college breakdown by course</div>
+    <table class="tbl">
+      <thead><tr><th>College</th><th class="rc">AI for Faculty</th><th class="rc">AI for Admins</th><th class="rc">AI for Leaders</th><th class="rc">AI Literacy All</th><th class="rc">Total</th><th class="rc">% of all</th></tr></thead>
+      <tbody id="facultyDetailTable"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Faculty course completion totals — all courses</div>
+    <div class="grid3" style="margin-bottom:0">
+      <div class="metric-mini blue"><div class="mv" style="color:#185FA5">61</div><div class="ml">AI for Faculty</div></div>
+      <div class="metric-mini blue"><div class="mv" style="color:#185FA5">16</div><div class="ml">AI for Administrators</div></div>
+      <div class="metric-mini blue"><div class="mv" style="color:#185FA5">6</div><div class="ml">AI for Leaders</div></div>
+      <div class="metric-mini blue"><div class="mv" style="color:#185FA5">20</div><div class="ml">AI Literacy for All</div></div>
+      <div class="metric-mini" style="background:#e6f1fb;border-left-color:#0d4f90"><div class="mv" style="color:#0d4f90">103</div><div class="ml">Total (faculty)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- TAB: ADMIN STAFF -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-admin" class="tab-pane">
+  <div class="info-box info-blue">Admin staff participated in the <strong>AI for Administrators</strong>, AI for Faculty, AI for Leaders, and AI Literacy for All courses. Only 5 of the 19 admin offices recorded completions. Data is per department/office — colleges do not apply to admin staff.</div>
+
+  <div class="kpi-grid">
+    <div class="kpi amber"><div class="kpi-label">Total admin completions</div><div class="kpi-val">9</div><div class="kpi-sub">across all course types</div></div>
+    <div class="kpi amber"><div class="kpi-label">Active offices</div><div class="kpi-val">5</div><div class="kpi-sub">of 19 offices</div></div>
+    <div class="kpi amber"><div class="kpi-label">Top office</div><div class="kpi-val">4</div><div class="kpi-sub">Office of Procurement</div></div>
+    <div class="kpi amber"><div class="kpi-label">AI for Admins course</div><div class="kpi-val">6</div><div class="kpi-sub">most popular course</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="dot dot-amber"></div>Admin completions per office<div class="card-sub">active offices only</div></div>
+      <div class="chart-wrap ch240"><canvas id="adminOfficeBar" role="img" aria-label="Bar chart of admin completions per office"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-amber"></div>Admin completions by course type</div>
+      <div class="chart-wrap ch200"><canvas id="adminCourseBar" role="img" aria-label="Bar chart of admin completions by course type"></canvas></div>
+      <div class="section-divider"></div>
+      <div style="font-size:12px;font-weight:700;color:#7a8fa6;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Course totals</div>
+      <div class="grid3" style="margin-bottom:0">
+        <div class="metric-mini amber"><div class="mv" style="color:#BA7517">6</div><div class="ml">AI for Admins</div></div>
+        <div class="metric-mini amber"><div class="mv" style="color:#BA7517">1</div><div class="ml">AI for Faculty</div></div>
+        <div class="metric-mini amber"><div class="mv" style="color:#BA7517">1</div><div class="ml">AI for Leaders</div></div>
+        <div class="metric-mini amber"><div class="mv" style="color:#BA7517">1</div><div class="ml">AI Literacy All</div></div>
+        <div class="metric-mini amber" style="background:#ffedc0"><div class="mv" style="color:#8a4800">9</div><div class="ml">Total</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-amber"></div>Admin staff — full breakdown by office and course</div>
+    <table class="tbl">
+      <thead><tr><th>Office / Department</th><th class="rc">AI for Admins</th><th class="rc">AI for Faculty</th><th class="rc">AI for Leaders</th><th class="rc">AI Literacy All</th><th class="rc">Total</th><th class="rc">Status</th></tr></thead>
+      <tbody id="adminDetailTable"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-amber"></div>Individual admin staff — course completions</div>
+    <div class="info-box info-amber" style="margin-bottom:10px">9 admin staff members completed courses. Rashid Ibrahim (Office of Procurement) is the only admin who completed all 4 course types.</div>
+    <table class="tbl">
+      <thead><tr><th>Name</th><th>Office</th><th class="rc">Courses completed</th><th>Course types</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Rashid Ibrahim</strong></td><td>Office of Procurement</td><td class="rc"><span class="chip chip-high">4</span></td><td>Admins · Faculty · Leaders · AI Literacy All</td></tr>
+        <tr><td>Amna Mohamed</td><td>Office of Medical Services</td><td class="rc"><span class="chip chip-mid">1</span></td><td>AI for Administrators</td></tr>
+        <tr><td>Alya Alraeesi</td><td>Office of Medical Services</td><td class="rc"><span class="chip chip-mid">1</span></td><td>AI for Administrators</td></tr>
+        <tr><td>Alya Alshuweihi</td><td>MASAR Career Excellence</td><td class="rc"><span class="chip chip-mid">1</span></td><td>AI for Administrators</td></tr>
+        <tr><td>Hanin Ali</td><td>Teaching Learning Center</td><td class="rc"><span class="chip chip-mid">1</span></td><td>AI for Administrators</td></tr>
+        <tr><td>Sonia Rodrigo</td><td>Office of VC for Institutional Planning</td><td class="rc"><span class="chip chip-mid">1</span></td><td>AI for Administrators</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box info-gray" style="margin-top:10px;margin-bottom:0"><strong>Note:</strong> 14 of 19 admin offices recorded zero completions: International Academic Affairs, Library, Center for Inclusive Learning, IT, Human Resources, Finance, AU Innovation Center, Continuing Education, Chancellor's Office, Budget & Planning, Registration, University Facilities, Strategic Communications, Internal Audit.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- TAB: LEADERS -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-leaders" class="tab-pane">
+  <div class="info-box info-purple">The <strong>AI for Leaders</strong> course is a senior-level programme. Leaders who completed it were identified from the faculty list — they completed the course alongside (or instead of) other faculty programmes. One admin leader (Rashid Ibrahim) also completed it.</div>
+
+  <div class="kpi-grid">
+    <div class="kpi purple"><div class="kpi-label">Total leaders completed</div><div class="kpi-val">7</div><div class="kpi-sub">faculty + admin combined</div></div>
+    <div class="kpi purple"><div class="kpi-label">Faculty leaders</div><div class="kpi-val">6</div><div class="kpi-sub">across 4 colleges</div></div>
+    <div class="kpi purple"><div class="kpi-label">Admin leader</div><div class="kpi-val">1</div><div class="kpi-sub">Office of Procurement</div></div>
+    <div class="kpi purple"><div class="kpi-label">Top college for leaders</div><div class="kpi-val">3</div><div class="kpi-sub">College of Law</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="dot dot-purple"></div>AI for Leaders completions by college</div>
+      <div class="chart-wrap ch240"><canvas id="leadersCollegeBar" role="img" aria-label="Bar chart of leader completions by college"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-purple"></div>Leaders profile — multi-course completers</div>
+      <div class="info-box info-purple" style="margin-bottom:10px">All 6 faculty leaders also completed additional courses. The most engaged leader completed 4 course types.</div>
+      <div class="chart-wrap ch200"><canvas id="leadersCourseProfile" role="img" aria-label="Bar chart showing leader course profiles"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-purple"></div>Individual leaders — AI for Leaders course completions</div>
+    <table class="tbl">
+      <thead><tr><th>Name</th><th>College / Office</th><th class="rc">AI for Leaders</th><th class="rc">Other courses completed</th><th>All courses taken</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Hnin Ei Thu</strong></td><td>College of Pharmacy & Health Sciences</td><td class="rc"><span class="chip chip-purple">✓</span></td><td class="rc">3</td><td>Faculty · Admins · Leaders · AI Literacy All</td></tr>
+        <tr><td><strong>Khaled Aljasmi</strong></td><td>College of Law</td><td class="rc"><span class="chip chip-purple">✓</span></td><td class="rc">2</td><td>Faculty · Leaders · AI Literacy All</td></tr>
+        <tr><td><strong>Nasr Hassan</strong></td><td>College of Law</td><td class="rc"><span class="chip chip-purple">✓</span></td><td class="rc">3</td><td>Faculty · Admins · Leaders · AI Literacy All</td></tr>
+        <tr><td><strong>Asma Aleryani</strong></td><td>College of Law</td><td class="rc"><span class="chip chip-purple">✓</span></td><td class="rc">3</td><td>Faculty · Admins · Leaders · AI Literacy All</td></tr>
+        <tr><td><strong>Aisha Alshamsi</strong></td><td>College of Architecture, Art & Design</td><td class="rc"><span class="chip chip-purple">✓</span></td><td class="rc">3</td><td>Faculty · Admins · Leaders · AI Literacy All</td></tr>
+        <tr><td><strong>Aljarrah (K. Aljarrah)</strong></td><td>College of Humanities & Sciences</td><td class="rc"><span class="chip chip-purple">✓</span></td><td class="rc">3</td><td>Faculty · Admins · Leaders · AI Literacy All</td></tr>
+        <tr style="background:#f9f6ff"><td><strong>Rashid Ibrahim</strong> <span class="chip chip-gray" style="margin-left:4px">Admin</span></td><td>Office of Procurement</td><td class="rc"><span class="chip chip-purple">✓</span></td><td class="rc">3</td><td>Admins · Faculty · Leaders · AI Literacy All</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-purple"></div>Leaders by college — course breakdown</div>
+    <table class="tbl">
+      <thead><tr><th>College</th><th class="rc">Leaders count</th><th class="rc">% of total (7)</th><th>Leader names</th></tr></thead>
+      <tbody>
+        <tr><td>College of Law</td><td class="rc"><strong style="color:#6C4BCC">3</strong></td><td class="rc"><span class="chip chip-purple">42.9%</span></td><td>Khaled Aljasmi, Nasr Hassan, Asma Aleryani</td></tr>
+        <tr><td>College of Pharmacy & Health Sciences</td><td class="rc"><strong style="color:#6C4BCC">1</strong></td><td class="rc"><span class="chip chip-gray">14.3%</span></td><td>Hnin Ei Thu</td></tr>
+        <tr><td>College of Architecture, Art & Design</td><td class="rc"><strong style="color:#6C4BCC">1</strong></td><td class="rc"><span class="chip chip-gray">14.3%</span></td><td>Aisha Alshamsi</td></tr>
+        <tr><td>College of Humanities & Sciences</td><td class="rc"><strong style="color:#6C4BCC">1</strong></td><td class="rc"><span class="chip chip-gray">14.3%</span></td><td>K. Aljarrah</td></tr>
+        <tr style="background:#f9f6ff"><td>Office of Procurement (Admin)</td><td class="rc"><strong style="color:#6C4BCC">1</strong></td><td class="rc"><span class="chip chip-gray">14.3%</span></td><td>Rashid Ibrahim</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box info-gray" style="margin-top:10px;margin-bottom:0"><strong>Note:</strong> Colleges of Business Administration, Dentistry, Engineering & IT, Mass Communication, and Medicine had zero faculty completions of the AI for Leaders course per the Data sheet.</div>
+  </div>
+</div>
+
+</div><!-- end page -->
+<div class="footer">AI For All · Ajman University VCAA Office · DEC Completion Report · Feb–Aug 2025</div>
+
+<script>
+Chart.defaults.font.family="'Segoe UI',Arial,sans-serif";
+Chart.defaults.font.size=12;
+Chart.defaults.color='#7a8fa6';
+
+// ── MASTER DATA ──
+const colleges=[
+  {s:'Medicine',        f:'College of Medicine',                   p:414,  st:124, fac:3,  ai_f:2, ai_a:0, ai_l:0, aill:1, rate:29.95},
+  {s:'Pharmacy & HS',   f:'College of Pharmacy & Health Sciences', p:963,  st:156, fac:21, ai_f:9, ai_a:6, ai_l:1, aill:5, rate:16.20},
+  {s:'Eng & IT',        f:'College of Engineering & IT',           p:1935, st:160, fac:4,  ai_f:3, ai_a:1, ai_l:0, aill:0, rate:8.27},
+  {s:'Business Admin',  f:'College of Business Administration',    p:1107, st:113, fac:4,  ai_f:2, ai_a:0, ai_l:0, aill:2, rate:10.21},
+  {s:'Mass Comm',       f:'College of Mass Communication',         p:789,  st:94,  fac:4,  ai_f:3, ai_a:0, ai_l:0, aill:1, rate:11.91},
+  {s:'Humanities & Sci',f:'College of Humanities & Sciences',      p:1156, st:101, fac:15, ai_f:12,ai_a:1, ai_l:1, aill:1, rate:8.74},
+  {s:'Dentistry',       f:'College of Dentistry',                  p:879,  st:34,  fac:27, ai_f:21,ai_a:3, ai_l:0, aill:3, rate:3.87},
+  {s:'Law',             f:'College of Law',                        p:443,  st:20,  fac:18, ai_f:6, ai_a:3, ai_l:3, aill:6, rate:4.51},
+  {s:'Arch Art & Design',f:'College of Architecture, Art & Design',p:650,  st:28,  fac:7,  ai_f:3, ai_a:2, ai_l:1, aill:1, rate:4.31},
+];
+
+const adminOffices=[
+  {name:'Office of Procurement',           ai_a:1,ai_f:1,ai_l:1,aill:1,total:4},
+  {name:'Office of Medical Services',      ai_a:2,ai_f:0,ai_l:0,aill:0,total:2},
+  {name:'MASAR Career Excellence',         ai_a:1,ai_f:0,ai_l:0,aill:0,total:1},
+  {name:'Teaching Learning Center',        ai_a:1,ai_f:0,ai_l:0,aill:0,total:1},
+  {name:'Office of VC Institutional Plan.',ai_a:1,ai_f:0,ai_l:0,aill:0,total:1},
+  // zero offices below
+  {name:'Office of Intl Academic Affairs', ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Library',                         ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Center for Inclusive Learning',   ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Office of Information Technology',ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Office of Human Resources',       ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Office of Finance',               ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'AU Innovation Center',            ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Center for Continuing Education', ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Office of the Chancellor',        ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Office of Budget and Planning',   ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Office of Registration',          ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Office of University Facilities', ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Strategic Communications',        ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+  {name:'Office of Internal Audit',        ai_a:0,ai_f:0,ai_l:0,aill:0,total:0},
+];
+
+function rateColor(r){return r>=20?'#1D9E75':r>=10?'#EF9F27':'#E24B4A';}
+function chipClass(r){return r>=20?'chip-high':r>=10?'chip-mid':'chip-low';}
+
+// ── OVERVIEW DOUGHNUT ──
+new Chart(document.getElementById('overviewDoughnut'),{type:'doughnut',
+  data:{labels:['Students (952)','Faculty (103)','Admin Staff (9)','Leaders (7)'],
+    datasets:[{data:[952,103,9,7],
+      backgroundColor:['#1D9E75','#185FA5','#EF9F27','#6C4BCC'],
+      borderWidth:0,hoverOffset:8}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
+    plugins:{legend:{position:'bottom',labels:{padding:14,font:{size:11}}},
+    tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw}`}}}}
+});
+
+// ── OVERVIEW COURSE BAR ──
+new Chart(document.getElementById('overviewCourse'),{type:'bar',
+  data:{labels:['AI for Faculty','AI for Admins','AI Literacy All','AI for Leaders'],
+    datasets:[
+      {label:'Faculty',data:[61,16,20,6],backgroundColor:'#185FA5',borderRadius:4,borderSkipped:false},
+      {label:'Admin',  data:[1,6,1,1],  backgroundColor:'#EF9F27',borderRadius:4,borderSkipped:false}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10}}},
+    scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:10}}},
+            y:{stacked:true,grid:{color:'#f0f4f8'}}}}
+});
+
+// ── OVERVIEW RANK TABLE ──
+const ranked=[...colleges].sort((a,b)=>b.st-a.st);
+const rankTb=document.getElementById('overviewRankTable');
+const maxSt=ranked[0].st;
+ranked.forEach((c,i)=>{
+  const rk=i+1;
+  const bc=rk===1?'r1':rk===2?'r2':rk===3?'r3':'rn';
+  const bw=Math.round(c.st/maxSt*100);
+  rankTb.innerHTML+=`<tr>
+    <td><div class="rank-badge ${bc}">${rk}</div></td>
+    <td style="font-weight:600">${c.f}</td>
+    <td class="rc" style="color:#7a8fa6">${c.p.toLocaleString()}</td>
+    <td class="rc" style="font-weight:700;color:#1D9E75">${c.st}</td>
+    <td><div class="bar-cell"><div class="bar-bg"><div class="bar-fill-g" style="width:${bw}%"></div></div></div></td>
+    <td class="rc"><span class="chip ${chipClass(c.rate)}">${c.rate.toFixed(1)}%</span></td>
+    <td class="rc" style="font-weight:700;color:#185FA5">${c.fac}</td>
+  </tr>`;
+});
+
+// ── STUDENT BAR ──
+const byStudent=[...colleges].sort((a,b)=>b.st-a.st);
+new Chart(document.getElementById('studentBar'),{type:'bar',
+  data:{labels:byStudent.map(c=>c.s),
+    datasets:[{label:'Student submissions',data:byStudent.map(c=>c.st),
+      backgroundColor:byStudent.map(c=>rateColor(c.rate)),borderRadius:5,borderSkipped:false}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw} submissions (${byStudent[ctx.dataIndex].rate.toFixed(1)}% rate)`}}},
+    scales:{x:{grid:{color:'#f0f4f8'}},y:{grid:{display:false},ticks:{font:{size:11}}}}}
+});
+
+// ── RATE BAR ──
+const byRate=[...colleges].sort((a,b)=>b.rate-a.rate);
+new Chart(document.getElementById('rateBar'),{type:'bar',
+  data:{labels:byRate.map(c=>c.s),
+    datasets:[{label:'Rate %',data:byRate.map(c=>c.rate),
+      backgroundColor:byRate.map(c=>rateColor(c.rate)),borderRadius:5,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw.toFixed(1)}%`}}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:40}},
+            y:{grid:{color:'#f0f4f8'},ticks:{callback:v=>v+'%'},max:35}}}
+});
+
+// ── FACULTY BAR ──
+const byFac=[...colleges].sort((a,b)=>b.fac-a.fac);
+new Chart(document.getElementById('facultyBar'),{type:'bar',
+  data:{labels:byFac.map(c=>c.s),
+    datasets:[{label:'Faculty submissions',data:byFac.map(c=>c.fac),
+      backgroundColor:'#185FA5',borderRadius:5,borderSkipped:false}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{grid:{color:'#f0f4f8'}},y:{grid:{display:false},ticks:{font:{size:11}}}}}
+});
+
+// ── FACULTY STACKED BAR PER COLLEGE ──
+new Chart(document.getElementById('facultyCourseStacked'),{type:'bar',
+  data:{labels:colleges.map(c=>c.s),
+    datasets:[
+      {label:'AI for Faculty',data:colleges.map(c=>c.ai_f),backgroundColor:'#185FA5',borderRadius:3,borderSkipped:false},
+      {label:'AI for Admins', data:colleges.map(c=>c.ai_a),backgroundColor:'#1D9E75',borderRadius:3,borderSkipped:false},
+      {label:'AI Literacy All',data:colleges.map(c=>c.aill),backgroundColor:'#6C4BCC',borderRadius:3,borderSkipped:false},
+      {label:'AI for Leaders',data:colleges.map(c=>c.ai_l),backgroundColor:'#EF9F27',borderRadius:3,borderSkipped:false},
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:8}}},
+    scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:9},maxRotation:40}},
+            y:{stacked:true,grid:{color:'#f0f4f8'}}}}
+});
+
+// ── FACULTY DETAIL TABLE ──
+const facTb=document.getElementById('facultyDetailTable');
+const facByTotal=[...colleges].sort((a,b)=>b.fac-a.fac);
+facByTotal.forEach(c=>{
+  const pct=(c.fac/103*100).toFixed(1);
+  facTb.innerHTML+=`<tr>
+    <td style="font-weight:600">${c.f}</td>
+    <td class="rc">${c.ai_f||'–'}</td>
+    <td class="rc">${c.ai_a||'–'}</td>
+    <td class="rc">${c.ai_l||'–'}</td>
+    <td class="rc">${c.aill||'–'}</td>
+    <td class="rc"><strong style="color:#185FA5">${c.fac}</strong></td>
+    <td class="rc"><span class="chip chip-blue">${pct}%</span></td>
+  </tr>`;
+});
+facTb.innerHTML+=`<tr style="background:#f0f5ff;font-weight:700">
+  <td>Total</td><td class="rc">61</td><td class="rc">16</td><td class="rc">6</td><td class="rc">20</td><td class="rc" style="color:#185FA5">103</td><td class="rc">100%</td>
+</tr>`;
+
+// ── ADMIN OFFICE BAR ──
+const activeAdmins=adminOffices.filter(o=>o.total>0);
+new Chart(document.getElementById('adminOfficeBar'),{type:'bar',
+  data:{labels:activeAdmins.map(o=>o.name.length>28?o.name.slice(0,26)+'…':o.name),
+    datasets:[{label:'Completions',data:activeAdmins.map(o=>o.total),
+      backgroundColor:'#EF9F27',borderRadius:5,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:10}}},
+            y:{grid:{color:'#f0f4f8'},ticks:{stepSize:1}}}}
+});
+
+// ── ADMIN COURSE BAR ──
+new Chart(document.getElementById('adminCourseBar'),{type:'bar',
+  data:{labels:['AI for Admins','AI for Faculty','AI for Leaders','AI Literacy All'],
+    datasets:[{label:'Admin completions',data:[6,1,1,1],
+      backgroundColor:['#EF9F27','#BA7517','#9a5e00','#f5c07a'],borderRadius:5,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:10}}},
+            y:{grid:{color:'#f0f4f8'},ticks:{stepSize:1},max:8}}}
+});
+
+// ── ADMIN DETAIL TABLE ──
+const adminTb=document.getElementById('adminDetailTable');
+adminOffices.forEach(o=>{
+  const status=o.total>0?`<span class="chip chip-high">Active</span>`:`<span class="chip chip-low">No completions</span>`;
+  adminTb.innerHTML+=`<tr>
+    <td>${o.name}</td>
+    <td class="rc">${o.ai_a||'–'}</td>
+    <td class="rc">${o.ai_f||'–'}</td>
+    <td class="rc">${o.ai_l||'–'}</td>
+    <td class="rc">${o.aill||'–'}</td>
+    <td class="rc"><strong ${o.total>0?'style="color:#EF9F27"':''}>${o.total||'0'}</strong></td>
+    <td class="rc">${status}</td>
+  </tr>`;
+});
+adminTb.innerHTML+=`<tr style="background:#fffbe6;font-weight:700">
+  <td>Total</td><td class="rc">6</td><td class="rc">1</td><td class="rc">1</td><td class="rc">1</td><td class="rc" style="color:#EF9F27">9</td><td class="rc"></td>
+</tr>`;
+
+// ── LEADERS COLLEGE BAR ──
+const leaderData=[
+  {college:'College of Law',count:3},
+  {college:'Pharmacy & HS',count:1},
+  {college:'Arch Art & Design',count:1},
+  {college:'Humanities & Sci',count:1},
+  {college:'Admin (Procurement)',count:1},
+];
+new Chart(document.getElementById('leadersCollegeBar'),{type:'bar',
+  data:{labels:leaderData.map(l=>l.college),
+    datasets:[{label:'AI for Leaders completions',data:leaderData.map(l=>l.count),
+      backgroundColor:'#6C4BCC',borderRadius:5,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:30}},
+            y:{grid:{color:'#f0f4f8'},ticks:{stepSize:1},max:4}}}
+});
+
+// ── LEADERS COURSE PROFILE (how many courses each leader took) ──
+new Chart(document.getElementById('leadersCourseProfile'),{type:'bar',
+  data:{labels:['Hnin Ei Thu','Khaled Aljasmi','Nasr Hassan','Asma Aleryani','Aisha Alshamsi','K. Aljarrah','Rashid Ibrahim'],
+    datasets:[
+      {label:'AI for Faculty',data:[1,1,1,1,1,1,1],backgroundColor:'#185FA5',borderRadius:2},
+      {label:'AI for Admins', data:[1,0,1,1,1,1,1],backgroundColor:'#1D9E75',borderRadius:2},
+      {label:'AI for Leaders',data:[1,1,1,1,1,1,1],backgroundColor:'#6C4BCC',borderRadius:2},
+      {label:'AI Literacy All',data:[1,1,1,1,1,1,1],backgroundColor:'#EF9F27',borderRadius:2},
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:6}}},
+    scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:9},maxRotation:25}},
+            y:{stacked:true,grid:{color:'#f0f4f8'},max:5,ticks:{stepSize:1}}}}
+});
+
+// ── TAB SWITCHING ──
+function switchTab(btn,id){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active','active-blue','active-purple','active-amber'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  const colorMap={
+    'tab-overview':'active',
+    'tab-students':'active',
+    'tab-faculty':'active-blue',
+    'tab-admin':'active-amber',
+    'tab-leaders':'active-purple'
+  };
+  btn.className='nav-tab '+(colorMap[id]||'active');
+  document.getElementById(id).classList.add('active');
+  // Re-render charts after tab switch to fix sizing
+  setTimeout(()=>window.dispatchEvent(new Event('resize')),50);
+}
+</script>
+</body>
+</html>
