@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moodle Book – Interactive Learning Resource Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS & VARIABLES
+    ============================================================ */
+    :root {
+      --au-blue:       #003B71;
+      --au-blue-mid:   #005BAA;
+      --au-blue-light: #1A7DC4;
+      --au-orange:     #E87722;
+      --au-orange-lt:  #F9A754;
+      --au-teal:       #00838F;
+      --au-teal-lt:    #00B2C0;
+      --neutral-50:    #F7F8FA;
+      --neutral-100:   #EEF0F4;
+      --neutral-200:   #D8DCE6;
+      --neutral-400:   #8E97AE;
+      --neutral-700:   #2D3348;
+      --neutral-900:   #111827;
+      --white:         #FFFFFF;
+
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  20px;
+      --radius-xl:  32px;
+
+      --shadow-card: 0 2px 12px rgba(0,59,113,.08), 0 1px 3px rgba(0,59,113,.06);
+      --shadow-lift: 0 8px 32px rgba(0,59,113,.14), 0 2px 8px rgba(0,59,113,.08);
+
+      --transition: .28s cubic-bezier(.4,0,.2,1);
+      --nav-w: 220px;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-body);
+      background: var(--neutral-50);
+      color: var(--neutral-700);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    h1,h2,h3,h4 { font-family: var(--font-display); line-height: 1.2; color: var(--neutral-900); }
+    a { color: var(--au-blue-mid); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; }
+    ul { list-style: none; }
+    button { font-family: var(--font-body); cursor: pointer; border: none; background: none; }
+
+    /* ============================================================
+       LAYOUT SHELL
+    ============================================================ */
+    .shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ============================================================
+       SIDEBAR NAV
+    ============================================================ */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--nav-w);
+      height: 100vh;
+      background: var(--au-blue);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      overflow-y: auto;
+      transition: transform var(--transition);
+    }
+    .sidebar-logo {
+      padding: 28px 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .sidebar-logo .logo-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--au-orange);
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .sidebar-logo h2 {
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      line-height: 1.3;
+    }
+    .sidebar-logo p {
+      color: rgba(255,255,255,.55);
+      font-size: .78rem;
+      margin-top: 4px;
+    }
+
+    .nav-list { padding: 16px 0; flex: 1; }
+    .nav-list li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      color: rgba(255,255,255,.72);
+      font-size: .85rem;
+      font-weight: 400;
+      transition: background var(--transition), color var(--transition);
+      border-left: 3px solid transparent;
+    }
+    .nav-list li a i { width: 16px; text-align: center; font-size: .8rem; }
+    .nav-list li a:hover,
+    .nav-list li a.active {
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      border-left-color: var(--au-orange);
+      text-decoration: none;
+    }
+    .nav-list .nav-section-label {
+      padding: 14px 20px 4px;
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+    }
+
+    /* Mobile nav toggle */
+    .nav-toggle {
+      display: none;
+      position: fixed;
+      top: 14px; left: 14px;
+      z-index: 200;
+      background: var(--au-blue);
+      color: #fff;
+      width: 42px; height: 42px;
+      border-radius: var(--radius-sm);
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: var(--shadow-lift);
+    }
+
+    /* ============================================================
+       MAIN CONTENT
+    ============================================================ */
+    .main {
+      margin-left: var(--nav-w);
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ============================================================
+       PROGRESS BAR
+    ============================================================ */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: var(--nav-w); right: 0;
+      height: 3px;
+      background: var(--au-orange);
+      transform-origin: left;
+      transform: scaleX(0);
+      z-index: 99;
+      transition: transform .1s linear;
+    }
+
+    /* ============================================================
+       SECTION BASE
+    ============================================================ */
+    .section {
+      padding: 72px 56px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .section.visible { opacity: 1; transform: none; }
+    .section:nth-child(even) { background: var(--white); }
+    .section:nth-child(odd)  { background: var(--neutral-50); }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--au-orange);
+      margin-bottom: 12px;
+    }
+    .section-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 18px; height: 2px;
+      background: var(--au-orange);
+      border-radius: 2px;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: var(--au-blue);
+      margin-bottom: 12px;
+    }
+    .section-lead {
+      font-size: 1.05rem;
+      color: var(--neutral-400);
+      max-width: 680px;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    /* ============================================================
+       HERO SECTION
+    ============================================================ */
+    #hero {
+      background: linear-gradient(135deg, var(--au-blue) 0%, var(--au-blue-mid) 55%, var(--au-teal) 100%);
+      padding: 80px 56px 88px;
+      position: relative;
+      overflow: hidden;
+      opacity: 1;
+      transform: none;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: -120px; right: 120px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: rgba(232,119,34,.15);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      color: rgba(255,255,255,.9);
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: .8rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    .hero-badge i { color: var(--au-orange-lt); }
+    #hero h1 {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      color: #fff;
+      max-width: 700px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    #hero h1 em {
+      font-style: italic;
+      color: var(--au-orange-lt);
+    }
+    #hero .hero-lead {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,.8);
+      max-width: 580px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+      font-weight: 300;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      text-align: center;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius-md);
+      padding: 16px 28px;
+      min-width: 110px;
+    }
+    .hero-stat .stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--au-orange-lt);
+      display: block;
+    }
+    .hero-stat .stat-label {
+      font-size: .78rem;
+      color: rgba(255,255,255,.65);
+      margin-top: 2px;
+      font-weight: 400;
+    }
+
+    /* ============================================================
+       WHAT IS MOODLE BOOK SECTION
+    ============================================================ */
+    .definition-block {
+      background: linear-gradient(135deg, var(--au-blue) 0%, var(--au-blue-mid) 100%);
+      border-radius: var(--radius-lg);
+      padding: 40px 48px;
+      color: #fff;
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      margin-bottom: 48px;
+    }
+    .definition-block .def-icon {
+      flex-shrink: 0;
+      width: 64px; height: 64px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: var(--au-orange-lt);
+    }
+    .definition-block h3 { color: #fff; font-size: 1.5rem; margin-bottom: 12px; }
+    .definition-block p  { color: rgba(255,255,255,.8); font-size: 1rem; }
+
+    /* ============================================================
+       FEATURE CARDS GRID
+    ============================================================ */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      box-shadow: var(--shadow-card);
+      transition: transform var(--transition), box-shadow var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--au-orange);
+      transform: scaleX(0);
+      transition: transform var(--transition);
+      transform-origin: left;
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+    .feature-card:hover::before { transform: scaleX(1); }
+
+    .card-icon {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+    }
+    .card-icon.blue  { background: rgba(0,91,170,.1); color: var(--au-blue-mid); }
+    .card-icon.orange{ background: rgba(232,119,34,.1); color: var(--au-orange); }
+    .card-icon.teal  { background: rgba(0,131,143,.1); color: var(--au-teal); }
+
+    .feature-card h4 { font-size: 1rem; margin-bottom: 8px; color: var(--au-blue); }
+    .feature-card p  { font-size: .88rem; color: var(--neutral-400); line-height: 1.6; }
+
+    /* Expand / collapse body */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease;
+    }
+    .feature-card.expanded .card-body { max-height: 300px; }
+    .card-toggle {
+      margin-top: 12px;
+      font-size: .8rem;
+      color: var(--au-blue-mid);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-toggle i { transition: transform var(--transition); font-size: .7rem; }
+    .feature-card.expanded .card-toggle i { transform: rotate(180deg); }
+
+    /* ============================================================
+       COMPARISON TABLE
+    ============================================================ */
+    .comparison-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .compare-col {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .compare-col .col-header {
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .compare-col.moodle .col-header { background: var(--au-blue); color: #fff; }
+    .compare-col.ppt   .col-header { background: #C04000; color: #fff; }
+    .compare-col .col-header h3 { font-size: 1.1rem; color: #fff; }
+    .compare-col .col-header i  { font-size: 1.4rem; }
+
+    .compare-list { background: var(--white); padding: 0; }
+    .compare-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--neutral-100);
+      font-size: .88rem;
+      transition: background var(--transition);
+    }
+    .compare-item:hover { background: var(--neutral-50); }
+    .compare-item:last-child { border-bottom: none; }
+    .compare-item .ci-icon {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      margin-top: 1px;
+    }
+    .ci-icon.check { background: rgba(0,131,143,.12); color: var(--au-teal); }
+    .ci-icon.cross { background: rgba(192,64,0,.1); color: #C04000; }
+
+    /* highlight advantage rows */
+    .compare-item.advantage { background: rgba(0,131,143,.04); }
+
+    /* ============================================================
+       MEDIA INTEGRATION SECTION
+    ============================================================ */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .media-card {
+      background: var(--white);
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .media-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+    .media-icon {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    .media-card h4 { font-size: .95rem; color: var(--au-blue); margin-bottom: 6px; }
+    .media-card p  { font-size: .8rem; color: var(--neutral-400); }
+
+    /* ============================================================
+       PEDAGOGICAL VALUE SECTION
+    ============================================================ */
+    .pedagogy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .pedagogy-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 32px 28px;
+      box-shadow: var(--shadow-card);
+      border-left: 4px solid var(--au-orange);
+      transition: box-shadow var(--transition);
+    }
+    .pedagogy-card:hover { box-shadow: var(--shadow-lift); }
+    .pedagogy-card .pd-num {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      color: var(--neutral-200);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .pedagogy-card h4 { font-size: 1.05rem; color: var(--au-blue); margin-bottom: 10px; }
+    .pedagogy-card p  { font-size: .88rem; color: var(--neutral-400); }
+
+    /* ============================================================
+       WHEN TO USE — CHECKLIST CARDS
+    ============================================================ */
+    .use-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .use-card {
+      background: var(--white);
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .use-card:hover { box-shadow: var(--shadow-lift); border-color: var(--au-blue-light); }
+    .use-card .uc-icon {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(0,59,113,.08);
+      color: var(--au-blue-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+      margin-top: 2px;
+    }
+    .use-card h4 { font-size: .93rem; color: var(--au-blue); margin-bottom: 4px; }
+    .use-card p  { font-size: .82rem; color: var(--neutral-400); }
+
+    /* ============================================================
+       SUMMARY / TAKEAWAY SECTION
+    ============================================================ */
+    #summary {
+      background: linear-gradient(135deg, var(--au-blue) 0%, var(--au-teal) 100%);
+      padding: 72px 56px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    #summary.visible { opacity: 1; transform: none; }
+
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 36px;
+    }
+    .takeaway-pill {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      color: #fff;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: background var(--transition);
+    }
+    .takeaway-pill:hover { background: rgba(255,255,255,.16); }
+    .takeaway-pill i   { color: var(--au-orange-lt); font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+    .takeaway-pill p   { font-size: .88rem; color: rgba(255,255,255,.85); line-height: 1.55; }
+
+    #summary .section-title { color: #fff; }
+    #summary .section-lead  { color: rgba(255,255,255,.75); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer {
+      background: var(--neutral-900);
+      padding: 28px 56px;
+      margin-left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .site-footer p { font-size: .8rem; color: var(--neutral-400); }
+    .site-footer a { color: var(--au-orange-lt); }
+
+    /* ============================================================
+       BACK TO TOP
+    ============================================================ */
+    #back-to-top {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--au-blue);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+      box-shadow: var(--shadow-lift);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+      z-index: 90;
+    }
+    #back-to-top.visible { opacity: 1; pointer-events: all; }
+    #back-to-top:hover { background: var(--au-blue-mid); }
+
+    /* ============================================================
+       RESPONSIVE — TABLET
+    ============================================================ */
+    @media (max-width: 900px) {
+      .comparison-wrapper, .use-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       RESPONSIVE — MOBILE
+    ============================================================ */
+    @media (max-width: 700px) {
+      :root { --nav-w: 0px; }
+
+      .sidebar {
+        transform: translateX(-220px);
+        width: 220px;
+      }
+      .sidebar.open { transform: translateX(0); }
+
+      .nav-toggle { display: flex; }
+
+      .main { margin-left: 0; }
+
+      #progress-bar { left: 0; }
+
+      .section, #hero, #summary {
+        padding: 48px 20px;
+      }
+
+      #hero h1 { font-size: 1.8rem; }
+
+      .hero-stats { gap: 12px; }
+
+      .definition-block {
+        flex-direction: column;
+        padding: 28px 24px;
+      }
+
+      .site-footer { padding: 20px; }
+    }
+
+    /* ============================================================
+       UTILITY
+    ============================================================ */
+    .divider {
+      height: 1px;
+      background: var(--neutral-200);
+      margin: 48px 0;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(0,59,113,.08);
+      color: var(--au-blue-mid);
+      font-size: .75rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* Overlay for mobile sidebar */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 99;
+    }
+    .overlay.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     MOBILE NAV TOGGLE
+============================================================ -->
+<button class="nav-toggle" id="nav-toggle" aria-label="Open navigation">
+  <i class="fas fa-bars"></i>
+</button>
+<div class="overlay" id="overlay"></div>
+
+<!-- ============================================================
+     SCROLL PROGRESS BAR
+============================================================ -->
+<div id="progress-bar" role="progressbar" aria-label="Reading progress"></div>
+
+<!-- ============================================================
+     SIDEBAR NAVIGATION
+============================================================ -->
+<nav class="sidebar" id="sidebar" aria-label="Section navigation">
+  <div class="sidebar-logo">
+    <div class="logo-tag"><i class="fas fa-book-open"></i> Moodle Resource</div>
+    <h2>Moodle Book</h2>
+    <p>Interactive Faculty Guide</p>
+  </div>
+
+  <ul class="nav-list" id="nav-list">
+    <li class="nav-section-label">Overview</li>
+    <li><a href="#hero"><i class="fas fa-home"></i> Introduction</a></li>
+    <li><a href="#what-is"><i class="fas fa-info-circle"></i> What Is It?</a></li>
+
+    <li class="nav-section-label">Features</li>
+    <li><a href="#features"><i class="fas fa-star"></i> Key Features</a></li>
+    <li><a href="#media"><i class="fas fa-photo-video"></i> Media Support</a></li>
+
+    <li class="nav-section-label">Comparison</li>
+    <li><a href="#comparison"><i class="fas fa-balance-scale"></i> Book vs PowerPoint</a></li>
+
+    <li class="nav-section-label">Learning Design</li>
+    <li><a href="#pedagogy"><i class="fas fa-brain"></i> Pedagogical Value</a></li>
+    <li><a href="#when-to-use"><i class="fas fa-check-circle"></i> When to Use</a></li>
+
+    <li class="nav-section-label">Summary</li>
+    <li><a href="#summary"><i class="fas fa-flag-checkered"></i> Key Takeaways</a></li>
+  </ul>
+</nav>
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+<main class="main" id="main">
+
+  <!-- =====================================================
+       HERO SECTION
+  ====================================================== -->
+  <section id="hero" aria-labelledby="hero-heading">
+    <div class="hero-badge">
+      <i class="fas fa-graduation-cap"></i>
+      Faculty Professional Development — Moodle Book Resource
+    </div>
+    <h1 id="hero-heading">
+      Why the <em>Moodle Book</em> Belongs in Your Course
+    </h1>
+    <p class="hero-lead">
+      The Moodle Book is a structured, multi-page resource that turns your course content into
+      a navigable, accessible, and pedagogically sound digital learning experience — far beyond
+      what a static file can achieve.
+    </p>
+
+    <!-- === REPLACE stat values below with institution-specific data if desired === -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-num">Multi</span>
+        <span class="stat-label">Chapter Structure</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Browser-based</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">6+</span>
+        <span class="stat-label">Media Types</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">WCAG</span>
+        <span class="stat-label">Accessible</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       WHAT IS THE MOODLE BOOK?
+  ====================================================== -->
+  <section id="what-is" class="section" aria-labelledby="what-heading">
+    <span class="section-eyebrow">Definition</span>
+    <h2 class="section-title" id="what-heading">What Is the Moodle Book?</h2>
+    <p class="section-lead">
+      A native Moodle resource designed to deliver rich, multi-page instructional content
+      in a clean, book-like format — directly inside your course.
+    </p>
+
+    <div class="definition-block">
+      <div class="def-icon"><i class="fas fa-book-reader"></i></div>
+      <div>
+        <h3>Simple to Build. Powerful to Navigate.</h3>
+        <p>
+          The Moodle Book is a core Moodle resource that allows educators to create multi-page,
+          chapter-based content using a simple editor — no coding required. Each "book" appears in
+          the course as a single clickable item, but inside it contains a full table of contents,
+          chapter navigation, and rich media support. Students move through chapters at their own pace,
+          while the automatic table of contents keeps orientation clear at all times.
+        </p>
+      </div>
+    </div>
+
+    <!-- === Quick at-a-glance tags === -->
+    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+      <span class="tag"><i class="fas fa-check"></i> Native Moodle Resource</span>
+      <span class="tag"><i class="fas fa-check"></i> No Downloads Required</span>
+      <span class="tag"><i class="fas fa-check"></i> Works on All Devices</span>
+      <span class="tag"><i class="fas fa-check"></i> Auto Table of Contents</span>
+      <span class="tag"><i class="fas fa-check"></i> Print-to-PDF Support</span>
+      <span class="tag"><i class="fas fa-check"></i> Supports H5P Embeds</span>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       KEY FEATURES (Expandable Cards)
+  ====================================================== -->
+  <section id="features" class="section" aria-labelledby="features-heading">
+    <span class="section-eyebrow">Capabilities</span>
+    <h2 class="section-title" id="features-heading">Key Features at a Glance</h2>
+    <p class="section-lead">
+      Click any card to expand and learn more about each feature.
+    </p>
+
+    <div class="cards-grid">
+
+      <!-- CARD: Structured Content -->
+      <div class="feature-card" onclick="toggleCard(this)" role="button" tabindex="0"
+           aria-expanded="false" aria-label="Structured content feature">
+        <div class="card-icon blue"><i class="fas fa-layer-group"></i></div>
+        <h4>Structured, Chapter-Based Content</h4>
+        <p>Organise material into chapters and sub-chapters for logical progression.</p>
+        <div class="card-body">
+          <div class="divider" style="margin:14px 0 12px;"></div>
+          <p style="font-size:.85rem;color:var(--neutral-700);">
+            Each book is divided into chapters (top-level) and sub-chapters (indented beneath).
+            This hierarchy mimics a real textbook structure, helping students understand the
+            relationship between ideas and move through content in a purposeful sequence.
+            Instructors can reorder chapters at any time without affecting the rest of the course.
+          </p>
+        </div>
+        <div class="card-toggle">Learn more <i class="fas fa-chevron-down"></i></div>
+      </div>
+
+      <!-- CARD: Auto Table of Contents -->
+      <div class="feature-card" onclick="toggleCard(this)" role="button" tabindex="0"
+           aria-expanded="false" aria-label="Table of contents feature">
+        <div class="card-icon orange"><i class="fas fa-list-ol"></i></div>
+        <h4>Automatic Table of Contents</h4>
+        <p>Moodle generates a clickable TOC sidebar based on your chapter structure.</p>
+        <div class="card-body">
+          <div class="divider" style="margin:14px 0 12px;"></div>
+          <p style="font-size:.85rem;color:var(--neutral-700);">
+            Unlike a PDF or PowerPoint where navigation requires scrolling through the whole
+            document, Moodle Book auto-generates a table of contents from your chapter titles.
+            Students can jump to any section instantly, supporting non-linear reading strategies
+            and quick review — valuable for learners returning to specific topics.
+          </p>
+        </div>
+        <div class="card-toggle">Learn more <i class="fas fa-chevron-down"></i></div>
+      </div>
+
+      <!-- CARD: Built-in Navigation -->
+      <div class="feature-card" onclick="toggleCard(this)" role="button" tabindex="0"
+           aria-expanded="false" aria-label="Navigation feature">
+        <div class="card-icon teal"><i class="fas fa-arrows-alt-h"></i></div>
+        <h4>Built-in Page Navigation</h4>
+        <p>Prev / Next buttons guide students through the book without confusion.</p>
+        <div class="card-body">
+          <div class="divider" style="margin:14px 0 12px;"></div>
+          <p style="font-size:.85rem;color:var(--neutral-700);">
+            Every chapter page includes Previous and Next navigation buttons. This linear
+            navigation path reduces cognitive effort — students always know where they are,
+            where they have been, and what comes next. It also helps faculty design a
+            deliberate content sequence.
+          </p>
+        </div>
+        <div class="card-toggle">Learn more <i class="fas fa-chevron-down"></i></div>
+      </div>
+
+      <!-- CARD: Multimedia Support -->
+      <div class="feature-card" onclick="toggleCard(this)" role="button" tabindex="0"
+           aria-expanded="false" aria-label="Multimedia support feature">
+        <div class="card-icon blue"><i class="fas fa-photo-video"></i></div>
+        <h4>Rich Multimedia Support</h4>
+        <p>Embed audio, video, images, URLs, H5P activities, and HTML pages.</p>
+        <div class="card-body">
+          <div class="divider" style="margin:14px 0 12px;"></div>
+          <p style="font-size:.85rem;color:var(--neutral-700);">
+            Moodle Book is not just text. Each chapter can contain images with alt text,
+            embedded video (YouTube, institutional streams), audio clips, hyperlinks to
+            external resources, embedded HTML pages (iframes), and interactive H5P content.
+            This allows a single Book to function as a complete learning module.
+          </p>
+        </div>
+        <div class="card-toggle">Learn more <i class="fas fa-chevron-down"></i></div>
+      </div>
+
+      <!-- CARD: H5P Embedding -->
+      <div class="feature-card" onclick="toggleCard(this)" role="button" tabindex="0"
+           aria-expanded="false" aria-label="H5P embedding feature">
+        <div class="card-icon orange"><i class="fas fa-puzzle-piece"></i></div>
+        <h4>H5P Interactive Embedding</h4>
+        <p>Bring interactive quizzes, timelines, and flashcards directly into chapters.</p>
+        <div class="card-body">
+          <div class="divider" style="margin:14px 0 12px;"></div>
+          <p style="font-size:.85rem;color:var(--neutral-700);">
+            H5P activities (interactive videos, drag-and-drop exercises, accordion summaries,
+            knowledge checks, and more) can be embedded directly into Moodle Book chapters.
+            This transforms a passive reading experience into an active, self-checking one
+            without requiring students to navigate away from the resource.
+          </p>
+        </div>
+        <div class="card-toggle">Learn more <i class="fas fa-chevron-down"></i></div>
+      </div>
+
+      <!-- CARD: Accessibility -->
+      <div class="feature-card" onclick="toggleCard(this)" role="button" tabindex="0"
+           aria-expanded="false" aria-label="Accessibility feature">
+        <div class="card-icon teal"><i class="fas fa-universal-access"></i></div>
+        <h4>Accessibility & Inclusion</h4>
+        <p>Supports screen readers, keyboard navigation, and responsive design.</p>
+        <div class="card-body">
+          <div class="divider" style="margin:14px 0 12px;"></div>
+          <p style="font-size:.85rem;color:var(--neutral-700);">
+            Moodle Book content is rendered as HTML in the browser, making it natively
+            compatible with screen readers, browser zoom, and text-to-speech tools. Using
+            proper heading structure, descriptive image alt text, and clean HTML ensures
+            the resource meets WCAG 2.1 accessibility standards — something a locked PDF
+            or PowerPoint cannot guarantee.
+          </p>
+        </div>
+        <div class="card-toggle">Learn more <i class="fas fa-chevron-down"></i></div>
+      </div>
+
+      <!-- CARD: Print to PDF -->
+      <div class="feature-card" onclick="toggleCard(this)" role="button" tabindex="0"
+           aria-expanded="false" aria-label="Print to PDF feature">
+        <div class="card-icon blue"><i class="fas fa-file-pdf"></i></div>
+        <h4>Print to PDF Export</h4>
+        <p>Students can export the entire book or a single chapter to PDF if needed.</p>
+        <div class="card-body">
+          <div class="divider" style="margin:14px 0 12px;"></div>
+          <p style="font-size:.85rem;color:var(--neutral-700);">
+            The Moodle Book includes a built-in "Print this chapter" and "Print whole book"
+            option, giving students a clean, formatted PDF. This provides flexibility for
+            learners who prefer offline reading, without requiring the instructor to maintain
+            a separate PDF file alongside the online content.
+          </p>
+        </div>
+        <div class="card-toggle">Learn more <i class="fas fa-chevron-down"></i></div>
+      </div>
+
+      <!-- CARD: Easy Editing -->
+      <div class="feature-card" onclick="toggleCard(this)" role="button" tabindex="0"
+           aria-expanded="false" aria-label="Easy editing feature">
+        <div class="card-icon orange"><i class="fas fa-edit"></i></div>
+        <h4>Easy In-Place Editing</h4>
+        <p>Update any chapter instantly without re-uploading files or broken links.</p>
+        <div class="card-body">
+          <div class="divider" style="margin:14px 0 12px;"></div>
+          <p style="font-size:.85rem;color:var(--neutral-700);">
+            Because the Moodle Book is a native resource, any instructor with editing rights
+            can update content in real-time using the Moodle WYSIWYG editor. There is no need
+            to download, edit, save, and re-upload a file — and no risk of students accessing
+            an outdated version, since they always see the live content.
+          </p>
+        </div>
+        <div class="card-toggle">Learn more <i class="fas fa-chevron-down"></i></div>
+      </div>
+
+      <!-- CARD: No Software Required -->
+      <div class="feature-card" onclick="toggleCard(this)" role="button" tabindex="0"
+           aria-expanded="false" aria-label="No software required feature">
+        <div class="card-icon teal"><i class="fas fa-cloud"></i></div>
+        <h4>Zero Software Dependencies</h4>
+        <p>Students access content in any modern browser — no apps, no plugins.</p>
+        <div class="card-body">
+          <div class="divider" style="margin:14px 0 12px;"></div>
+          <p style="font-size:.85rem;color:var(--neutral-700);">
+            Unlike PowerPoint (requires Office), PDFs with active elements (requires Adobe),
+            or proprietary formats, the Moodle Book requires only a web browser. This removes
+            a significant access barrier, particularly for students on low-cost devices,
+            those using mobile data, or those on non-Windows operating systems.
+          </p>
+        </div>
+        <div class="card-toggle">Learn more <i class="fas fa-chevron-down"></i></div>
+      </div>
+
+    </div><!-- /cards-grid -->
+  </section>
+
+  <!-- =====================================================
+       MEDIA INTEGRATION
+  ====================================================== -->
+  <section id="media" class="section" aria-labelledby="media-heading">
+    <span class="section-eyebrow">Content Types</span>
+    <h2 class="section-title" id="media-heading">Media Integration</h2>
+    <p class="section-lead">
+      Each chapter in a Moodle Book can contain any combination of these content types,
+      creating a rich, multimodal learning experience.
+    </p>
+
+    <div class="media-grid">
+
+      <!-- Audio -->
+      <div class="media-card">
+        <div class="media-icon" style="background:rgba(0,59,113,.1);color:var(--au-blue);">
+          <i class="fas fa-volume-up"></i>
+        </div>
+        <h4>Audio</h4>
+        <p>Embed narration, podcasts, or pronunciation guides using the built-in media player.</p>
+      </div>
+
+      <!-- Video -->
+      <div class="media-card">
+        <div class="media-icon" style="background:rgba(232,119,34,.1);color:var(--au-orange);">
+          <i class="fas fa-play-circle"></i>
+        </div>
+        <h4>Video</h4>
+        <p>Embed YouTube, Vimeo, or institutional video streams (e.g. Kaltura, Echo360) inline.</p>
+      </div>
+
+      <!-- Images -->
+      <div class="media-card">
+        <div class="media-icon" style="background:rgba(0,131,143,.1);color:var(--au-teal);">
+          <i class="fas fa-image"></i>
+        </div>
+        <h4>Images</h4>
+        <p>Upload diagrams, charts, photos, or infographics with accessible alt text support.</p>
+      </div>
+
+      <!-- URLs / Hyperlinks -->
+      <div class="media-card">
+        <div class="media-icon" style="background:rgba(0,91,170,.1);color:var(--au-blue-mid);">
+          <i class="fas fa-link"></i>
+        </div>
+        <h4>Hyperlinks & URLs</h4>
+        <p>Link to external readings, databases, or library resources without leaving the chapter.</p>
+      </div>
+
+      <!-- H5P -->
+      <div class="media-card">
+        <div class="media-icon" style="background:rgba(232,119,34,.1);color:var(--au-orange);">
+          <i class="fas fa-puzzle-piece"></i>
+        </div>
+        <h4>H5P Activities</h4>
+        <p>Embed interactive quizzes, flashcards, timelines, and branching scenarios mid-chapter.</p>
+      </div>
+
+      <!-- HTML Pages -->
+      <div class="media-card">
+        <div class="media-icon" style="background:rgba(0,131,143,.1);color:var(--au-teal);">
+          <i class="fas fa-code"></i>
+        </div>
+        <h4>HTML Pages / iFrames</h4>
+        <p>Embed external web tools, simulations, or interactive data visualisations via iframe.</p>
+      </div>
+
+    </div><!-- /media-grid -->
+  </section>
+
+  <!-- =====================================================
+       COMPARISON: BOOK vs POWERPOINT
+  ====================================================== -->
+  <section id="comparison" class="section" aria-labelledby="comparison-heading">
+    <span class="section-eyebrow">Comparison</span>
+    <h2 class="section-title" id="comparison-heading">Moodle Book vs. PowerPoint</h2>
+    <p class="section-lead">
+      Both are familiar content tools — but they serve different pedagogical purposes.
+      Here is how they compare for asynchronous course delivery.
+    </p>
+
+    <div class="comparison-wrapper">
+
+      <!-- MOODLE BOOK column -->
+      <div class="compare-col moodle">
+        <div class="col-header">
+          <i class="fas fa-book-open"></i>
+          <h3>Moodle Book</h3>
+        </div>
+        <ul class="compare-list">
+          <li class="compare-item advantage">
+            <div class="ci-icon check"><i class="fas fa-check"></i></div>
+            <span>Chapter-based, navigable structure with auto TOC</span>
+          </li>
+          <li class="compare-item advantage">
+            <div class="ci-icon check"><i class="fas fa-check"></i></div>
+            <span>Fully accessible in any web browser — no software needed</span>
+          </li>
+          <li class="compare-item advantage">
+            <div class="ci-icon check"><i class="fas fa-check"></i></div>
+            <span>Embeds interactive H5P content and live media</span>
+          </li>
+          <li class="compare-item advantage">
+            <div class="ci-icon check"><i class="fas fa-check"></i></div>
+            <span>WCAG-compliant: works with screen readers and keyboard navigation</span>
+          </li>
+          <li class="compare-item advantage">
+            <div class="ci-icon check"><i class="fas fa-check"></i></div>
+            <span>Editable in real-time — students always see the latest version</span>
+          </li>
+          <li class="compare-item advantage">
+            <div class="ci-icon check"><i class="fas fa-check"></i></div>
+            <span>Designed for self-paced, non-linear reading</span>
+          </li>
+          <li class="compare-item advantage">
+            <div class="ci-icon check"><i class="fas fa-check"></i></div>
+            <span>Print-to-PDF export available on demand</span>
+          </li>
+          <li class="compare-item">
+            <div class="ci-icon cross"><i class="fas fa-times"></i></div>
+            <span>Requires content to be re-entered into Moodle editor</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- POWERPOINT column -->
+      <div class="compare-col ppt">
+        <div class="col-header">
+          <i class="fas fa-file-powerpoint"></i>
+          <h3>PowerPoint / Uploaded Slides</h3>
+        </div>
+        <ul class="compare-list">
+          <li class="compare-item">
+            <div class="ci-icon cross"><i class="fas fa-times"></i></div>
+            <span>Linear slide-by-slide format; poor for reading and reference</span>
+          </li>
+          <li class="compare-item">
+            <div class="ci-icon cross"><i class="fas fa-times"></i></div>
+            <span>Requires PowerPoint or compatible app to open</span>
+          </li>
+          <li class="compare-item">
+            <div class="ci-icon cross"><i class="fas fa-times"></i></div>
+            <span>Embedded media often breaks when shared as a file</span>
+          </li>
+          <li class="compare-item">
+            <div class="ci-icon cross"><i class="fas fa-times"></i></div>
+            <span>Accessibility requires significant manual effort (reading order, alt text, colour contrast)</span>
+          </li>
+          <li class="compare-item">
+            <div class="ci-icon cross"><i class="fas fa-times"></i></div>
+            <span>Each update requires re-upload — risk of version mismatch</span>
+          </li>
+          <li class="compare-item">
+            <div class="ci-icon cross"><i class="fas fa-times"></i></div>
+            <span>Designed for live presentations, not asynchronous study</span>
+          </li>
+          <li class="compare-item">
+            <div class="ci-icon check" style="background:rgba(0,131,143,.12);color:var(--au-teal);">
+              <i class="fas fa-check"></i>
+            </div>
+            <span>Familiar format; easy to create from existing lecture slides</span>
+          </li>
+          <li class="compare-item">
+            <div class="ci-icon check" style="background:rgba(0,131,143,.12);color:var(--au-teal);">
+              <i class="fas fa-check"></i>
+            </div>
+            <span>Good for structured visual presentations with speaker notes</span>
+          </li>
+        </ul>
+      </div>
+
+    </div><!-- /comparison-wrapper -->
+
+    <!-- === VERDICT === -->
+    <div style="margin-top:24px;background:rgba(0,59,113,.06);border-left:4px solid var(--au-blue);border-radius:var(--radius-sm);padding:20px 24px;">
+      <p style="font-size:.92rem;color:var(--neutral-700);">
+        <strong style="color:var(--au-blue);">Bottom line:</strong>
+        PowerPoint is designed for <em>live delivery</em>. The Moodle Book is designed for
+        <em>independent study</em>. When the audience is a student reading alone, the Moodle Book
+        significantly outperforms a static slide deck in navigation, accessibility, interactivity,
+        and maintainability.
+      </p>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       PEDAGOGICAL VALUE
+  ====================================================== -->
+  <section id="pedagogy" class="section" aria-labelledby="pedagogy-heading">
+    <span class="section-eyebrow">Learning Design</span>
+    <h2 class="section-title" id="pedagogy-heading">Pedagogical Value</h2>
+    <p class="section-lead">
+      The Moodle Book is not just a container for content — it is a tool grounded in
+      established principles of effective online learning design.
+    </p>
+
+    <div class="pedagogy-grid">
+
+      <div class="pedagogy-card">
+        <div class="pd-num">01</div>
+        <h4>Constructive Alignment</h4>
+        <p>
+          Structure book chapters to map directly to learning outcomes. Each chapter can address
+          a specific outcome, allowing students to connect what they read to what they are expected
+          to know, do, or produce — making the learning intent transparent.
+        </p>
+      </div>
+
+      <div class="pedagogy-card">
+        <div class="pd-num">02</div>
+        <h4>Self-Paced Learning</h4>
+        <p>
+          Students control their pace through the content. They can read at their own speed,
+          re-read chapters, skip to relevant sections using the TOC, and revisit the book
+          multiple times before an assessment. This flexibility reduces anxiety and supports
+          diverse learning needs.
+        </p>
+      </div>
+
+      <div class="pedagogy-card">
+        <div class="pd-num">03</div>
+        <h4>Cognitive Load Reduction</h4>
+        <p>
+          Chunking content into focused chapters reduces extraneous cognitive load. Students
+          are not confronted with a 60-slide deck at once — they encounter one manageable idea
+          at a time, in a clean reading environment free from presentation decorations and
+          crowded bullet points.
+        </p>
+      </div>
+
+      <div class="pedagogy-card">
+        <div class="pd-num">04</div>
+        <h4>Multimodal Learning</h4>
+        <p>
+          By combining text, images, video, audio, and interactive H5P activities in one
+          resource, the Moodle Book supports multiple learning modalities. Visual learners,
+          auditory learners, and kinaesthetic learners can all engage with content that suits
+          their preferences within a single resource.
+        </p>
+      </div>
+
+      <div class="pedagogy-card">
+        <div class="pd-num">05</div>
+        <h4>Formative Assessment Integration</h4>
+        <p>
+          Embedding H5P knowledge checks, reflection prompts, or self-assessment activities
+          within chapters transforms reading into an active process. Students receive immediate
+          feedback on their understanding before moving to the next chapter — supporting
+          metacognitive development.
+        </p>
+      </div>
+
+      <div class="pedagogy-card">
+        <div class="pd-num">06</div>
+        <h4>Scalable Reuse</h4>
+        <p>
+          A well-structured Moodle Book can be duplicated across course instances, shared via
+          Moodle's import/export system, or reused in future semesters with minimal rework.
+          This reduces faculty workload while maintaining instructional quality year over year.
+        </p>
+      </div>
+
+    </div><!-- /pedagogy-grid -->
+  </section>
+
+  <!-- =====================================================
+       WHEN TO USE MOODLE BOOK
+  ====================================================== -->
+  <section id="when-to-use" class="section" aria-labelledby="when-heading">
+    <span class="section-eyebrow">Decision Guide</span>
+    <h2 class="section-title" id="when-heading">When to Use the Moodle Book</h2>
+    <p class="section-lead">
+      The Moodle Book is well-suited to a wide range of instructional scenarios.
+      Use it whenever learners need to read, reference, or interact with content independently.
+    </p>
+
+    <div class="use-grid">
+
+      <div class="use-card">
+        <div class="uc-icon"><i class="fas fa-book"></i></div>
+        <div>
+          <h4>Delivering Pre-Reading or Lecture Content</h4>
+          <p>Present foundational concepts, theoretical frameworks, or background knowledge before a live session or tutorial.</p>
+        </div>
+      </div>
+
+      <div class="use-card">
+        <div class="uc-icon"><i class="fas fa-map-signs"></i></div>
+        <div>
+          <h4>Creating Course or Module Guides</h4>
+          <p>Replace static PDF study guides with a dynamic, navigable Moodle Book that can be updated in real-time.</p>
+        </div>
+      </div>
+
+      <div class="use-card">
+        <div class="uc-icon"><i class="fas fa-tasks"></i></div>
+        <div>
+          <h4>Assessment Briefs and Instructions</h4>
+          <p>Present assessment instructions clearly across multiple chapters — task overview, criteria, submission steps — reducing student confusion.</p>
+        </div>
+      </div>
+
+      <div class="use-card">
+        <div class="uc-icon"><i class="fas fa-microscope"></i></div>
+        <div>
+          <h4>Lab or Tutorial Manuals</h4>
+          <p>Structure step-by-step procedural content, lab instructions, or practical guides with images and video demonstrations embedded inline.</p>
+        </div>
+      </div>
+
+      <div class="use-card">
+        <div class="uc-icon"><i class="fas fa-user-graduate"></i></div>
+        <div>
+          <h4>Orientation and Onboarding</h4>
+          <p>Welcome students to the course, introduce expectations, policies, and key resources in a structured, readable format.</p>
+        </div>
+      </div>
+
+      <div class="use-card">
+        <div class="uc-icon"><i class="fas fa-sync-alt"></i></div>
+        <div>
+          <h4>Frequently Updated Resource Collections</h4>
+          <p>Any content that needs regular updating benefits from the Moodle Book's in-place editing — no re-upload cycle required.</p>
+        </div>
+      </div>
+
+      <div class="use-card">
+        <div class="uc-icon"><i class="fas fa-globe"></i></div>
+        <div>
+          <h4>Fully Online and Blended Units</h4>
+          <p>For courses without a live lecture component, the Moodle Book acts as the primary learning resource, replacing the role of in-person explanation.</p>
+        </div>
+      </div>
+
+      <div class="use-card">
+        <div class="uc-icon"><i class="fas fa-puzzle-piece"></i></div>
+        <div>
+          <h4>Interactive Self-Study Modules</h4>
+          <p>Combine chapters of reading with embedded H5P activities to create self-contained learning modules with built-in formative assessment.</p>
+        </div>
+      </div>
+
+    </div><!-- /use-grid -->
+
+    <!-- NOT ideal for... -->
+    <div style="margin-top:32px;background:rgba(232,119,34,.06);border:1px solid rgba(232,119,34,.2);border-radius:var(--radius-md);padding:24px 28px;">
+      <h4 style="color:var(--au-orange);margin-bottom:12px;font-size:1rem;">
+        <i class="fas fa-info-circle"></i>&nbsp; When <em>not</em> to use the Moodle Book
+      </h4>
+      <p style="font-size:.88rem;color:var(--neutral-700);">
+        The Moodle Book is not the right tool for every scenario. Avoid it when you need
+        <strong>formal document formatting</strong> (use a PDF), when content is a
+        <strong>live presentation</strong> (use PowerPoint or reveal.js), or when you need
+        <strong>student submission or gradeable interaction</strong> (use a Moodle Assignment,
+        Quiz, or Forum instead). It is a <em>reading and reference</em> resource, not an
+        assessment or discussion tool.
+      </p>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       SUMMARY / KEY TAKEAWAYS
+  ====================================================== -->
+  <section id="summary" aria-labelledby="summary-heading">
+    <span class="section-eyebrow" style="color:var(--au-orange-lt);">Summary</span>
+    <h2 class="section-title" id="summary-heading">Key Takeaways</h2>
+    <p class="section-lead">
+      The Moodle Book is one of the most versatile and underutilised resources available in
+      Moodle. Here is what to remember.
+    </p>
+
+    <div class="takeaway-grid">
+
+      <div class="takeaway-pill">
+        <i class="fas fa-layer-group"></i>
+        <p>Organise content into chapters and sub-chapters for clear, logical learning progression.</p>
+      </div>
+
+      <div class="takeaway-pill">
+        <i class="fas fa-universal-access"></i>
+        <p>Natively accessible in any browser — no downloads, no plugins, no software barriers.</p>
+      </div>
+
+      <div class="takeaway-pill">
+        <i class="fas fa-puzzle-piece"></i>
+        <p>Embed H5P, video, audio, and interactive tools directly within chapters for active learning.</p>
+      </div>
+
+      <div class="takeaway-pill">
+        <i class="fas fa-edit"></i>
+        <p>Update content in real-time — students always access the latest version without re-uploads.</p>
+      </div>
+
+      <div class="takeaway-pill">
+        <i class="fas fa-brain"></i>
+        <p>Reduce cognitive overload by chunking content and providing clear navigational cues.</p>
+      </div>
+
+      <div class="takeaway-pill">
+        <i class="fas fa-balance-scale"></i>
+        <p>Outperforms static PowerPoint files for asynchronous, independent, and online learning.</p>
+      </div>
+
+      <div class="takeaway-pill">
+        <i class="fas fa-recycle"></i>
+        <p>Reusable across course offerings — duplicate, import, and adapt with minimal effort.</p>
+      </div>
+
+      <div class="takeaway-pill">
+        <i class="fas fa-graduation-cap"></i>
+        <p>Designed for self-paced learning — empowers students to navigate content on their own terms.</p>
+      </div>
+
+    </div><!-- /takeaway-grid -->
+  </section>
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+  <footer class="site-footer">
+    <!-- === UPDATE institution name and year below === -->
+    <p>Moodle Book — Faculty Learning Resource &nbsp;|&nbsp; Learning Design &amp; Technology</p>
+    <p>Built for higher education faculty training. Content may be updated to reflect institutional Moodle configuration.</p>
+  </footer>
+
+</main><!-- /main -->
+
+<!-- Back to top button -->
+<button id="back-to-top" onclick="scrollToTop()" aria-label="Back to top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+  /* =====================================================
+     TOGGLE EXPAND/COLLAPSE on Feature Cards
+  ===================================================== */
+  function toggleCard(card) {
+    const isExpanded = card.classList.contains('expanded');
+    // Close all others
+    document.querySelectorAll('.feature-card.expanded').forEach(c => {
+      c.classList.remove('expanded');
+      c.setAttribute('aria-expanded', 'false');
+    });
+    // Toggle this one
+    if (!isExpanded) {
+      card.classList.add('expanded');
+      card.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  // Keyboard support for cards (Enter / Space)
+  document.querySelectorAll('.feature-card[role="button"]').forEach(card => {
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleCard(card);
+      }
+    });
+  });
+
+  /* =====================================================
+     SCROLL-BASED SECTION REVEAL (Intersection Observer)
+  ===================================================== */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.07 });
+
+  document.querySelectorAll('.section, #summary').forEach(sec => {
+    revealObserver.observe(sec);
+  });
+
+  /* =====================================================
+     ACTIVE NAV LINK (Intersection Observer)
+  ===================================================== */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-list a');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach(sec => navObserver.observe(sec));
+
+  /* =====================================================
+     SCROLL PROGRESS BAR
+  ===================================================== */
+  const progressBar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total    = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio    = total > 0 ? scrolled / total : 0;
+    progressBar.style.transform = `scaleX(${ratio})`;
+
+    // Back to top visibility
+    document.getElementById('back-to-top').classList.toggle('visible', scrolled > 400);
+  });
+
+  /* =====================================================
+     BACK TO TOP
+  ===================================================== */
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* =====================================================
+     MOBILE SIDEBAR TOGGLE
+  ===================================================== */
+  const navToggle = document.getElementById('nav-toggle');
+  const sidebar   = document.getElementById('sidebar');
+  const overlay   = document.getElementById('overlay');
+
+  navToggle.addEventListener('click', () => {
+    const isOpen = sidebar.classList.toggle('open');
+    overlay.classList.toggle('active', isOpen);
+    navToggle.innerHTML = isOpen
+      ? '<i class="fas fa-times"></i>'
+      : '<i class="fas fa-bars"></i>';
+  });
+
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+  });
+
+  // Close sidebar when a nav link is clicked (mobile)
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+    });
+  });
+</script>
+
+</body>
+</html>
