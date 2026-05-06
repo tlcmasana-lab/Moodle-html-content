@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moodle + Copilot — Wonder Workflow</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+  :root {
+    --blue-deep: #1a237e;
+    --blue-mid: #3949ab;
+    --blue-light: #7986cb;
+    --purple-deep: #4a148c;
+    --purple-mid: #7b1fa2;
+    --purple-light: #ba68c8;
+    --accent-cyan: #00e5ff;
+    --accent-gold: #ffd740;
+    --white: #ffffff;
+    --soft-white: #f0f4ff;
+    --glass: rgba(255,255,255,0.08);
+    --glass-border: rgba(255,255,255,0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: #0d0d2b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── STAGE ── */
+  #stage {
+    position: relative;
+    width: 900px;
+    height: 506px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.7);
+  }
+
+  /* ── BACKGROUND ── */
+  .bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0d0d2b 0%, #1a1060 40%, #2d1b6b 70%, #1a237e 100%);
+    z-index: 0;
+  }
+  .bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 80% 20%, rgba(121,134,203,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 20% 80%, rgba(186,104,200,0.12) 0%, transparent 60%);
+  }
+
+  /* ── GRID OVERLAY ── */
+  .grid-overlay {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* ── FLOATING PARTICLES ── */
+  .particles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) scale(1); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.5; }
+    100% { transform: translateY(-520px) scale(0.3); opacity: 0; }
+  }
+
+  /* ── SCENES ── */
+  .scene {
+    position: absolute; inset: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+    padding: 40px;
+  }
+  .scene.active { opacity: 1; }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: absolute; bottom: 0; left: 0; height: 3px; z-index: 100;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--purple-light));
+    width: 0%; transition: width 0.1s linear;
+  }
+
+  /* ── SCENE DOT INDICATORS ── */
+  #dots {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px; z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transition: all 0.3s ease;
+  }
+  .dot.active { background: var(--accent-cyan); width: 20px; border-radius: 3px; }
+
+  /* ── PLAY/PAUSE BUTTON ── */
+  #controls {
+    margin-top: 20px;
+    display: flex; gap: 12px; align-items: center;
+  }
+  .ctrl-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 10px 28px;
+    border-radius: 50px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+  .ctrl-btn:hover { background: rgba(255,255,255,0.18); border-color: var(--accent-cyan); }
+  .scene-label {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    min-width: 160px; text-align: center;
+  }
+
+  /* ══════════════════════════════════
+     SCENE 1 — PROBLEM
+  ══════════════════════════════════ */
+  .s1-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 28px; width: 100%;
+  }
+  .s1-tag {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent-cyan); font-weight: 600;
+    animation: fadeSlideDown 0.6s 0.2s both;
+  }
+  .s1-headline {
+    font-size: 26px; font-weight: 700; color: #fff;
+    text-align: center; line-height: 1.3;
+    max-width: 600px;
+    animation: fadeSlideDown 0.6s 0.4s both;
+  }
+  .s1-headline em { color: var(--purple-light); font-style: normal; }
+
+  .chaos-grid {
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    animation: fadeSlideUp 0.6s 0.6s both;
+  }
+  .chaos-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 10px;
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 13px; font-weight: 500;
+  }
+  .chaos-card .icon { font-size: 22px; }
+  .chaos-card:nth-child(1) { animation: wobble 2.2s 1s infinite; }
+  .chaos-card:nth-child(2) { animation: wobble 2.2s 1.3s infinite; }
+  .chaos-card:nth-child(3) { animation: wobble 2.2s 1.6s infinite; }
+  .chaos-card:nth-child(4) { animation: wobble 2.2s 1.9s infinite; }
+
+  @keyframes wobble {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-4px) rotate(-1deg); }
+    75% { transform: translateY(3px) rotate(1deg); }
+  }
+
+  /* ══════════════════════════════════
+     SCENE 2 — CHALLENGE
+  ══════════════════════════════════ */
+  .s2-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 32px; width: 100%;
+  }
+  .s2-headline {
+    font-size: 30px; font-weight: 800; color: #fff;
+    text-align: center; line-height: 1.2;
+    animation: fadeSlideDown 0.6s 0.3s both;
+  }
+  .s2-headline .stress { color: #ff6b6b; }
+
+  .tool-scatter {
+    display: flex; gap: 20px; align-items: center;
+    animation: fadeSlideUp 0.6s 0.5s both;
+  }
+  .tool-node {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-align: center; color: #fff;
+    font-size: 12px;
+    backdrop-filter: blur(8px);
+    position: relative;
+  }
+  .tool-node .t-icon { font-size: 26px; display: block; margin-bottom: 6px; }
+  .arrow-chaos { font-size: 22px; color: rgba(255,255,255,0.3); animation: arrowPulse 1.5s infinite; }
+  @keyframes arrowPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  .s2-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px; color: rgba(255,255,255,0.6);
+    text-align: center;
+    animation: fadeSlideUp 0.6s 0.7s both;
+  }
+
+  /* ══════════════════════════════════
+     SCENE 3 — SOLUTION
+  ══════════════════════════════════ */
+  .s3-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 24px; width: 100%;
+  }
+  .logo-pair {
+    display: flex; align-items: center; gap: 20px;
+    animation: fadeSlideDown 0.7s 0.3s both;
+  }
+  .logo-badge {
+    background: linear-gradient(135deg, var(--blue-mid), var(--purple-mid));
+    border-radius: 16px;
+    padding: 16px 24px;
+    font-size: 15px; font-weight: 700; color: #fff;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 0 30px rgba(121,134,203,0.4);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .logo-plus { font-size: 28px; color: rgba(255,255,255,0.4); }
+  .copilot-badge {
+    background: linear-gradient(135deg, var(--purple-mid), #e040fb);
+    box-shadow: 0 0 30px rgba(224,64,251,0.4);
+  }
+
+  .s3-headline {
+    font-size: 36px; font-weight: 800; color: #fff;
+    text-align: center; letter-spacing: -0.5px;
+    animation: fadeSlideUp 0.7s 0.5s both;
+  }
+  .s3-headline .glow {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 20px rgba(0,229,255,0.6), 0 0 60px rgba(0,229,255,0.3);
+    animation: glowPulse 2s infinite;
+  }
+  @keyframes glowPulse {
+    0%,100% { text-shadow: 0 0 20px rgba(0,229,255,0.6), 0 0 60px rgba(0,229,255,0.3); }
+    50% { text-shadow: 0 0 40px rgba(0,229,255,0.9), 0 0 100px rgba(0,229,255,0.5); }
+  }
+
+  .prompt-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--accent-cyan);
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; color: rgba(255,255,255,0.9);
+    box-shadow: 0 0 30px rgba(0,229,255,0.15), inset 0 0 20px rgba(0,229,255,0.05);
+    animation: fadeSlideUp 0.7s 0.7s both;
+    position: relative;
+    overflow: hidden;
+  }
+  .prompt-box::after {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,229,255,0.1), transparent);
+    animation: shimmer 2.5s 1.2s infinite;
+  }
+  @keyframes shimmer { to { left: 160%; } }
+
+  /* ══════════════════════════════════
+     SCENE 4 — AUTOMATION
+  ══════════════════════════════════ */
+  .s4-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 22px; width: 100%;
+  }
+  .s4-headline {
+    font-size: 18px; font-weight: 600;
+    color: rgba(255,255,255,0.8);
+    font-family: 'DM Sans', sans-serif;
+    animation: fadeSlideDown 0.6s 0.2s both;
+  }
+  .s4-headline span { color: var(--accent-cyan); font-weight: 700; }
+
+  .output-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; width: 580px;
+  }
+  .output-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex; align-items: flex-start; gap: 12px;
+    backdrop-filter: blur(10px);
+    color: #fff;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+  }
+  .output-card.appear { opacity: 1; transform: translateY(0); }
+  .check { font-size: 20px; }
+  .card-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .card-sub { font-size: 11px; color: rgba(255,255,255,0.5); font-family: 'DM Sans', sans-serif; }
+  .card-bar {
+    height: 3px; border-radius: 2px; margin-top: 8px;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--purple-light));
+    width: 0%; transition: width 1s ease;
+  }
+  .output-card.appear .card-bar { width: 100%; }
+
+  .s4-arrow {
+    font-size: 14px; color: rgba(255,255,255,0.5);
+    font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 8px;
+    animation: fadeSlideUp 0.6s 0.4s both;
+  }
+
+  /* ══════════════════════════════════
+     SCENE 5 — IMPACT
+  ══════════════════════════════════ */
+  .s5-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 28px; width: 100%;
+  }
+  .impact-grid {
+    display: flex; gap: 16px;
+    animation: fadeSlideUp 0.6s 0.4s both;
+  }
+  .impact-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 20px 18px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    width: 140px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .impact-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--purple-light));
+  }
+  .impact-icon { font-size: 30px; margin-bottom: 10px; display: block; }
+  .impact-label { font-size: 12px; font-weight: 600; line-height: 1.4; }
+
+  .s5-bullets {
+    display: flex; flex-direction: column; gap: 8px; align-items: center;
+    animation: fadeSlideUp 0.6s 0.6s both;
+  }
+  .bullet-line {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 15px; color: rgba(255,255,255,0.85);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .bullet-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-cyan); flex-shrink: 0; }
+
+  /* ══════════════════════════════════
+     SCENE 6 — KEY MESSAGE
+  ══════════════════════════════════ */
+  .s6-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 20px;
+  }
+  .s6-kicker {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    animation: fadeSlideDown 0.5s 0.2s both;
+  }
+  .s6-main {
+    font-size: 42px; font-weight: 800;
+    text-align: center; line-height: 1.1;
+    animation: fadeSlideUp 0.6s 0.3s both;
+  }
+  .s6-moodle { color: var(--blue-light); }
+  .s6-op { color: rgba(255,255,255,0.5); font-weight: 300; }
+  .s6-copilot { color: var(--purple-light); }
+  .s6-eq { color: rgba(255,255,255,0.4); font-weight: 300; }
+  .s6-wonder {
+    display: block;
+    background: linear-gradient(90deg, var(--accent-cyan), #a78bfa, var(--accent-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 52px;
+    animation: gradientShift 3s infinite;
+    background-size: 200%;
+  }
+  @keyframes gradientShift {
+    0%,100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .s6-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px; color: rgba(255,255,255,0.55);
+    animation: fadeSlideUp 0.6s 0.5s both;
+    letter-spacing: 1px;
+  }
+
+  .s6-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(0,229,255,0.15);
+    animation: ringExpand 4s ease-out infinite;
+  }
+  @keyframes ringExpand {
+    0% { transform: scale(0.2); opacity: 0.8; }
+    100% { transform: scale(3); opacity: 0; }
+  }
+
+  /* ══════════════════════════════════
+     SCENE 7 — CTA
+  ══════════════════════════════════ */
+  .s7-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 24px;
+  }
+  .s7-tag {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent-cyan);
+    animation: fadeSlideDown 0.5s 0.2s both;
+  }
+  .s7-cta-main {
+    font-size: 32px; font-weight: 800; color: #fff;
+    text-align: center;
+    animation: fadeSlideDown 0.6s 0.4s both;
+  }
+  .s7-cta-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px; color: rgba(255,255,255,0.6);
+    text-align: center;
+    animation: fadeSlideUp 0.6s 0.5s both;
+  }
+
+  .s7-pill {
+    background: linear-gradient(135deg, var(--blue-mid), var(--purple-mid));
+    border-radius: 50px;
+    padding: 14px 36px;
+    font-size: 15px; font-weight: 700; color: #fff;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 40px rgba(121,134,203,0.5);
+    animation: fadeSlideUp 0.6s 0.6s both, pillPulse 2s 1.5s infinite;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  @keyframes pillPulse {
+    0%,100% { box-shadow: 0 0 40px rgba(121,134,203,0.5); }
+    50% { box-shadow: 0 0 70px rgba(121,134,203,0.8); }
+  }
+
+  .s7-closing {
+    display: flex; align-items: center; gap: 12px;
+    animation: fadeSlideUp 0.6s 0.8s both;
+    opacity: 0.7;
+  }
+  .s7-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-mid), var(--purple-mid));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+  .s7-name { font-size: 13px; color: rgba(255,255,255,0.7); font-family: 'DM Sans', sans-serif; }
+  .s7-handle { font-size: 11px; color: rgba(255,255,255,0.35); }
+
+  /* ── SHARED ANIMATIONS ── */
+  @keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SCENE TITLE OVERLAY ── */
+  .scene-badge {
+    position: absolute; top: 18px; left: 24px;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    font-family: 'DM Sans', sans-serif;
+    z-index: 20;
+  }
+
+  /* ── WATERMARK ── */
+  .watermark {
+    position: absolute; top: 18px; right: 24px;
+    font-size: 11px; color: rgba(255,255,255,0.15);
+    font-family: 'DM Sans', sans-serif; letter-spacing: 1px;
+    z-index: 20;
+  }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div class="bg"></div>
+  <div class="grid-overlay"></div>
+
+  <!-- Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Ring decoration for scene 6 -->
+  <div class="s6-ring" id="s6ring" style="width:200px;height:200px;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);display:none;"></div>
+
+  <!-- Scene label -->
+  <div class="scene-badge" id="scene-badge">Scene 1 / 7</div>
+  <div class="watermark">Moodle + Copilot</div>
+
+  <!-- ── SCENE 1 ── -->
+  <div class="scene active" id="scene-1">
+    <div class="s1-inner">
+      <div class="s1-tag">⚡ The Problem</div>
+      <div class="s1-headline">Faculty workflows are <em>repetitive,</em><br>time-consuming, and complex…</div>
+      <div class="chaos-grid">
+        <div class="chaos-card"><span class="icon">📝</span> Quiz Creation</div>
+        <div class="chaos-card"><span class="icon">📋</span> Assignments</div>
+        <div class="chaos-card"><span class="icon">📊</span> Rubrics</div>
+        <div class="chaos-card"><span class="icon">📚</span> Course Content</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 2 ── -->
+  <div class="scene" id="scene-2">
+    <div class="s2-inner">
+      <div class="s2-headline">Too many steps.<br><span class="stress">Too many tools.</span><br>Too much manual effort.</div>
+      <div class="tool-scatter">
+        <div class="tool-node"><span class="t-icon">🗂️</span>LMS</div>
+        <div class="arrow-chaos">→</div>
+        <div class="tool-node"><span class="t-icon">📄</span>Docs</div>
+        <div class="arrow-chaos">→</div>
+        <div class="tool-node"><span class="t-icon">📧</span>Email</div>
+        <div class="arrow-chaos">→</div>
+        <div class="tool-node"><span class="t-icon">🔧</span>Tools</div>
+        <div class="arrow-chaos">→</div>
+        <div class="tool-node"><span class="t-icon">😰</span>More...</div>
+      </div>
+      <div class="s2-sub">Scattered processes. Wasted hours. Inconsistent results.</div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 3 ── -->
+  <div class="scene" id="scene-3">
+    <div class="s3-inner">
+      <div class="logo-pair">
+        <div class="logo-badge">🎓 Moodle</div>
+        <div class="logo-plus">+</div>
+        <div class="logo-badge copilot-badge">🤖 Copilot</div>
+      </div>
+      <div class="s3-headline">One Prompt.<br><span class="glow">Complete Workflow.</span></div>
+      <div class="prompt-box">
+        ✦ &nbsp;"Create a full quiz, rubric, and course page from my lecture slides…"
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 4 ── -->
+  <div class="scene" id="scene-4">
+    <div class="s4-inner">
+      <div class="s4-arrow">From lecture notes <strong style="color:#fff">→</strong> <span>Fully structured Moodle activities</span></div>
+      <div class="output-grid" id="outputGrid">
+        <div class="output-card" id="oc1">
+          <span class="check">✅</span>
+          <div>
+            <div class="card-title">Quiz Creation</div>
+            <div class="card-sub">MCQs, True/False, Short Answer</div>
+            <div class="card-bar"></div>
+          </div>
+        </div>
+        <div class="output-card" id="oc2">
+          <span class="check">✅</span>
+          <div>
+            <div class="card-title">Moodle Book / Page</div>
+            <div class="card-sub">Auto-generated from PPT slides</div>
+            <div class="card-bar"></div>
+          </div>
+        </div>
+        <div class="output-card" id="oc3">
+          <span class="check">✅</span>
+          <div>
+            <div class="card-title">Assignment Rubrics</div>
+            <div class="card-sub">Structured grading criteria</div>
+            <div class="card-bar"></div>
+          </div>
+        </div>
+        <div class="output-card" id="oc4">
+          <span class="check">✅</span>
+          <div>
+            <div class="card-title">5-Phase Workshop</div>
+            <div class="card-sub">Peer assessment setup, complete</div>
+            <div class="card-bar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 5 ── -->
+  <div class="scene" id="scene-5">
+    <div class="s5-inner">
+      <div class="s1-tag">🌟 The Impact</div>
+      <div class="impact-grid">
+        <div class="impact-card">
+          <span class="impact-icon">⏱️</span>
+          <div class="impact-label">Time Saved</div>
+        </div>
+        <div class="impact-card">
+          <span class="impact-icon">✅</span>
+          <div class="impact-label">Consistency</div>
+        </div>
+        <div class="impact-card">
+          <span class="impact-icon">📐</span>
+          <div class="impact-label">Scalable Design</div>
+        </div>
+        <div class="impact-card">
+          <span class="impact-icon">🎓</span>
+          <div class="impact-label">Better Learning</div>
+        </div>
+      </div>
+      <div class="s5-bullets">
+        <div class="bullet-line"><span class="bullet-dot"></span> Reduce repeated tasks</div>
+        <div class="bullet-line"><span class="bullet-dot"></span> Streamline workflows</div>
+        <div class="bullet-line"><span class="bullet-dot"></span> Focus on teaching, not formatting</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 6 ── -->
+  <div class="scene" id="scene-6">
+    <div class="s6-inner">
+      <div class="s6-kicker">Key Message</div>
+      <div class="s6-main">
+        <span class="s6-moodle">Moodle</span>
+        <span class="s6-op"> + </span>
+        <span class="s6-copilot">Copilot</span>
+        <span class="s6-eq"> = </span>
+        <span class="s6-wonder">Wonder Workflow</span>
+      </div>
+      <div class="s6-sub">Design once. Generate everything.</div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 7 ── -->
+  <div class="scene" id="scene-7">
+    <div class="s7-inner">
+      <div class="s7-tag">🚀 Get Started</div>
+      <div class="s7-cta-main">Try the Single Prompt Approach</div>
+      <div class="s7-cta-sub">Transform your teaching workflow today</div>
+      <div class="s7-pill">✦ Start Your Wonder Workflow</div>
+      <div class="s7-closing">
+        <div class="s7-avatar">🎓</div>
+        <div>
+          <div class="s7-name">Moodle + Microsoft Copilot</div>
+          <div class="s7-handle">Academic Workflow Automation · 2025</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div id="progress-bar"></div>
+
+  <!-- Dots -->
+  <div id="dots">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div id="controls">
+  <button class="ctrl-btn" id="prevBtn">◀ Prev</button>
+  <span class="scene-label" id="sceneLabel">Scene 1 — Problem</span>
+  <button class="ctrl-btn" id="nextBtn">Next ▶</button>
+  <button class="ctrl-btn" id="playBtn">⏸ Pause</button>
+</div>
+
+<script>
+  // ── PARTICLES ──
+  const pContainer = document.getElementById('particles');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    const size = Math.random() * 4 + 2;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      bottom:${-size}px;
+      animation-duration:${8 + Math.random()*10}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    pContainer.appendChild(p);
+  }
+
+  // ── SCENE MANAGEMENT ──
+  const SCENE_DURATIONS = [5000, 5000, 5500, 7000, 5500, 5000, 6000]; // ms
+  const SCENE_LABELS = [
+    'Scene 1 — Problem',
+    'Scene 2 — Challenge',
+    'Scene 3 — Solution',
+    'Scene 4 — Automation',
+    'Scene 5 — Impact',
+    'Scene 6 — Key Message',
+    'Scene 7 — Call to Action'
+  ];
+
+  let current = 0;
+  let playing = true;
+  let timer = null;
+  let progressTimer = null;
+  let progressStart = null;
+
+  const scenes = document.querySelectorAll('.scene');
+  const dots = document.querySelectorAll('.dot');
+  const progressBar = document.getElementById('progress-bar');
+  const sceneLabel = document.getElementById('sceneLabel');
+  const sceneBadge = document.getElementById('scene-badge');
+
+  function showScene(idx) {
+    scenes.forEach((s, i) => {
+      s.classList.toggle('active', i === idx);
+    });
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i === idx);
+    });
+    sceneLabel.textContent = SCENE_LABELS[idx];
+    sceneBadge.textContent = `Scene ${idx+1} / 7`;
+
+    // Scene 4 special: stagger cards
+    if (idx === 3) {
+      ['oc1','oc2','oc3','oc4'].forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.classList.remove('appear');
+        setTimeout(() => el.classList.add('appear'), 400 + i * 300);
+      });
+    }
+
+    // Scene 6 ring
+    const ring = document.getElementById('s6ring');
+    if (idx === 5) {
+      ring.style.display = 'block';
+      ring.style.animation = 'ringExpand 4s ease-out infinite';
+    } else {
+      ring.style.display = 'none';
+      ring.style.animation = 'none';
+    }
+  }
+
+  function startProgress(duration) {
+    progressBar.style.transition = 'none';
+    progressBar.style.width = '0%';
+    progressStart = Date.now();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        progressBar.style.transition = `width ${duration}ms linear`;
+        progressBar.style.width = '100%';
+      });
+    });
+  }
+
+  function advance() {
+    current = (current + 1) % 7;
+    showScene(current);
+    if (playing) scheduleNext();
+  }
+
+  function scheduleNext() {
+    clearTimeout(timer);
+    startProgress(SCENE_DURATIONS[current]);
+    timer = setTimeout(advance, SCENE_DURATIONS[current]);
+  }
+
+  // Init
+  showScene(0);
+  scheduleNext();
+
+  document.getElementById('playBtn').addEventListener('click', () => {
+    playing = !playing;
+    document.getElementById('playBtn').textContent = playing ? '⏸ Pause' : '▶ Play';
+    if (playing) {
+      scheduleNext();
+    } else {
+      clearTimeout(timer);
+      progressBar.style.transition = 'none';
+    }
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    clearTimeout(timer);
+    current = (current + 1) % 7;
+    showScene(current);
+    if (playing) scheduleNext();
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    clearTimeout(timer);
+    current = (current - 1 + 7) % 7;
+    showScene(current);
+    if (playing) scheduleNext();
+  });
+</script>
+</body>
+</html>
