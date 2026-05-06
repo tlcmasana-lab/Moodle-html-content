@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ions & Ionic Compounds — CHM111 Interactive Infographic</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0e1a; --panel:#111827; --card:#1a2236; --border:#1e3a5f;
+    --a1:#00d4ff; --a2:#ff6b35; --a3:#7bed9f; --a4:#ffd32a;
+    --text:#e8f4fd; --muted:#8ba5c0;
+    --cation:#ff6b35; --anion:#00d4ff;
+    --mono:'Space Mono',monospace; --body:'DM Sans',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+
+  #pbar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--a1),var(--a2));width:0%;z-index:1000;transition:width .4s}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:rgba(10,14,26,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:var(--mono);font-size:12px;color:var(--a1);letter-spacing:2px}
+  .nav-tabs{display:flex;gap:5px;flex-wrap:wrap}
+  .ntab{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--body);font-size:12px;cursor:pointer;transition:all .2s}
+  .ntab.active,.ntab:hover{background:var(--a1);color:var(--bg);border-color:var(--a1);font-weight:700}
+
+  .section{display:none;min-height:100vh;padding:88px 32px 60px;max-width:1080px;margin:0 auto}
+  .section.active{display:block}
+
+  #hero{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;position:relative;overflow:hidden}
+  #hero.active{display:flex}
+
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(0,212,255,.08) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(255,107,53,.08) 0%,transparent 60%);pointer-events:none}
+  .orbit{position:absolute;border:1px solid rgba(0,212,255,.1);border-radius:50%;animation:spin 20s linear infinite}
+  .orbit:nth-child(1){width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%)}
+  .orbit:nth-child(2){width:720px;height:720px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:32s;animation-direction:reverse}
+  .orbit:nth-child(3){width:940px;height:940px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:44s;border-color:rgba(255,107,53,.07)}
+  @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+  .hero-badge{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--a1);text-transform:uppercase;margin-bottom:20px;opacity:0;animation:fadeUp .8s .2s ease forwards}
+  .hero-title{font-size:clamp(38px,8vw,76px);font-weight:700;line-height:1.05;margin-bottom:18px;opacity:0;animation:fadeUp .8s .4s ease forwards}
+  .hero-title .hi{color:var(--a1)} .hero-title .lo{color:var(--a2)}
+  .hero-sub{font-size:17px;color:var(--muted);max-width:540px;margin-bottom:44px;line-height:1.7;opacity:0;animation:fadeUp .8s .6s ease forwards}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp .8s .8s ease forwards}
+
+  .btn{padding:13px 28px;border-radius:8px;font-family:var(--body);font-size:14px;cursor:pointer;transition:all .2s;border:none}
+  .btn-p{background:var(--a1);color:var(--bg);font-weight:700}
+  .btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,212,255,.3)}
+  .btn-o{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn-o:hover{border-color:var(--a1);color:var(--a1)}
+
+  .sec-hdr{margin-bottom:40px;opacity:0;animation:fadeUp .6s .1s ease forwards}
+  .sec-tag{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--a1);text-transform:uppercase;margin-bottom:8px}
+  .sec-title{font-size:clamp(26px,4vw,42px);font-weight:700;line-height:1.15}
+  .sec-title em{color:var(--a2);font-style:normal}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px}
+  .card-tag{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--a1);text-transform:uppercase;margin-bottom:16px}
+
+  /* ION CARDS */
+  .ion-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px}
+  @media(max-width:680px){.ion-grid{grid-template-columns:1fr}}
+  .icard{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;opacity:0;transform:translateY(20px);transition:opacity .5s,transform .5s,border-color .2s}
+  .icard.vis{opacity:1;transform:none}
+  .icard:hover{border-color:var(--a1);transform:translateY(-3px)}
+  .icard-head{padding:14px 20px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .icard-head.cat{background:rgba(255,107,53,.12);color:var(--cation)}
+  .icard-head.ani{background:rgba(0,212,255,.1);color:var(--anion)}
+  .icard-body{padding:20px}
+
+  /* SVG DIAGRAMS */
+  .svg-wrap{border-radius:12px;overflow:hidden;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);margin-bottom:4px}
+  svg text{font-family:'DM Sans',sans-serif}
+
+  /* STOCK GRID */
+  .sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:28px}
+  .scard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;cursor:pointer;opacity:0;transform:scale(.95);transition:opacity .4s,transform .4s,border-color .2s}
+  .scard.vis{opacity:1;transform:scale(1)}
+  .scard:hover{border-color:var(--a2)}
+  .ssym{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--cation);margin-bottom:3px}
+  .sname{font-size:12px;color:var(--muted);margin-bottom:8px}
+  .sstate{font-size:11px;font-family:var(--mono);padding:3px 8px;border-radius:4px;background:rgba(255,107,53,.1);color:var(--cation);margin-top:4px}
+
+  /* POLY TABLE */
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:28px}
+  th{text-align:left;padding:10px 14px;font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+  tr:hover td{background:rgba(0,212,255,.03)}
+  .pf{font-family:var(--mono);color:var(--a1);font-size:12px}
+  .pc{padding:2px 7px;border-radius:4px;font-family:var(--mono);font-size:11px;display:inline-block}
+  .pc.n{background:rgba(0,212,255,.1);color:var(--anion)}
+  .pc.p{background:rgba(255,107,53,.1);color:var(--cation)}
+
+  /* NAMING RULES */
+  .rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:32px}
+  .rcard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;opacity:0;transform:translateY(18px);transition:all .5s;cursor:pointer}
+  .rcard.vis{opacity:1;transform:none}
+  .rcard:hover{border-color:var(--a4)}
+  .rnum{width:30px;height:30px;border-radius:50%;background:var(--a4);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;margin-bottom:12px}
+  .rhead{font-weight:700;font-size:15px;margin-bottom:6px}
+  .rbody{font-size:13px;color:var(--muted);line-height:1.6}
+  .rex{margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--a1);background:rgba(0,212,255,.06);padding:5px 9px;border-radius:5px}
+
+  /* BUILDER */
+  .brow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .brow label{font-size:13px;color:var(--muted);min-width:64px}
+  select{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--body);font-size:13px;cursor:pointer;outline:none}
+  select:focus{border-color:var(--a1)}
+  .fdisplay{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:22px;text-align:center;margin-top:16px}
+  .fbig{font-family:var(--mono);font-size:38px;font-weight:700;color:var(--a1);margin-bottom:6px;letter-spacing:2px;transition:opacity .3s}
+  .fname{font-size:15px;color:var(--muted);margin-bottom:3px}
+  .frule{font-size:11px;color:var(--a3);font-family:var(--mono)}
+
+  /* QUIZ */
+  .qprog{display:flex;gap:5px;margin-bottom:28px}
+  .qdot{flex:1;height:4px;border-radius:2px;background:var(--border);transition:background .3s}
+  .qdot.done{background:var(--a3)} .qdot.act{background:var(--a1)}
+  .qcard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:20px}
+  .qq{font-size:18px;font-weight:600;margin-bottom:24px;line-height:1.4}
+  .qcomp{font-family:var(--mono);color:var(--a1);font-size:22px;display:block;margin-bottom:3px}
+  .qopts{display:grid;gap:10px}
+  .qopt{padding:13px 18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;cursor:pointer;text-align:left;font-family:var(--body);transition:all .2s}
+  .qopt:hover{border-color:var(--a1);background:rgba(0,212,255,.05)}
+  .qopt.correct{border-color:var(--a3);background:rgba(123,237,159,.1);color:var(--a3)}
+  .qopt.wrong{border-color:var(--a2);background:rgba(255,107,53,.1);color:var(--a2)}
+  .qfb{padding:14px 18px;border-radius:10px;font-size:13px;margin-top:14px;display:none;line-height:1.6}
+  .qfb.correct{background:rgba(123,237,159,.1);border:1px solid var(--a3);color:var(--a3)}
+  .qfb.wrong{background:rgba(255,107,53,.1);border:1px solid var(--a2);color:var(--a2)}
+  .qnav{display:flex;justify-content:space-between;align-items:center}
+  .qsc{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+  /* SCORE */
+  #scr{display:none;text-align:center;padding:50px 20px}
+  #scr.show{display:block}
+  .sring{width:150px;height:150px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 28px;background:conic-gradient(var(--a3) var(--pct,0%),var(--border) 0%);position:relative}
+  .sring::before{content:'';width:120px;height:120px;border-radius:50%;background:var(--bg);position:absolute}
+  .snum{font-family:var(--mono);font-size:36px;font-weight:700;color:var(--a3);position:relative;z-index:1;line-height:1}
+  .slbl{font-size:12px;color:var(--muted);position:relative;z-index:1}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  ::-webkit-scrollbar{width:5px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+  /* Flowchart nodes inside svg */
+  .flow-label{font-size:13px;fill:#e8f4fd;font-family:'DM Sans',sans-serif}
+  .flow-sub{font-size:11px;fill:#8ba5c0;font-family:'DM Sans',sans-serif}
+</style>
+</head>
+<body>
+<div id="pbar"></div>
+
+<nav>
+  <div class="nav-logo">CHM111 · Ionic Compounds</div>
+  <div class="nav-tabs">
+    <button class="ntab active" onclick="go('hero')">Home</button>
+    <button class="ntab" onclick="go('ions')">Ions</button>
+    <button class="ntab" onclick="go('poly')">Polyatomic</button>
+    <button class="ntab" onclick="go('naming')">Naming</button>
+    <button class="ntab" onclick="go('builder')">Builder</button>
+    <button class="ntab" onclick="go('quiz')">Quiz</button>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="hero" class="active">
+  <div class="hero-bg">
+    <div class="orbit"></div><div class="orbit"></div><div class="orbit"></div>
+  </div>
+  <div style="position:relative;z-index:2">
+    <div class="hero-badge">CHM111 · General Chemistry · Chapter 2.6</div>
+    <h1 class="hero-title"><span class="hi">Ions</span> &amp;<br><span class="lo">Ionic Compounds</span></h1>
+    <p class="hero-sub">An interactive micro-learning journey through atomic ions, polyatomic ions, formulas, and naming — with visual diagrams for every concept.</p>
+    <div class="hero-cta">
+      <button class="btn btn-p" onclick="go('ions')">Start Learning →</button>
+      <button class="btn btn-o" onclick="go('quiz')">Jump to Quiz</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ IONS ═══════════ -->
+<section id="ions" class="section">
+  <div class="sec-hdr">
+    <div class="sec-tag">Module 01</div>
+    <h2 class="sec-title">Atomic <em>Ions</em></h2>
+  </div>
+
+  <!-- Concept card -->
+  <div class="card" style="margin-bottom:28px;opacity:0;animation:fadeUp .6s .1s ease forwards">
+    <div class="card-tag">Core Concept</div>
+    <p style="font-size:14px;line-height:1.8;color:var(--muted)">
+      An <strong style="color:var(--text)">atomic (monatomic) ion</strong> is a single atom with a net charge. Charge arises because protons ≠ electrons.
+      <strong style="color:var(--cation)">Loss of electrons → Cation (+)</strong> &nbsp;|&nbsp;
+      <strong style="color:var(--anion)">Gain of electrons → Anion (−)</strong>
+    </p>
+  </div>
+
+  <!-- Visual ion diagrams -->
+  <div class="ion-grid">
+    <!-- CATION -->
+    <div class="icard" id="ic0">
+      <div class="icard-head cat">⊕ Cation — Positive Ion</div>
+      <div class="icard-body">
+        <div class="svg-wrap">
+          <svg width="100%" viewBox="0 0 340 190" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="ng1" cx="50%" cy="40%"><stop offset="0%" stop-color="#ffb89a"/><stop offset="100%" stop-color="#c0392b"/></radialGradient>
+              <radialGradient id="ng2" cx="50%" cy="40%"><stop offset="0%" stop-color="#ffcba4"/><stop offset="100%" stop-color="#d45010"/></radialGradient>
+              <filter id="glow-cat"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <!-- Na atom -->
+            <circle cx="80" cy="95" r="46" fill="rgba(255,255,255,.06)" stroke="#8ba5c0" stroke-width="1.5"/>
+            <!-- Electrons on Na atom (11) -->
+            <circle cx="80" cy="44" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="123" cy="63" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="130" cy="110" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="103" cy="138" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="57" cy="140" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="30" cy="112" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="29" cy="67" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="53" cy="44" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="95" cy="54" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <circle cx="115" cy="87" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <circle cx="46" cy="86" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <text x="80" y="93" text-anchor="middle" font-size="20" font-weight="700" fill="#e8f4fd" font-family="DM Sans,sans-serif">Na</text>
+            <text x="80" y="109" text-anchor="middle" font-size="10" fill="#8ba5c0" font-family="DM Sans,sans-serif">11p · 11e</text>
+            <!-- Arrow with electron leaving -->
+            <path d="M140 95 L195 95" stroke="#ff6b35" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arrowC)"/>
+            <defs><marker id="arrowC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#ff6b35" stroke-width="1.5" stroke-linecap="round"/></marker></defs>
+            <circle cx="168" cy="82" r="5" fill="#ff6b35" opacity=".9"/>
+            <text x="168" y="75" text-anchor="middle" font-size="9" fill="#ff6b35" font-family="DM Sans,sans-serif">e⁻ lost</text>
+            <!-- Na+ ion -->
+            <circle cx="262" cy="95" r="40" fill="rgba(255,107,53,.15)" stroke="#ff6b35" stroke-width="2"/>
+            <!-- Only 10 electrons -->
+            <circle cx="262" cy="50" r="4" fill="#ff6b35" opacity=".6"/>
+            <circle cx="300" cy="67" r="4" fill="#ff6b35" opacity=".6"/>
+            <circle cx="303" cy="112" r="4" fill="#ff6b35" opacity=".6"/>
+            <circle cx="278" cy="133" r="4" fill="#ff6b35" opacity=".6"/>
+            <circle cx="245" cy="135" r="4" fill="#ff6b35" opacity=".6"/>
+            <circle cx="222" cy="113" r="4" fill="#ff6b35" opacity=".6"/>
+            <circle cx="221" cy="68" r="4" fill="#ff6b35" opacity=".6"/>
+            <circle cx="244" cy="50" r="4" fill="#ff6b35" opacity=".6"/>
+            <circle cx="290" cy="87" r="3.5" fill="#ff6b35" opacity=".45"/>
+            <circle cx="235" cy="86" r="3.5" fill="#ff6b35" opacity=".45"/>
+            <text x="262" y="89" text-anchor="middle" font-size="18" font-weight="700" fill="#ff6b35" font-family="DM Sans,sans-serif">Na</text>
+            <text x="280" y="74" text-anchor="start" font-size="13" font-weight="700" fill="#ff6b35" font-family="DM Sans,sans-serif">+</text>
+            <text x="262" y="105" text-anchor="middle" font-size="10" fill="#ff8a6a" font-family="DM Sans,sans-serif">11p · 10e</text>
+            <!-- Labels -->
+            <text x="80" y="155" text-anchor="middle" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Neutral Na atom</text>
+            <text x="262" y="155" text-anchor="middle" font-size="11" fill="#ff6b35" font-family="DM Sans,sans-serif">Na⁺ Cation</text>
+          </svg>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;padding:8px 12px;background:rgba(255,107,53,.07);border-radius:8px;border-left:3px solid var(--cation)">
+          Sodium loses 1 electron → net charge becomes <strong style="color:var(--cation)">+1</strong>. Protons still = 11, but electrons = 10.
+        </div>
+      </div>
+    </div>
+
+    <!-- ANION -->
+    <div class="icard" id="ic1">
+      <div class="icard-head ani">⊖ Anion — Negative Ion</div>
+      <div class="icard-body">
+        <div class="svg-wrap">
+          <svg width="100%" viewBox="0 0 340 190" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round"/></marker>
+            </defs>
+            <!-- Cl atom -->
+            <circle cx="80" cy="95" r="46" fill="rgba(255,255,255,.06)" stroke="#8ba5c0" stroke-width="1.5"/>
+            <circle cx="80" cy="44" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="123" cy="63" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="130" cy="110" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="103" cy="138" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="57" cy="140" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="30" cy="112" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="29" cy="67" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="53" cy="44" r="4" fill="#8ba5c0" opacity=".7"/>
+            <circle cx="95" cy="54" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <circle cx="115" cy="87" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <circle cx="46" cy="86" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <circle cx="108" cy="74" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <circle cx="52" cy="116" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <circle cx="67" cy="58" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <circle cx="92" cy="130" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <circle cx="68" cy="136" r="3.5" fill="#8ba5c0" opacity=".5"/>
+            <text x="80" y="93" text-anchor="middle" font-size="20" font-weight="700" fill="#e8f4fd" font-family="DM Sans,sans-serif">Cl</text>
+            <text x="80" y="109" text-anchor="middle" font-size="10" fill="#8ba5c0" font-family="DM Sans,sans-serif">17p · 17e</text>
+            <!-- arrow -->
+            <path d="M140 95 L195 95" stroke="#00d4ff" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arrowA)"/>
+            <!-- Incoming electron -->
+            <circle cx="168" cy="82" r="5" fill="#00d4ff" opacity=".9"/>
+            <text x="168" y="75" text-anchor="middle" font-size="9" fill="#00d4ff" font-family="DM Sans,sans-serif">e⁻ gain</text>
+            <!-- Cl- ion (bigger, 18 electrons) -->
+            <circle cx="262" cy="95" r="44" fill="rgba(0,212,255,.12)" stroke="#00d4ff" stroke-width="2"/>
+            <circle cx="262" cy="46" r="4" fill="#00d4ff" opacity=".6"/>
+            <circle cx="302" cy="64" r="4" fill="#00d4ff" opacity=".6"/>
+            <circle cx="306" cy="112" r="4" fill="#00d4ff" opacity=".6"/>
+            <circle cx="280" cy="135" r="4" fill="#00d4ff" opacity=".6"/>
+            <circle cx="244" cy="138" r="4" fill="#00d4ff" opacity=".6"/>
+            <circle cx="218" cy="115" r="4" fill="#00d4ff" opacity=".6"/>
+            <circle cx="217" cy="66" r="4" fill="#00d4ff" opacity=".6"/>
+            <circle cx="243" cy="47" r="4" fill="#00d4ff" opacity=".6"/>
+            <circle cx="292" cy="87" r="3.5" fill="#00d4ff" opacity=".45"/>
+            <circle cx="232" cy="86" r="3.5" fill="#00d4ff" opacity=".45"/>
+            <circle cx="294" cy="108" r="3.5" fill="#00d4ff" opacity=".45"/>
+            <circle cx="232" cy="107" r="3.5" fill="#00d4ff" opacity=".45"/>
+            <circle cx="274" cy="55" r="3.5" fill="#00d4ff" opacity=".45"/>
+            <circle cx="252" cy="56" r="3.5" fill="#00d4ff" opacity=".45"/>
+            <circle cx="227" cy="78" r="3.5" fill="#00d4ff" opacity=".45"/>
+            <circle cx="297" cy="79" r="3.5" fill="#00d4ff" opacity=".45"/>
+            <circle cx="262" cy="137" r="3.5" fill="#00d4ff" opacity=".55"/>
+            <circle cx="262" cy="53" r="3.5" fill="#00d4ff" opacity=".55"/>
+            <text x="262" y="89" text-anchor="middle" font-size="18" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">Cl</text>
+            <text x="281" y="76" text-anchor="start" font-size="13" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">−</text>
+            <text x="262" y="105" text-anchor="middle" font-size="10" fill="#5edeff" font-family="DM Sans,sans-serif">17p · 18e</text>
+            <text x="80" y="155" text-anchor="middle" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Neutral Cl atom</text>
+            <text x="262" y="155" text-anchor="middle" font-size="11" fill="#00d4ff" font-family="DM Sans,sans-serif">Cl⁻ Anion</text>
+          </svg>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;padding:8px 12px;background:rgba(0,212,255,.07);border-radius:8px;border-left:3px solid var(--anion)">
+          Chlorine gains 1 electron → net charge becomes <strong style="color:var(--anion)">−1</strong>. Protons still = 17, but electrons = 18.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock system -->
+  <div style="margin-bottom:20px;opacity:0;animation:fadeUp .5s .3s ease forwards">
+    <div class="sec-tag" style="margin-bottom:8px">Stock System</div>
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:6px">Transition Metals — Multiple Oxidation States</h3>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:18px">Roman numerals in parentheses distinguish ions of different charges from the same element.</p>
+  </div>
+
+  <!-- Stock SVG diagram -->
+  <div class="svg-wrap" style="margin-bottom:24px;opacity:0;animation:fadeUp .6s .4s ease forwards">
+    <svg width="100%" viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#8ba5c0" stroke-width="1.5" stroke-linecap="round"/></marker>
+      </defs>
+      <!-- Fe -->
+      <rect x="30" y="20" width="130" height="160" rx="10" fill="rgba(255,107,53,.07)" stroke="#ff6b35" stroke-width="1"/>
+      <text x="95" y="46" text-anchor="middle" font-size="26" font-weight="700" fill="#ff6b35" font-family="DM Sans,sans-serif">Fe</text>
+      <text x="95" y="64" text-anchor="middle" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Iron</text>
+      <rect x="46" y="80" width="98" height="26" rx="5" fill="rgba(255,107,53,.12)"/>
+      <text x="95" y="97" text-anchor="middle" font-size="11" font-family="Space Mono,monospace" fill="#ff6b35">Fe²⁺ → Iron(II)</text>
+      <rect x="46" y="114" width="98" height="26" rx="5" fill="rgba(255,107,53,.18)"/>
+      <text x="95" y="131" text-anchor="middle" font-size="11" font-family="Space Mono,monospace" fill="#ff8a6a">Fe³⁺ → Iron(III)</text>
+      <text x="95" y="172" text-anchor="middle" font-size="10" fill="#5a7a96" font-family="DM Sans,sans-serif">Most common</text>
+      <!-- Cu -->
+      <rect x="185" y="20" width="130" height="160" rx="10" fill="rgba(255,107,53,.05)" stroke="#ff8a6a" stroke-width="1"/>
+      <text x="250" y="46" text-anchor="middle" font-size="26" font-weight="700" fill="#ffb07a" font-family="DM Sans,sans-serif">Cu</text>
+      <text x="250" y="64" text-anchor="middle" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Copper</text>
+      <rect x="201" y="80" width="98" height="26" rx="5" fill="rgba(255,176,122,.1)"/>
+      <text x="250" y="97" text-anchor="middle" font-size="11" font-family="Space Mono,monospace" fill="#ffb07a">Cu⁺ → Copper(I)</text>
+      <rect x="201" y="114" width="98" height="26" rx="5" fill="rgba(255,176,122,.17)"/>
+      <text x="250" y="131" text-anchor="middle" font-size="11" font-family="Space Mono,monospace" fill="#ffc89a">Cu²⁺ → Copper(II)</text>
+      <text x="250" y="172" text-anchor="middle" font-size="10" fill="#5a7a96" font-family="DM Sans,sans-serif">Coinage metal</text>
+      <!-- Pb -->
+      <rect x="340" y="20" width="130" height="160" rx="10" fill="rgba(255,210,42,.05)" stroke="#ffd32a" stroke-width="1"/>
+      <text x="405" y="46" text-anchor="middle" font-size="26" font-weight="700" fill="#ffd32a" font-family="DM Sans,sans-serif">Pb</text>
+      <text x="405" y="64" text-anchor="middle" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Lead</text>
+      <rect x="356" y="80" width="98" height="26" rx="5" fill="rgba(255,210,42,.1)"/>
+      <text x="405" y="97" text-anchor="middle" font-size="11" font-family="Space Mono,monospace" fill="#ffd32a">Pb²⁺ → Lead(II)</text>
+      <rect x="356" y="114" width="98" height="26" rx="5" fill="rgba(255,210,42,.17)"/>
+      <text x="405" y="131" text-anchor="middle" font-size="11" font-family="Space Mono,monospace" fill="#ffe46e">Pb⁴⁺ → Lead(IV)</text>
+      <text x="405" y="172" text-anchor="middle" font-size="10" fill="#5a7a96" font-family="DM Sans,sans-serif">Heavy metal</text>
+      <!-- Hg -->
+      <rect x="495" y="20" width="150" height="160" rx="10" fill="rgba(123,237,159,.05)" stroke="#7bed9f" stroke-width="1"/>
+      <text x="570" y="46" text-anchor="middle" font-size="26" font-weight="700" fill="#7bed9f" font-family="DM Sans,sans-serif">Hg</text>
+      <text x="570" y="64" text-anchor="middle" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Mercury</text>
+      <rect x="511" y="80" width="118" height="26" rx="5" fill="rgba(123,237,159,.1)"/>
+      <text x="570" y="97" text-anchor="middle" font-size="11" font-family="Space Mono,monospace" fill="#7bed9f">Hg₂²⁺ → Merc(I)</text>
+      <rect x="511" y="114" width="118" height="26" rx="5" fill="rgba(123,237,159,.17)"/>
+      <text x="570" y="131" text-anchor="middle" font-size="11" font-family="Space Mono,monospace" fill="#a8f5c3">Hg²⁺ → Merc(II)</text>
+      <text x="570" y="172" text-anchor="middle" font-size="10" fill="#5a7a96" font-family="DM Sans,sans-serif">Unusual dimer</text>
+    </svg>
+  </div>
+
+  <div style="text-align:center;margin-top:8px">
+    <button class="btn btn-p" onclick="go('poly')">Next: Polyatomic Ions →</button>
+  </div>
+</section>
+
+<!-- ═══════════ POLYATOMIC ═══════════ -->
+<section id="poly" class="section">
+  <div class="sec-hdr">
+    <div class="sec-tag">Module 02</div>
+    <h2 class="sec-title">Polyatomic <em>Ions</em></h2>
+  </div>
+
+  <!-- Visual diagram of a polyatomic ion -->
+  <div class="card" style="margin-bottom:24px;opacity:0;animation:fadeUp .6s .1s ease forwards">
+    <div class="card-tag">Visual — Sulfate Ion SO₄²⁻</div>
+    <div class="svg-wrap">
+      <svg width="100%" viewBox="0 0 680 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="bondM" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#5edeff" stroke-width="1.5" stroke-linecap="round"/></marker>
+        </defs>
+        <!-- Central S atom -->
+        <circle cx="260" cy="110" r="30" fill="rgba(255,210,42,.2)" stroke="#ffd32a" stroke-width="2"/>
+        <text x="260" y="107" text-anchor="middle" font-size="18" font-weight="700" fill="#ffd32a" font-family="DM Sans,sans-serif">S</text>
+        <text x="260" y="122" text-anchor="middle" font-size="10" fill="#c0a000" font-family="DM Sans,sans-serif">+6</text>
+        <!-- O atoms -->
+        <circle cx="160" cy="110" r="24" fill="rgba(0,212,255,.15)" stroke="#00d4ff" stroke-width="1.5"/>
+        <text x="160" y="107" text-anchor="middle" font-size="16" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">O</text>
+        <text x="160" y="120" text-anchor="middle" font-size="9" fill="#5edeff" font-family="DM Sans,sans-serif">−2</text>
+        <circle cx="260" cy="32" r="24" fill="rgba(0,212,255,.15)" stroke="#00d4ff" stroke-width="1.5"/>
+        <text x="260" y="29" text-anchor="middle" font-size="16" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">O</text>
+        <text x="260" y="42" text-anchor="middle" font-size="9" fill="#5edeff" font-family="DM Sans,sans-serif">−2</text>
+        <circle cx="360" cy="110" r="24" fill="rgba(0,212,255,.15)" stroke="#00d4ff" stroke-width="1.5"/>
+        <text x="360" y="107" text-anchor="middle" font-size="16" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">O</text>
+        <text x="360" y="120" text-anchor="middle" font-size="9" fill="#5edeff" font-family="DM Sans,sans-serif">−2</text>
+        <circle cx="260" cy="188" r="24" fill="rgba(0,212,255,.15)" stroke="#00d4ff" stroke-width="1.5"/>
+        <text x="260" y="185" text-anchor="middle" font-size="16" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">O</text>
+        <text x="260" y="198" text-anchor="middle" font-size="9" fill="#5edeff" font-family="DM Sans,sans-serif">−2</text>
+        <!-- Bonds -->
+        <line x1="184" y1="110" x2="230" y2="110" stroke="#5edeff" stroke-width="2.5" opacity=".6"/>
+        <line x1="260" y1="56" x2="260" y2="80" stroke="#5edeff" stroke-width="2.5" opacity=".6"/>
+        <line x1="290" y1="110" x2="336" y2="110" stroke="#5edeff" stroke-width="2.5" opacity=".6"/>
+        <line x1="260" y1="140" x2="260" y2="164" stroke="#5edeff" stroke-width="2.5" opacity=".6"/>
+        <!-- Bracket showing it's a unit -->
+        <rect x="124" y="20" width="262" height="178" rx="8" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="5 4" opacity=".5"/>
+        <text x="392" y="18" text-anchor="middle" font-size="18" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">2−</text>
+        <!-- Annotation -->
+        <text x="480" y="70" text-anchor="start" font-size="13" font-weight="600" fill="#e8f4fd" font-family="DM Sans,sans-serif">SO₄²⁻</text>
+        <text x="480" y="90" text-anchor="start" font-size="12" fill="#8ba5c0" font-family="DM Sans,sans-serif">Sulfate ion</text>
+        <text x="480" y="114" text-anchor="start" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">1 sulfur + 4 oxygens</text>
+        <text x="480" y="132" text-anchor="start" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Net charge = −2</text>
+        <text x="480" y="152" text-anchor="start" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Acts as a single unit</text>
+        <text x="480" y="172" text-anchor="start" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">in ionic compounds</text>
+      </svg>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Formula</th><th>Charge</th><th>Tip</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Hydroxide</td><td class="pf">OH⁻</td><td><span class="pc n">−1</span></td><td style="color:var(--muted);font-size:11px">O + H, always −1</td></tr>
+      <tr><td>Nitrate</td><td class="pf">NO₃⁻</td><td><span class="pc n">−1</span></td><td style="color:var(--muted);font-size:11px">-ate = more O</td></tr>
+      <tr><td>Nitrite</td><td class="pf">NO₂⁻</td><td><span class="pc n">−1</span></td><td style="color:var(--muted);font-size:11px">-ite = fewer O</td></tr>
+      <tr><td>Sulfate</td><td class="pf">SO₄²⁻</td><td><span class="pc n">−2</span></td><td style="color:var(--muted);font-size:11px">4 oxygens, −2</td></tr>
+      <tr><td>Sulfite</td><td class="pf">SO₃²⁻</td><td><span class="pc n">−2</span></td><td style="color:var(--muted);font-size:11px">3 oxygens, −2</td></tr>
+      <tr><td>Carbonate</td><td class="pf">CO₃²⁻</td><td><span class="pc n">−2</span></td><td style="color:var(--muted);font-size:11px">C + 3 oxygens</td></tr>
+      <tr><td>Phosphate</td><td class="pf">PO₄³⁻</td><td><span class="pc n">−3</span></td><td style="color:var(--muted);font-size:11px">4 oxygens, −3</td></tr>
+      <tr><td>Ammonium</td><td class="pf">NH₄⁺</td><td><span class="pc p">+1</span></td><td style="color:var(--muted);font-size:11px">Only common +1 polyatomic</td></tr>
+      <tr><td>Chromate</td><td class="pf">CrO₄²⁻</td><td><span class="pc n">−2</span></td><td style="color:var(--muted);font-size:11px">Cr + 4 oxygens (yellow)</td></tr>
+      <tr><td>Hydrogen phosphate</td><td class="pf">HPO₄²⁻</td><td><span class="pc n">−2</span></td><td style="color:var(--muted);font-size:11px">Phosphate + H</td></tr>
+    </tbody>
+  </table>
+
+  <div style="text-align:center">
+    <button class="btn btn-p" onclick="go('naming')">Next: Naming Rules →</button>
+  </div>
+</section>
+
+<!-- ═══════════ NAMING ═══════════ -->
+<section id="naming" class="section">
+  <div class="sec-hdr">
+    <div class="sec-tag">Module 03</div>
+    <h2 class="sec-title">Naming <em>Ionic Compounds</em></h2>
+  </div>
+
+  <div class="rgrid">
+    <div class="rcard" id="rc0"><div class="rnum">1</div><div class="rhead">Name the cation first</div><div class="rbody">Write the metal name exactly as on the periodic table. No suffix changes.</div><div class="rex">Na → sodium | Mg → magnesium | Al → aluminum</div></div>
+    <div class="rcard" id="rc1"><div class="rnum">2</div><div class="rhead">Anion: add -ide suffix</div><div class="rbody">For monatomic anions, drop the element ending and add <strong style="color:var(--a4)">-ide</strong>. Polyatomic anions keep their own names.</div><div class="rex">Cl⁻ → chloride | SO₄²⁻ → sulfate</div></div>
+    <div class="rcard" id="rc2"><div class="rnum">3</div><div class="rhead">Stock system for variable metals</div><div class="rbody">Transition metals with multiple oxidation states get a Roman numeral in parentheses indicating the charge.</div><div class="rex">Fe²⁺ → iron(II) | Fe³⁺ → iron(III)</div></div>
+    <div class="rcard" id="rc3"><div class="rnum">4</div><div class="rhead">No subscripts in the name</div><div class="rbody">The name never indicates subscripts. Subscripts come from charge balance — not the name itself.</div><div class="rex">MgO → magnesium oxide (not "1:1" anywhere)</div></div>
+    <div class="rcard" id="rc4"><div class="rnum">5</div><div class="rhead">Charge balance for formulas</div><div class="rbody">Criss-cross the charges as subscripts, then simplify so the total positive charge = total negative charge.</div><div class="rex">Al³⁺ + O²⁻ → Al₂O₃</div></div>
+  </div>
+
+  <!-- Naming flowchart SVG -->
+  <div class="card" style="margin-bottom:24px;opacity:0;animation:fadeUp .6s .3s ease forwards">
+    <div class="card-tag">Decision Flowchart — How to Name Any Ionic Compound</div>
+    <div class="svg-wrap">
+      <svg width="100%" viewBox="0 0 680 460" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowF" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#8ba5c0" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="arrowFY" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#7bed9f" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="arrowFN" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#ff6b35" stroke-width="1.5" stroke-linecap="round"/></marker>
+        </defs>
+        <!-- Step 1: Start -->
+        <rect x="215" y="20" width="250" height="52" rx="26" fill="rgba(0,212,255,.12)" stroke="#00d4ff" stroke-width="1.5"/>
+        <text x="340" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">Ionic compound to name</text>
+        <text x="340" y="59" text-anchor="middle" font-size="11" fill="#5edeff" font-family="DM Sans,sans-serif">Identify cation + anion</text>
+        <!-- Arrow down -->
+        <line x1="340" y1="72" x2="340" y2="105" stroke="#8ba5c0" stroke-width="1.5" marker-end="url(#arrowF)"/>
+        <!-- Step 2: Decision diamond -->
+        <polygon points="340,108 460,148 340,188 220,148" fill="rgba(255,210,42,.1)" stroke="#ffd32a" stroke-width="1.5"/>
+        <text x="340" y="143" text-anchor="middle" font-size="12" font-weight="600" fill="#ffd32a" font-family="DM Sans,sans-serif">Fixed charge metal?</text>
+        <text x="340" y="158" text-anchor="middle" font-size="10" fill="#c0a000" font-family="DM Sans,sans-serif">(Na, Mg, Al, Ca…)</text>
+        <!-- YES branch -->
+        <line x1="220" y1="148" x2="80" y2="148" stroke="#7bed9f" stroke-width="1.5" marker-end="url(#arrowFY)"/>
+        <text x="152" y="140" text-anchor="middle" font-size="10" fill="#7bed9f" font-family="DM Sans,sans-serif">YES</text>
+        <rect x="20" y="120" width="60" height="26" rx="4" fill="rgba(123,237,159,.08)" stroke="#7bed9f" stroke-width="1"/>
+        <text x="50" y="137" text-anchor="middle" font-size="9" fill="#7bed9f" font-family="DM Sans,sans-serif">No Roman #</text>
+        <!-- NO branch -->
+        <line x1="460" y1="148" x2="580" y2="148" stroke="#ff6b35" stroke-width="1.5" marker-end="url(#arrowFN)"/>
+        <text x="518" y="140" text-anchor="middle" font-size="10" fill="#ff6b35" font-family="DM Sans,sans-serif">NO</text>
+        <rect x="580" y="120" width="80" height="56" rx="8" fill="rgba(255,107,53,.1)" stroke="#ff6b35" stroke-width="1.5"/>
+        <text x="620" y="140" text-anchor="middle" font-size="11" font-weight="600" fill="#ff6b35" font-family="DM Sans,sans-serif">Find charge</text>
+        <text x="620" y="154" text-anchor="middle" font-size="10" fill="#ff8a6a" font-family="DM Sans,sans-serif">from formula</text>
+        <text x="620" y="168" text-anchor="middle" font-size="10" fill="#ff8a6a" font-family="DM Sans,sans-serif">Add Roman #</text>
+        <!-- Both branches converge down -->
+        <line x1="50" y1="146" x2="50" y2="265" stroke="#8ba5c0" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="50" y1="265" x2="210" y2="265" stroke="#8ba5c0" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="620" y1="176" x2="620" y2="265" stroke="#8ba5c0" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="620" y1="265" x2="470" y2="265" stroke="#8ba5c0" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="340" y1="188" x2="340" y2="245" stroke="#8ba5c0" stroke-width="1.5" marker-end="url(#arrowF)"/>
+        <!-- Step 3: Name anion -->
+        <rect x="190" y="248" width="300" height="52" rx="10" fill="rgba(0,212,255,.07)" stroke="#00d4ff" stroke-width="1"/>
+        <text x="340" y="270" text-anchor="middle" font-size="13" font-weight="600" fill="#e8f4fd" font-family="DM Sans,sans-serif">Name the anion</text>
+        <text x="340" y="286" text-anchor="middle" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Monatomic: root + -ide | Polyatomic: keep name</text>
+        <!-- Arrow -->
+        <line x1="340" y1="300" x2="340" y2="330" stroke="#8ba5c0" stroke-width="1.5" marker-end="url(#arrowF)"/>
+        <!-- Step 4: Combine -->
+        <rect x="190" y="333" width="300" height="52" rx="10" fill="rgba(255,107,53,.07)" stroke="#ff6b35" stroke-width="1"/>
+        <text x="340" y="355" text-anchor="middle" font-size="13" font-weight="600" fill="#e8f4fd" font-family="DM Sans,sans-serif">Combine: cation name + anion name</text>
+        <text x="340" y="371" text-anchor="middle" font-size="11" fill="#8ba5c0" font-family="DM Sans,sans-serif">Two words, no subscripts</text>
+        <!-- Arrow -->
+        <line x1="340" y1="385" x2="340" y2="415" stroke="#7bed9f" stroke-width="1.5" marker-end="url(#arrowFY)"/>
+        <!-- Final result -->
+        <rect x="175" y="418" width="330" height="36" rx="18" fill="rgba(123,237,159,.15)" stroke="#7bed9f" stroke-width="1.5"/>
+        <text x="340" y="440" text-anchor="middle" font-size="13" font-weight="700" fill="#7bed9f" font-family="DM Sans,sans-serif">✓ Complete ionic compound name</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Worked examples -->
+  <div class="card" style="opacity:0;animation:fadeUp .6s .4s ease forwards">
+    <div class="card-tag">Worked Examples — Click to reveal</div>
+    <div id="exlist"></div>
+  </div>
+
+  <div style="text-align:center;margin-top:20px">
+    <button class="btn btn-p" onclick="go('builder')">Next: Formula Builder →</button>
+  </div>
+</section>
+
+<!-- ═══════════ BUILDER ═══════════ -->
+<section id="builder" class="section">
+  <div class="sec-hdr">
+    <div class="sec-tag">Module 04</div>
+    <h2 class="sec-title">Formula <em>Builder</em></h2>
+  </div>
+
+  <p style="color:var(--muted);margin-bottom:24px;font-size:14px;opacity:0;animation:fadeUp .5s .2s ease forwards">Select a cation and anion. The builder applies the charge-balance (criss-cross) method to determine the correct formula.</p>
+
+  <!-- Criss-cross diagram -->
+  <div class="svg-wrap" style="margin-bottom:20px;opacity:0;animation:fadeUp .6s .25s ease forwards" id="crisswrap">
+    <svg width="100%" viewBox="0 0 680 140" xmlns="http://www.w3.org/2000/svg" id="crissSVG">
+      <!-- Cation box -->
+      <rect x="60" y="30" width="180" height="80" rx="12" fill="rgba(255,107,53,.12)" stroke="#ff6b35" stroke-width="1.5"/>
+      <text id="cLabel" x="150" y="62" text-anchor="middle" font-size="22" font-weight="700" fill="#ff6b35" font-family="DM Sans,sans-serif">Na</text>
+      <text id="cCharge" x="182" y="49" text-anchor="middle" font-size="14" font-weight="700" fill="#ff6b35" font-family="DM Sans,sans-serif">+1</text>
+      <text id="cName" x="150" y="82" text-anchor="middle" font-size="11" fill="#ff8a6a" font-family="DM Sans,sans-serif">sodium</text>
+      <text id="cSub" x="150" y="98" text-anchor="middle" font-size="10" fill="#c05010" font-family="Space Mono,monospace">subscript: ×1</text>
+      <!-- Anion box -->
+      <rect x="440" y="30" width="180" height="80" rx="12" fill="rgba(0,212,255,.1)" stroke="#00d4ff" stroke-width="1.5"/>
+      <text id="aLabel" x="530" y="62" text-anchor="middle" font-size="22" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">O</text>
+      <text id="aCharge" x="562" y="49" text-anchor="middle" font-size="14" font-weight="700" fill="#00d4ff" font-family="DM Sans,sans-serif">2−</text>
+      <text id="aName" x="530" y="82" text-anchor="middle" font-size="11" fill="#5edeff" font-family="DM Sans,sans-serif">oxide</text>
+      <text id="aSub" x="530" y="98" text-anchor="middle" font-size="10" fill="#008aaa" font-family="Space Mono,monospace">subscript: ×1</text>
+      <!-- Criss-cross arrows -->
+      <path id="cr1" d="M240 50 Q340 10 440 95" fill="none" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="5 3" opacity=".7"/>
+      <path id="cr2" d="M440 50 Q340 10 240 95" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-dasharray="5 3" opacity=".7"/>
+      <!-- Formula result -->
+      <rect x="284" y="42" width="112" height="56" rx="8" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+      <text id="crissFormula" x="340" y="68" text-anchor="middle" font-size="22" font-weight="700" fill="#e8f4fd" font-family="Space Mono,monospace">Na₂O</text>
+      <text x="340" y="88" text-anchor="middle" font-size="10" fill="#8ba5c0" font-family="DM Sans,sans-serif">formula</text>
+    </svg>
+  </div>
+
+  <div class="card" style="opacity:0;animation:fadeUp .6s .35s ease forwards">
+    <div class="card-tag">Interactive Ion Combiner</div>
+    <div class="brow">
+      <label>Cation:</label>
+      <select id="csel" onchange="updateF()">
+        <option value="Na+1">Na⁺ (Sodium, +1)</option>
+        <option value="K+1">K⁺ (Potassium, +1)</option>
+        <option value="Mg+2">Mg²⁺ (Magnesium, +2)</option>
+        <option value="Ca+2">Ca²⁺ (Calcium, +2)</option>
+        <option value="Al+3">Al³⁺ (Aluminum, +3)</option>
+        <option value="Fe+2">Fe²⁺ (Iron II, +2)</option>
+        <option value="Fe+3">Fe³⁺ (Iron III, +3)</option>
+        <option value="Cu+1">Cu⁺ (Copper I, +1)</option>
+        <option value="Cu+2">Cu²⁺ (Copper II, +2)</option>
+        <option value="Pb+2">Pb²⁺ (Lead II, +2)</option>
+        <option value="NH4+1">NH₄⁺ (Ammonium, +1)</option>
+      </select>
+    </div>
+    <div class="brow">
+      <label>Anion:</label>
+      <select id="asel" onchange="updateF()">
+        <option value="O-2">O²⁻ (Oxide, −2)</option>
+        <option value="Cl-1">Cl⁻ (Chloride, −1)</option>
+        <option value="Br-1">Br⁻ (Bromide, −1)</option>
+        <option value="F-1">F⁻ (Fluoride, −1)</option>
+        <option value="S-2">S²⁻ (Sulfide, −2)</option>
+        <option value="OH-1">OH⁻ (Hydroxide, −1)</option>
+        <option value="NO3-1">NO₃⁻ (Nitrate, −1)</option>
+        <option value="SO4-2">SO₄²⁻ (Sulfate, −2)</option>
+        <option value="CO3-2">CO₃²⁻ (Carbonate, −2)</option>
+        <option value="PO4-3">PO₄³⁻ (Phosphate, −3)</option>
+        <option value="CrO4-2">CrO₄²⁻ (Chromate, −2)</option>
+      </select>
+    </div>
+    <div class="fdisplay">
+      <div class="fbig" id="fout">Na₂O</div>
+      <div class="fname" id="fnameout">Sodium oxide</div>
+      <div class="frule" id="fruleout"></div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:20px">
+    <button class="btn btn-p" onclick="go('quiz')">Take the Quiz →</button>
+  </div>
+</section>
+
+<!-- ═══════════ QUIZ ═══════════ -->
+<section id="quiz" class="section">
+  <div class="sec-hdr">
+    <div class="sec-tag">Module 05</div>
+    <h2 class="sec-title">Knowledge <em>Check</em></h2>
+  </div>
+  <div style="max-width:680px;margin:0 auto">
+    <div class="qprog" id="qprog"></div>
+    <div id="qbody"></div>
+    <div id="scr">
+      <div class="sring" id="sring"><div class="snum" id="snum">0/0</div><div class="slbl">Score</div></div>
+      <h3 style="font-size:22px;margin-bottom:10px" id="smsg"></h3>
+      <p style="color:var(--muted);margin-bottom:28px;font-size:14px" id="ssub"></p>
+      <button class="btn btn-p" onclick="buildQ()">Try Again</button>
+      &nbsp;<button class="btn btn-o" onclick="go('ions')">Review Content</button>
+    </div>
+  </div>
+</section>
+
+<script>
+// ─── NAV ───
+const order=['hero','ions','poly','naming','builder','quiz'];
+function go(id){
+  document.querySelectorAll('.section,#hero').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  document.querySelectorAll('.ntab').forEach((t,i)=>t.classList.toggle('active',order[i]===id));
+  document.getElementById('pbar').style.width=(order.indexOf(id)/(order.length-1)*100)+'%';
+  setTimeout(()=>document.querySelectorAll('.icard,.scard,.rcard').forEach((el,i)=>setTimeout(()=>el.classList.add('vis'),i*70)),100);
+}
+
+// ─── EXAMPLES ───
+const exs=[
+  {f:'MgO',a:'Magnesium oxide',h:'Mg²⁺ + O²⁻ → 1:1 ratio (charges cancel)'},
+  {f:'Al(OH)₃',a:'Aluminum hydroxide',h:'Al³⁺ + 3×OH⁻ → balance +3 with three −1'},
+  {f:'Fe₂(SO₄)₃',a:'Iron(III) sulfate',h:'Fe³⁺ stock system; 2Fe³⁺ + 3SO₄²⁻ = +6−6'},
+  {f:'Hg₂Cl₂',a:'Mercury(I) chloride',h:'Hg₂²⁺ dimer unit + 2Cl⁻'},
+  {f:'PbCrO₄',a:'Lead(II) chromate',h:'Pb²⁺ + CrO₄²⁻ → 1:1'},
+  {f:'K₂HPO₄',a:'Potassium hydrogen phosphate',h:'2K⁺ + HPO₄²⁻ → balance'},
+];
+function buildExs(){
+  const c=document.getElementById('exlist');
+  if(!c)return;
+  c.innerHTML=exs.map((e,i)=>`
+    <div onclick="toggleEx(${i})" style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;display:flex;align-items:center;gap:16px">
+      <span style="font-family:var(--mono);font-size:16px;color:var(--a1);min-width:130px">${e.f}</span>
+      <span id="ea${i}" style="font-size:13px;color:var(--muted);display:none">${e.a} <span style="color:var(--a4);font-size:11px">— ${e.h}</span></span>
+      <span id="eh${i}" style="font-size:12px;color:rgba(255,255,255,.2)">Click to reveal →</span>
+    </div>`).join('');
+}
+function toggleEx(i){
+  const a=document.getElementById('ea'+i),h=document.getElementById('eh'+i);
+  const v=a.style.display!=='none';
+  a.style.display=v?'none':'inline';h.style.display=v?'inline':'none';
+}
+
+// ─── FORMULA BUILDER DATA ───
+const CD={
+  'Na+1':{sym:'Na',c:1,n:'sodium',stock:false},
+  'K+1':{sym:'K',c:1,n:'potassium',stock:false},
+  'Mg+2':{sym:'Mg',c:2,n:'magnesium',stock:false},
+  'Ca+2':{sym:'Ca',c:2,n:'calcium',stock:false},
+  'Al+3':{sym:'Al',c:3,n:'aluminum',stock:false},
+  'Fe+2':{sym:'Fe',c:2,n:'iron',stock:true,r:'(II)'},
+  'Fe+3':{sym:'Fe',c:3,n:'iron',stock:true,r:'(III)'},
+  'Cu+1':{sym:'Cu',c:1,n:'copper',stock:true,r:'(I)'},
+  'Cu+2':{sym:'Cu',c:2,n:'copper',stock:true,r:'(II)'},
+  'Pb+2':{sym:'Pb',c:2,n:'lead',stock:true,r:'(II)'},
+  'NH4+1':{sym:'NH₄',c:1,n:'ammonium',stock:false,poly:true},
+};
+const AD={
+  'O-2':{sym:'O',c:2,n:'oxide'},
+  'Cl-1':{sym:'Cl',c:1,n:'chloride'},
+  'Br-1':{sym:'Br',c:1,n:'bromide'},
+  'F-1':{sym:'F',c:1,n:'fluoride'},
+  'S-2':{sym:'S',c:2,n:'sulfide'},
+  'OH-1':{sym:'OH',c:1,n:'hydroxide',poly:true},
+  'NO3-1':{sym:'NO₃',c:1,n:'nitrate',poly:true},
+  'SO4-2':{sym:'SO₄',c:2,n:'sulfate',poly:true},
+  'CO3-2':{sym:'CO₃',c:2,n:'carbonate',poly:true},
+  'PO4-3':{sym:'PO₄',c:3,n:'phosphate',poly:true},
+  'CrO4-2':{sym:'CrO₄',c:2,n:'chromate',poly:true},
+};
+function gcd(a,b){return b?gcd(b,a%b):a}
+function sub(n){return n<=1?'':String(n).split('').map(d=>'₀₁₂₃₄₅₆₇₈₉'[+d]).join('')}
+function sup(n){return'⁰¹²³⁴⁵⁶⁷⁸⁹'[n]||n}
+
+function updateF(){
+  const cv=document.getElementById('csel').value;
+  const av=document.getElementById('asel').value;
+  const cc=CD[cv],aa=AD[av];
+  if(!cc||!aa)return;
+  const g=gcd(cc.c,aa.c);
+  const lcm=cc.c*aa.c/g;
+  let cn=lcm/cc.c, an=lcm/aa.c;
+  const cbr=cc.poly&&cn>1, abr=aa.poly&&an>1;
+  let formula=(cbr?`(${cc.sym})`:cc.sym)+sub(cn)+(abr?`(${aa.sym})`:aa.sym)+sub(an);
+  const cname=cc.stock?cc.n+cc.r:cc.n;
+  const fullname=cname+' '+aa.n;
+  const rule=`${cc.sym}${sup(cc.c)}⁺ × ${cn} = +${cn*cc.c} | ${aa.sym}${sup(aa.c)}⁻ × ${an} = −${an*aa.c} → balanced`;
+
+  const fo=document.getElementById('fout');
+  fo.style.opacity='0';
+  setTimeout(()=>{
+    fo.textContent=formula;fo.style.opacity='1';fo.style.transition='opacity .3s';
+    document.getElementById('fnameout').textContent=fullname.charAt(0).toUpperCase()+fullname.slice(1);
+    document.getElementById('fruleout').textContent=rule;
+  },150);
+
+  // Update criss-cross SVG
+  document.getElementById('cLabel').textContent=cc.sym;
+  document.getElementById('cCharge').textContent='+'+cc.c;
+  document.getElementById('cName').textContent=cc.n;
+  document.getElementById('cSub').textContent='subscript: ×'+cn;
+  document.getElementById('aLabel').textContent=aa.sym.length>4?aa.sym.substring(0,4):aa.sym;
+  document.getElementById('aCharge').textContent=aa.c+'−';
+  document.getElementById('aName').textContent=aa.n;
+  document.getElementById('aSub').textContent='subscript: ×'+an;
+  document.getElementById('crissFormula').textContent=formula;
+}
+
+// ─── QUIZ ───
+const QS=[
+  {q:'What happens when an atom LOSES electrons?',c:null,opts:['Becomes an anion (−)','Becomes a cation (+)','Becomes a polyatomic ion','Remains neutral'],ans:1,ex:'Losing electrons means fewer negative charges → net positive → CATION. Memory: Ca-tions are posi-Ca-tive!'},
+  {q:'Name this ionic compound:',c:'MgO',opts:['Magnesium(II) oxide','Manganese oxide','Magnesium oxide','Magnesium(I) oxide'],ans:2,ex:'Mg always forms Mg²⁺ (no Roman numeral needed). O²⁻ → oxide. Answer: magnesium oxide.'},
+  {q:'What is the correct formula for iron(III) sulfate?',c:null,opts:['FeSO₄','Fe₂(SO₄)₃','Fe₃(SO₄)₂','Fe(SO₄)₃'],ans:1,ex:'Fe³⁺ and SO₄²⁻. LCM(3,2)=6. Need 2 Fe and 3 SO₄ → Fe₂(SO₄)₃.'},
+  {q:'Which of the following is a polyatomic ion?',c:null,opts:['Na⁺','Cl⁻','Mg²⁺','SO₄²⁻'],ans:3,ex:'SO₄²⁻ (sulfate) = 1 S + 4 O bonded together as one charged unit.'},
+  {q:'What is the charge on iron in Fe₂(SO₄)₃?',c:'Fe₂(SO₄)₃',opts:['+1','+2','+3','+4'],ans:2,ex:'3 × SO₄²⁻ = −6 total. Two Fe atoms must provide +6 total → each Fe = +3 → Iron(III).'},
+  {q:'Name: Al(OH)₃',c:'Al(OH)₃',opts:['Aluminum(III) hydroxide','Aluminum hydroxide','Aluminum oxide','Aluminium(I) hydroxide'],ans:1,ex:'Al is always +3 (no Roman numeral). OH⁻ = hydroxide. Answer: aluminum hydroxide.'},
+  {q:'The formula for mercury(I) chloride is:',c:null,opts:['HgCl','HgCl₂','Hg₂Cl₂','Hg₂Cl'],ans:2,ex:'Mercury(I) is the dimer Hg₂²⁺. Two Cl⁻ needed to balance → Hg₂Cl₂.'},
+];
+let qi=0,sc=0;
+function buildQ(){
+  qi=0;sc=0;
+  document.getElementById('scr').classList.remove('show');
+  renderQ();
+}
+function renderQ(){
+  if(qi>=QS.length){showSc();return}
+  const q=QS[qi];
+  document.getElementById('qprog').innerHTML=QS.map((_,i)=>
+    `<div class="qdot ${i<qi?'done':i===qi?'act':''}"></div>`).join('');
+  document.getElementById('qbody').innerHTML=`
+    <div class="qcard">
+      <div class="qq">${q.q}${q.c?`<span class="qcomp">${q.c}</span>`:''}</div>
+      <div class="qopts">${q.opts.map((o,i)=>`<button class="qopt" onclick="pickA(${i})">${o}</button>`).join('')}</div>
+      <div class="qfb" id="qfb"></div>
+    </div>
+    <div class="qnav"><div class="qsc">Q${qi+1}/${QS.length} · Score: ${sc}</div></div>`;
+}
+function pickA(i){
+  const q=QS[qi];
+  document.querySelectorAll('.qopt').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.qopt')[i].classList.add(i===q.ans?'correct':'wrong');
+  if(i!==q.ans)document.querySelectorAll('.qopt')[q.ans].classList.add('correct');
+  if(i===q.ans)sc++;
+  const fb=document.getElementById('qfb');
+  fb.style.display='block';
+  fb.className='qfb '+(i===q.ans?'correct':'wrong');
+  fb.innerHTML=(i===q.ans?'✓ Correct! ':'✗ Not quite. ')+q.ex;
+  setTimeout(()=>{qi++;renderQ();},2800);
+}
+function showSc(){
+  document.getElementById('qbody').innerHTML='';
+  document.getElementById('qprog').innerHTML=QS.map(()=>`<div class="qdot done"></div>`).join('');
+  const pct=Math.round(sc/QS.length*100);
+  const ss=document.getElementById('scr');ss.classList.add('show');
+  document.getElementById('sring').style.setProperty('--pct',pct+'%');
+  document.getElementById('snum').textContent=sc+'/'+QS.length;
+  const msgs=[['🎉 Excellent!','Strong command of ionic compound chemistry.'],['👍 Good Progress','Review naming rules and formula builder.'],['📖 Keep Reviewing','Go back through each module carefully.']];
+  const idx=pct>=85?0:pct>=60?1:2;
+  document.getElementById('smsg').textContent=msgs[idx][0];
+  document.getElementById('ssub').textContent=msgs[idx][1];
+}
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded',()=>{
+  buildExs();buildQ();updateF();
+  setTimeout(()=>document.querySelectorAll('.icard,.scard,.rcard').forEach((el,i)=>setTimeout(()=>el.classList.add('vis'),i*60)),200);
+});
+</script>
+</body>
+</html>
