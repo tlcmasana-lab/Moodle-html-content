@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Periodontal Chart – Ajman University College of Dentistry</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CSS VARIABLES & RESET
+============================================================ */
+:root {
+  --primary:    #0A4D68;
+  --secondary:  #088395;
+  --accent:     #05BFDB;
+  --accent-light: #E0F7FB;
+  --bg:         #F5F7FA;
+  --card:       #FFFFFF;
+  --border:     #D6E4EA;
+  --text:       #1A2D3A;
+  --muted:      #6B8899;
+  --good:       #16A34A;
+  --good-bg:    #DCFCE7;
+  --fair:       #D97706;
+  --fair-bg:    #FEF3C7;
+  --poor:       #DC2626;
+  --poor-bg:    #FEE2E2;
+  --shadow-sm:  0 1px 4px rgba(10,77,104,.06);
+  --shadow-md:  0 4px 16px rgba(10,77,104,.10);
+  --shadow-lg:  0 8px 32px rgba(10,77,104,.14);
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --transition: .2s ease;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+/* ============================================================
+   TYPOGRAPHY
+============================================================ */
+h1,h2,h3 { font-family: 'DM Serif Display', serif; }
+h2 { font-size: 1.05rem; font-family: 'DM Sans', sans-serif; font-weight: 700; letter-spacing: .02em; }
+label { font-weight: 500; color: var(--primary); font-size: 12.5px; display: block; margin-bottom: 4px; }
+/* ============================================================
+   LAYOUT
+============================================================ */
+.page-wrapper { max-width: 1100px; margin: 0 auto; padding: 24px 16px 60px; }
+/* ============================================================
+   HEADER
+============================================================ */
+.site-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 60%, var(--accent) 100%);
+  color: #fff;
+  text-align: center;
+  padding: 36px 24px 32px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.site-header::before {
+  content:'';
+  position:absolute; inset:0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.site-header .logo-area { display:flex; align-items:center; justify-content:center; gap:16px; }
+.logo-circle {
+  width:64px; height:64px; border-radius:50%;
+  background:rgba(255,255,255,.15);
+  border:2px solid rgba(255,255,255,.35);
+  display:flex; align-items:center; justify-content:center;
+  font-size:28px; flex-shrink:0;
+}
+.site-header h1 {
+  font-size:1.8rem; color:#fff; line-height:1.15; text-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.site-header h1 span { display:block; font-size:1rem; font-family:'DM Sans',sans-serif; font-weight:300; opacity:.85; margin-top:4px; letter-spacing:.08em; text-transform:uppercase; }
+.site-header .chart-badge {
+  display:inline-block; margin-top:10px;
+  background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3);
+  border-radius:20px; padding:4px 14px;
+  font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:600;
+}
+/* ============================================================
+   ACTION BAR
+============================================================ */
+.action-bar {
+  display:flex; gap:10px; justify-content:flex-end; margin-bottom:20px; flex-wrap:wrap;
+}
+.btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 18px; border-radius:var(--radius-sm);
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+  cursor:pointer; border:none; transition:all var(--transition);
+  text-decoration:none;
+}
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { background:#083d53; box-shadow:var(--shadow-md); transform:translateY(-1px); }
+.btn-accent { background:var(--accent); color:#fff; }
+.btn-accent:hover { background:#04a8c2; box-shadow:var(--shadow-md); transform:translateY(-1px); }
+.btn-outline { background:#fff; color:var(--primary); border:1.5px solid var(--border); }
+.btn-outline:hover { border-color:var(--accent); color:var(--secondary); }
+.btn-danger { background:#fff; color:var(--poor); border:1.5px solid #fca5a5; }
+.btn-danger:hover { background:var(--poor-bg); }
+/* ============================================================
+   SECTION CARDS
+============================================================ */
+.section-card {
+  background:var(--card);
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+  margin-bottom:18px;
+  overflow:hidden;
+  transition:box-shadow var(--transition);
+}
+.section-card:hover { box-shadow:var(--shadow-md); }
+.section-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:13px 20px;
+  background:linear-gradient(90deg,var(--primary) 0%, var(--secondary) 100%);
+  cursor:pointer;
+  user-select:none;
+}
+.section-header h2 { color:#fff; font-size:.9rem; display:flex; align-items:center; gap:8px; }
+.section-header h2 .sec-icon { font-size:1rem; }
+.section-toggle { color:#fff; font-size:18px; transition:transform var(--transition); }
+.section-toggle.open { transform:rotate(180deg); }
+.section-body { padding:20px; }
+.section-body.collapsed { display:none; }
+/* ============================================================
+   FORM ELEMENTS
+============================================================ */
+.form-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+.form-grid-3 { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px; }
+.form-group { display:flex; flex-direction:column; }
+.form-control {
+  border:1.5px solid var(--border); border-radius:var(--radius-sm);
+  padding:8px 11px; font-family:'DM Sans',sans-serif; font-size:13.5px;
+  color:var(--text); background:#fff;
+  transition:border-color var(--transition), box-shadow var(--transition);
+  width:100%;
+}
+.form-control:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(5,191,219,.12); }
+.form-control:invalid { border-color:#fca5a5; }
+select.form-control { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230A4D68' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:28px; }
+/* Radio / Toggle */
+.radio-group { display:flex; gap:12px; margin-top:4px; flex-wrap:wrap; }
+.radio-pill input[type=radio] { display:none; }
+.radio-pill label {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:6px 14px; border-radius:20px;
+  border:1.5px solid var(--border);
+  cursor:pointer; font-size:12.5px; font-weight:500;
+  transition:all var(--transition);
+  color:var(--muted); margin-bottom:0;
+}
+.radio-pill input[type=radio]:checked + label {
+  border-color:var(--accent); background:var(--accent-light); color:var(--primary);
+}
+/* ============================================================
+   OHI TABLE
+============================================================ */
+.ohi-wrapper { overflow-x:auto; }
+.ohi-table { width:100%; border-collapse:collapse; min-width:540px; }
+.ohi-table th {
+  background:var(--primary); color:#fff;
+  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em;
+  padding:8px 10px; text-align:center;
+}
+.ohi-table td { padding:6px 6px; border:1px solid var(--border); text-align:center; }
+.ohi-table tr:nth-child(even) td { background:#F9FBFC; }
+.ohi-table .row-label {
+  font-weight:600; font-size:12px; color:var(--primary);
+  background:#EEF5F8; text-align:left; padding-left:12px; white-space:nowrap;
+}
+.ohi-table select { width:60px; font-size:13px; padding:4px 6px; }
+/* Score display */
+.score-grid { display:flex; gap:12px; margin-top:16px; flex-wrap:wrap; }
+.score-box {
+  flex:1; min-width:110px;
+  border-radius:var(--radius-md); padding:12px 16px; text-align:center;
+  border:1.5px solid var(--border); background:#F9FBFC;
+  transition:all var(--transition);
+}
+.score-box .label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+.score-box .value { font-size:2rem; font-weight:700; color:var(--primary); font-family:'DM Serif Display',serif; }
+.score-box .classification { font-size:11.5px; font-weight:600; margin-top:2px; }
+.score-good { border-color:var(--good); background:var(--good-bg); }
+.score-good .value, .score-good .classification { color:var(--good); }
+.score-fair { border-color:var(--fair); background:var(--fair-bg); }
+.score-fair .value, .score-fair .classification { color:var(--fair); }
+.score-poor { border-color:var(--poor); background:var(--poor-bg); }
+.score-poor .value, .score-poor .classification { color:var(--poor); }
+/* ============================================================
+   RISK FACTORS
+============================================================ */
+.risk-row { display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+.risk-group { flex:1; min-width:180px; }
+.conditional-row {
+  margin-top:10px; padding:12px 14px;
+  background:var(--accent-light); border-radius:var(--radius-sm);
+  border-left:3px solid var(--accent);
+  display:none;
+  animation:fadeIn .2s ease;
+}
+.conditional-row.visible { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+/* ============================================================
+   PERIODONTAL GRID
+============================================================ */
+.perio-scroll { overflow-x:auto; }
+.perio-table { border-collapse:collapse; min-width:900px; width:100%; }
+.perio-table th {
+  background:var(--primary); color:#fff;
+  font-size:10.5px; font-weight:600; text-transform:uppercase;
+  letter-spacing:.05em; padding:7px 8px; text-align:center; white-space:nowrap;
+}
+.perio-table td { border:1px solid var(--border); padding:4px 5px; text-align:center; }
+.perio-table tr:nth-child(even) td { background:#F9FBFC; }
+.perio-table .tooth-num {
+  font-weight:700; font-size:12px; color:#fff;
+  background:var(--secondary); padding:3px 6px; border-radius:4px;
+  white-space:nowrap;
+}
+.perio-table input[type=number] {
+  width:56px; border:1px solid var(--border); border-radius:4px;
+  padding:4px 6px; font-size:12.5px; text-align:center; font-family:'DM Sans',sans-serif;
+}
+.perio-table input[type=number]:focus { outline:none; border-color:var(--accent); }
+.perio-table select { font-size:12px; padding:3px 4px; width:54px; }
+.arch-divider td {
+  background:linear-gradient(90deg,var(--secondary),var(--accent));
+  color:#fff; font-size:10px; font-weight:700; text-align:center;
+  padding:3px; letter-spacing:.1em; text-transform:uppercase;
+}
+/* ============================================================
+   INVESTIGATIONS / BONE LEVEL
+============================================================ */
+.bone-options { display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
+.bone-pill input[type=radio] { display:none; }
+.bone-pill label {
+  display:inline-block; padding:7px 16px; border-radius:20px;
+  border:1.5px solid var(--border); cursor:pointer;
+  font-size:12.5px; font-weight:500; color:var(--muted);
+  transition:all var(--transition);
+}
+.bone-pill input[type=radio]:checked + label {
+  border-color:var(--primary); background:var(--primary); color:#fff;
+}
+/* ============================================================
+   DIAGNOSIS / PROGNOSIS
+============================================================ */
+.prognosis-pills { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+.prog-pill input[type=radio] { display:none; }
+.prog-pill label {
+  padding:8px 20px; border-radius:20px; border:1.5px solid var(--border);
+  cursor:pointer; font-size:12.5px; font-weight:600;
+  transition:all var(--transition);
+}
+.prog-pill label.good  { color:var(--good); }
+.prog-pill label.fair  { color:var(--fair); }
+.prog-pill label.poor  { color:var(--poor); }
+.prog-pill input[type=radio]:checked + label.good { background:var(--good-bg); border-color:var(--good); }
+.prog-pill input[type=radio]:checked + label.fair { background:var(--fair-bg); border-color:var(--fair); }
+.prog-pill input[type=radio]:checked + label.poor { background:var(--poor-bg); border-color:var(--poor); }
+/* ============================================================
+   TREATMENT PLAN
+============================================================ */
+.tx-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
+.tx-box { border:1.5px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
+.tx-box-header { background:var(--primary); color:#fff; padding:8px 14px; font-size:12px; font-weight:700; letter-spacing:.04em; }
+.tx-box textarea { width:100%; border:none; padding:10px 12px; font-family:'DM Sans',sans-serif; font-size:13px; resize:vertical; min-height:80px; color:var(--text); background:#fff; }
+.tx-box textarea:focus { outline:none; background:var(--accent-light); }
+/* ============================================================
+   VALIDATION
+============================================================ */
+.field-error { font-size:11px; color:var(--poor); margin-top:3px; display:none; }
+.has-error .form-control { border-color:var(--poor); }
+.has-error .field-error { display:block; }
+/* ============================================================
+   DIVIDER
+============================================================ */
+.divider { height:1px; background:var(--border); margin:14px 0; }
+/* ============================================================
+   PRINT
+============================================================ */
+@media print {
+  body { background:#fff; font-size:11px; }
+  .action-bar, .btn, .section-toggle { display:none !important; }
+  .section-body.collapsed { display:block !important; }
+  .section-card { box-shadow:none; border:1px solid #ccc; margin-bottom:12px; break-inside:avoid; }
+  .site-header { background:#0A4D68 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .perio-table, .ohi-table { font-size:9px; }
+  .perio-table th, .ohi-table th { background:#0A4D68 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .perio-table input, .perio-table select, .ohi-table select { border:1px solid #999; }
+  @page { margin:1.2cm; }
+}
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media(max-width:640px) {
+  .form-grid { grid-template-columns:1fr 1fr; }
+  .score-grid { flex-direction:column; }
+  .site-header h1 { font-size:1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="logo-area">
+      <div class="logo-circle">🦷</div>
+      <div>
+        <h1>
+          AJMAN UNIVERSITY
+          <span>College of Dentistry</span>
+        </h1>
+      </div>
+    </div>
+    <div class="chart-badge">Periodontal Chart &amp; Oral Hygiene Index</div>
+  </header>
+
+  <!-- ===== ACTION BAR ===== -->
+  <div class="action-bar">
+    <button class="btn btn-danger" onclick="resetAll()">↺ Reset Form</button>
+    <button class="btn btn-outline" onclick="collapseAll()">⊟ Collapse All</button>
+    <button class="btn btn-outline" onclick="expandAll()">⊞ Expand All</button>
+    <button class="btn btn-accent" onclick="validateAndPrint()">🖨 Print / Export PDF</button>
+  </div>
+
+  <!-- ===================================================
+       SECTION 1 – PATIENT INFORMATION
+  ==================================================== -->
+  <div class="section-card" id="sec-patient">
+    <div class="section-header" onclick="toggleSection('sec-patient')">
+      <h2><span class="sec-icon">👤</span>Patient Information</h2>
+      <span class="section-toggle open" id="sec-patient-toggle">▾</span>
+    </div>
+    <div class="section-body" id="sec-patient-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="fileNo">File No. *</label>
+          <input type="text" id="fileNo" class="form-control" placeholder="e.g. AU-2024-001" required>
+          <span class="field-error">File No. is required</span>
+        </div>
+        <div class="form-group">
+          <label for="patientName">Patient Name *</label>
+          <input type="text" id="patientName" class="form-control" placeholder="Full name" required>
+          <span class="field-error">Patient name is required</span>
+        </div>
+        <div class="form-group">
+          <label for="studentName">Student Name *</label>
+          <input type="text" id="studentName" class="form-control" placeholder="Student full name" required>
+          <span class="field-error">Student name is required</span>
+        </div>
+        <div class="form-group">
+          <label for="studentId">Student ID *</label>
+          <input type="text" id="studentId" class="form-control" placeholder="e.g. 20230001" required>
+          <span class="field-error">Student ID is required</span>
+        </div>
+        <div class="form-group">
+          <label for="visitDate">Date</label>
+          <input type="date" id="visitDate" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="patientAge">Age</label>
+          <input type="number" id="patientAge" class="form-control" placeholder="Years" min="1" max="120">
+        </div>
+        <div class="form-group">
+          <label for="patientGender">Gender</label>
+          <select id="patientGender" class="form-control">
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       SECTION 2 – ORAL HYGIENE PROCEDURES
+  ==================================================== -->
+  <div class="section-card" id="sec-ohp">
+    <div class="section-header" onclick="toggleSection('sec-ohp')">
+      <h2><span class="sec-icon">🪥</span>Oral Hygiene Procedures</h2>
+      <span class="section-toggle open" id="sec-ohp-toggle">▾</span>
+    </div>
+    <div class="section-body" id="sec-ohp-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="brushType">Type of Brush</label>
+          <select id="brushType" class="form-control">
+            <option value="">Select</option>
+            <option>Manual – Soft</option>
+            <option>Manual – Medium</option>
+            <option>Manual – Hard</option>
+            <option>Electric</option>
+            <option>Orthodontic</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="brushTech">Brushing Technique</label>
+          <select id="brushTech" class="form-control">
+            <option value="">Select</option>
+            <option>Bass</option>
+            <option>Modified Bass</option>
+            <option>Stillman</option>
+            <option>Modified Stillman</option>
+            <option>Circular / Fones</option>
+            <option>Charter</option>
+            <option>Horizontal Scrub</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="brushFreq">Frequency</label>
+          <select id="brushFreq" class="form-control">
+            <option value="">Select</option>
+            <option>Once daily</option>
+            <option>Twice daily</option>
+            <option>Three times daily</option>
+            <option>After every meal</option>
+            <option>Irregular</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="otherHygiene">Other Aids</label>
+          <input type="text" id="otherHygiene" class="form-control" placeholder="e.g. Floss, Mouthwash">
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="form-group" style="max-width:280px">
+        <label>Halitosis</label>
+        <div class="radio-group">
+          <div class="radio-pill"><input type="radio" name="halitosis" id="hal-yes" value="yes"><label for="hal-yes">✔ Yes</label></div>
+          <div class="radio-pill"><input type="radio" name="halitosis" id="hal-no" value="no" checked><label for="hal-no">✘ No</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       SECTION 3 – SIMPLIFIED OHI (SOHI)
+  ==================================================== -->
+  <div class="section-card" id="sec-ohi">
+    <div class="section-header" onclick="toggleSection('sec-ohi')">
+      <h2><span class="sec-icon">📊</span>Simplified Oral Hygiene Index (SOHI)</h2>
+      <span class="section-toggle open" id="sec-ohi-toggle">▾</span>
+    </div>
+    <div class="section-body" id="sec-ohi-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Index teeth: 16, 11, 26, 36, 31, 46 &nbsp;|&nbsp; Score: 0 = No deposit · 1 = &lt;⅓ · 2 = &lt;⅔ · 3 = &gt;⅔</p>
+      <div class="ohi-wrapper">
+        <table class="ohi-table" id="ohiTable">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding-left:12px;min-width:90px;">Component</th>
+              <th>16</th><th>11</th><th>26</th><th>36</th><th>31</th><th>46</th>
+              <th>Sum</th><th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-label">Debris (DI)</td>
+              <td id="d16-cell"><select class="form-control ohi-select" data-type="debris" data-tooth="16" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="debris" data-tooth="11" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="debris" data-tooth="26" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="debris" data-tooth="36" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="debris" data-tooth="31" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="debris" data-tooth="46" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td id="debrisSum" style="font-weight:700;">0</td>
+              <td id="disScore" style="font-weight:700;color:var(--secondary);">0.00</td>
+            </tr>
+            <tr>
+              <td class="row-label">Calculus (CI)</td>
+              <td><select class="form-control ohi-select" data-type="calculus" data-tooth="16" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="calculus" data-tooth="11" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="calculus" data-tooth="26" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="calculus" data-tooth="36" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="calculus" data-tooth="31" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td><select class="form-control ohi-select" data-type="calculus" data-tooth="46" onchange="calcOHI()"><option>0</option><option>1</option><option>2</option><option>3</option></select></td>
+              <td id="calculusSum" style="font-weight:700;">0</td>
+              <td id="cisScore" style="font-weight:700;color:var(--secondary);">0.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Score Summary -->
+      <div class="score-grid" id="scoreGrid">
+        <div class="score-box" id="box-dis">
+          <div class="label">DIS Score</div>
+          <div class="value" id="dis-val">0.00</div>
+          <div class="classification" id="dis-class">—</div>
+        </div>
+        <div class="score-box" id="box-cis">
+          <div class="label">CIS Score</div>
+          <div class="value" id="cis-val">0.00</div>
+          <div class="classification" id="cis-class">—</div>
+        </div>
+        <div class="score-box" id="box-total">
+          <div class="label">Total OHI-S</div>
+          <div class="value" id="total-val">0.00</div>
+          <div class="classification" id="total-class">—</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;font-size:11.5px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;">
+        <span style="color:var(--good);font-weight:600;">✅ Good: 0.0 – 1.2</span>
+        <span style="color:var(--fair);font-weight:600;">⚠️ Fair: 1.3 – 3.0</span>
+        <span style="color:var(--poor);font-weight:600;">❌ Poor: 3.1 – 6.0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       SECTION 4 – ASSOCIATED RISK FACTORS
+  ==================================================== -->
+  <div class="section-card" id="sec-risk">
+    <div class="section-header" onclick="toggleSection('sec-risk')">
+      <h2><span class="sec-icon">⚠️</span>Associated Risk Factors</h2>
+      <span class="section-toggle open" id="sec-risk-toggle">▾</span>
+    </div>
+    <div class="section-body" id="sec-risk-body">
+      <div class="risk-row">
+
+        <!-- SMOKING -->
+        <div class="risk-group">
+          <label style="font-size:13px;font-weight:700;margin-bottom:8px;">🚬 Smoking</label>
+          <div class="radio-group">
+            <div class="radio-pill"><input type="radio" name="smoking" id="smk-no" value="no" checked onchange="toggleSmoking()"><label for="smk-no">✘ Non-Smoker</label></div>
+            <div class="radio-pill"><input type="radio" name="smoking" id="smk-yes" value="yes" onchange="toggleSmoking()"><label for="smk-yes">✔ Smoker</label></div>
+          </div>
+          <div class="conditional-row" id="smoking-detail">
+            <label style="margin-bottom:6px;">Cigarettes per day</label>
+            <div class="radio-group">
+              <div class="radio-pill"><input type="radio" name="smkAmt" id="smk-lt10" value="<10"><label for="smk-lt10">&lt; 10 / day</label></div>
+              <div class="radio-pill"><input type="radio" name="smkAmt" id="smk-ge10" value="≥10"><label for="smk-ge10">≥ 10 / day</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="width:1px;background:var(--border);"></div>
+
+        <!-- DIABETES -->
+        <div class="risk-group">
+          <label style="font-size:13px;font-weight:700;margin-bottom:8px;">🩸 Diabetes</label>
+          <div class="radio-group">
+            <div class="radio-pill"><input type="radio" name="diabetes" id="dia-no" value="no" checked onchange="toggleDiabetes()"><label for="dia-no">No Diagnosis</label></div>
+            <div class="radio-pill"><input type="radio" name="diabetes" id="dia-yes" value="yes" onchange="toggleDiabetes()"><label for="dia-yes">Diagnosed</label></div>
+          </div>
+          <div class="conditional-row" id="diabetes-detail">
+            <label style="margin-bottom:6px;">HbA1c Level</label>
+            <div class="radio-group">
+              <div class="radio-pill"><input type="radio" name="hba1c" id="hba-lt7" value="<7%"><label for="hba-lt7">HbA1c &lt; 7%</label></div>
+              <div class="radio-pill"><input type="radio" name="hba1c" id="hba-gt7" value=">7%"><label for="hba-gt7">HbA1c &gt; 7%</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="width:1px;background:var(--border);"></div>
+
+        <!-- OTHER RISK FACTORS -->
+        <div class="risk-group">
+          <label style="font-size:13px;font-weight:700;margin-bottom:8px;">📋 Other Systemic Factors</label>
+          <div class="form-group">
+            <input type="text" class="form-control" id="otherRisk" placeholder="e.g. Cardiovascular disease, medications…">
+          </div>
+          <div style="margin-top:8px;">
+            <label>Stress Level</label>
+            <select class="form-control" id="stressLevel">
+              <option value="">Not assessed</option>
+              <option>Low</option>
+              <option>Moderate</option>
+              <option>High</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       SECTION 5 – PERIODONTAL STATUS GRID
+  ==================================================== -->
+  <div class="section-card" id="sec-perio">
+    <div class="section-header" onclick="toggleSection('sec-perio')">
+      <h2><span class="sec-icon">🦷</span>Periodontal Status Grid</h2>
+      <span class="section-toggle open" id="sec-perio-toggle">▾</span>
+    </div>
+    <div class="section-body" id="sec-perio-body">
+      <p style="font-size:11.5px;color:var(--muted);margin-bottom:10px;">Pocket Depth (PD) mm · Clinical Attachment Level (CAL) mm · Mobility 0–3 · Furcation 0–3 · Bleeding on Probing (BOP)</p>
+      <div class="perio-scroll">
+        <table class="perio-table" id="perioTable">
+          <thead>
+            <tr>
+              <th>Tooth</th>
+              <th>Mobility<br>(0–3)</th>
+              <th>Furcation<br>(0–3)</th>
+              <th>BOP</th>
+              <th>PD M<br>(mm)</th>
+              <th>PD B<br>(mm)</th>
+              <th>PD D<br>(mm)</th>
+              <th>CAL M<br>(mm)</th>
+              <th>CAL B<br>(mm)</th>
+              <th>CAL D<br>(mm)</th>
+              <th>Recession</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="perioBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       SECTION 6 – INVESTIGATIONS
+  ==================================================== -->
+  <div class="section-card" id="sec-invest">
+    <div class="section-header" onclick="toggleSection('sec-invest')">
+      <h2><span class="sec-icon">🔬</span>Investigations</h2>
+      <span class="section-toggle open" id="sec-invest-toggle">▾</span>
+    </div>
+    <div class="section-body" id="sec-invest-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Bone Level (Radiographic)</label>
+          <div class="bone-options">
+            <div class="bone-pill"><input type="radio" name="boneLevel" id="bl-lt15" value="<15%"><label for="bl-lt15">&lt; 15%</label></div>
+            <div class="bone-pill"><input type="radio" name="boneLevel" id="bl-1533" value="15–33%"><label for="bl-1533">15 – 33%</label></div>
+            <div class="bone-pill"><input type="radio" name="boneLevel" id="bl-gt33" value=">33%"><label for="bl-gt33">&gt; 33%</label></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="ageRatio">Age–Bone Loss Ratio</label>
+          <input type="number" step="0.01" id="ageRatio" class="form-control" placeholder="e.g. 0.5" min="0" max="10">
+          <span style="font-size:11px;color:var(--muted);margin-top:3px;">Bone loss (%) ÷ Patient age</span>
+        </div>
+        <div class="form-group">
+          <label for="xrayType">Radiograph Type</label>
+          <select id="xrayType" class="form-control">
+            <option value="">Select</option>
+            <option>Full Mouth Periapical</option>
+            <option>Bitewing</option>
+            <option>Panoramic (OPG)</option>
+            <option>CBCT</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="xrayDate">Radiograph Date</label>
+          <input type="date" id="xrayDate" class="form-control">
+        </div>
+        <div class="form-group" style="grid-column:span 2">
+          <label for="xrayFindings">Radiographic Findings</label>
+          <textarea id="xrayFindings" class="form-control" rows="3" placeholder="Describe bone pattern, furcation involvement, calculus visibility…" style="resize:vertical;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       SECTION 7 – DIAGNOSIS & PROGNOSIS
+  ==================================================== -->
+  <div class="section-card" id="sec-diag">
+    <div class="section-header" onclick="toggleSection('sec-diag')">
+      <h2><span class="sec-icon">📋</span>Diagnosis &amp; Prognosis</h2>
+      <span class="section-toggle open" id="sec-diag-toggle">▾</span>
+    </div>
+    <div class="section-body" id="sec-diag-body">
+      <div class="form-grid">
+        <div class="form-group" style="grid-column:span 2">
+          <label for="periodiagnosis">Periodontal Diagnosis (2017 Classification)</label>
+          <select id="periodiagnosis" class="form-control">
+            <option value="">Select diagnosis</option>
+            <optgroup label="Periodontal Health">
+              <option>Periodontal Health on Intact Periodontium</option>
+              <option>Periodontal Health on Reduced Periodontium</option>
+            </optgroup>
+            <optgroup label="Gingivitis">
+              <option>Plaque-Induced Gingivitis – Intact Periodontium</option>
+              <option>Plaque-Induced Gingivitis – Reduced Periodontium (Non-Periodontitis)</option>
+              <option>Plaque-Induced Gingivitis – Reduced Periodontium (Periodontitis)</option>
+              <option>Non-Plaque-Induced Gingival Condition</option>
+            </optgroup>
+            <optgroup label="Periodontitis">
+              <option>Periodontitis Stage I – Grade A</option>
+              <option>Periodontitis Stage I – Grade B</option>
+              <option>Periodontitis Stage I – Grade C</option>
+              <option>Periodontitis Stage II – Grade A</option>
+              <option>Periodontitis Stage II – Grade B</option>
+              <option>Periodontitis Stage II – Grade C</option>
+              <option>Periodontitis Stage III – Grade A</option>
+              <option>Periodontitis Stage III – Grade B</option>
+              <option>Periodontitis Stage III – Grade C</option>
+              <option>Periodontitis Stage IV – Grade A</option>
+              <option>Periodontitis Stage IV – Grade B</option>
+              <option>Periodontitis Stage IV – Grade C</option>
+            </optgroup>
+            <optgroup label="Necrotizing Diseases">
+              <option>Necrotizing Gingivitis (NG)</option>
+              <option>Necrotizing Periodontitis (NP)</option>
+              <option>Necrotizing Stomatitis (NS)</option>
+            </optgroup>
+            <optgroup label="Other">
+              <option>Peri-Implant Health</option>
+              <option>Peri-Implant Mucositis</option>
+              <option>Peri-Implantitis</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:span 2">
+          <label for="diagNotes">Diagnosis Notes</label>
+          <textarea id="diagNotes" class="form-control" rows="2" placeholder="Stage / Grade justification, additional findings…" style="resize:vertical;"></textarea>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;">
+        <div class="form-group">
+          <label>Overall Prognosis</label>
+          <div class="prognosis-pills">
+            <div class="prog-pill"><input type="radio" name="overallProg" id="op-good" value="good"><label for="op-good" class="good">✅ Good</label></div>
+            <div class="prog-pill"><input type="radio" name="overallProg" id="op-fair" value="fair"><label for="op-fair" class="fair">⚠️ Fair</label></div>
+            <div class="prog-pill"><input type="radio" name="overallProg" id="op-poor" value="poor"><label for="op-poor" class="poor">❌ Poor</label></div>
+            <div class="prog-pill"><input type="radio" name="overallProg" id="op-hopeless" value="hopeless"><label for="op-hopeless" class="poor">💀 Hopeless</label></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="individualProg">Individual Tooth Prognosis</label>
+          <select id="individualProg" class="form-control">
+            <option value="">Select</option>
+            <option>Good</option>
+            <option>Fair</option>
+            <option>Poor</option>
+            <option>Questionable</option>
+            <option>Hopeless</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       SECTION 8 – TREATMENT PLAN
+  ==================================================== -->
+  <div class="section-card" id="sec-tx">
+    <div class="section-header" onclick="toggleSection('sec-tx')">
+      <h2><span class="sec-icon">💊</span>Treatment Plan</h2>
+      <span class="section-toggle open" id="sec-tx-toggle">▾</span>
+    </div>
+    <div class="section-body" id="sec-tx-body">
+      <div class="tx-grid">
+        <div class="tx-box">
+          <div class="tx-box-header">Phase 1 – Etiotropic (Cause-Related)</div>
+          <textarea id="tx-phase1" placeholder="OHI, scaling & root planing, patient motivation, antimicrobials…"></textarea>
+        </div>
+        <div class="tx-box">
+          <div class="tx-box-header">Phase 2 – Surgical</div>
+          <textarea id="tx-phase2" placeholder="Osseous surgery, flap procedures, guided tissue regeneration, implants…"></textarea>
+        </div>
+        <div class="tx-box">
+          <div class="tx-box-header">Phase 3 – Restorative / Maintenance</div>
+          <textarea id="tx-phase3" placeholder="Recall schedule, prosthetics, supportive periodontal therapy…"></textarea>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label for="nextVisit">Next Recall Visit</label>
+          <input type="date" id="nextVisit" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="recallInterval">Recall Interval</label>
+          <select id="recallInterval" class="form-control">
+            <option value="">Select</option>
+            <option>3 months</option>
+            <option>4 months</option>
+            <option>6 months</option>
+            <option>12 months</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="supervisorSig">Supervisor Signature</label>
+          <input type="text" id="supervisorSig" class="form-control" placeholder="Dr. Name">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+/* =========================================================
+   TOOTH LIST (FDI numbering)
+========================================================= */
+const UPPER_TEETH = [18,17,16,15,14,13,12,11, 21,22,23,24,25,26,27,28];
+const LOWER_TEETH = [48,47,46,45,44,43,42,41, 31,32,33,34,35,36,37,38];
+const ALL_TEETH   = [...UPPER_TEETH, ...LOWER_TEETH];
+
+/* =========================================================
+   BUILD PERIODONTAL TABLE ROWS
+========================================================= */
+function buildPerioTable() {
+  const tbody = document.getElementById('perioBody');
+  tbody.innerHTML = '';
+
+  // Upper arch label
+  tbody.insertAdjacentHTML('beforeend', `
+    <tr class="arch-divider"><td colspan="12">▲ MAXILLA (Upper) ▲</td></tr>
+  `);
+  UPPER_TEETH.forEach(t => tbody.insertAdjacentHTML('beforeend', buildPerioRow(t)));
+
+  // Lower arch label
+  tbody.insertAdjacentHTML('beforeend', `
+    <tr class="arch-divider"><td colspan="12">▼ MANDIBLE (Lower) ▼</td></tr>
+  `);
+  LOWER_TEETH.forEach(t => tbody.insertAdjacentHTML('beforeend', buildPerioRow(t)));
+}
+
+function buildPerioRow(tooth) {
+  const mobOpts = [0,1,2,3].map(v=>`<option>${v}</option>`).join('');
+  const furOpts = [0,1,2,3].map(v=>`<option>${v}</option>`).join('');
+  return `
+    <tr data-tooth="${tooth}">
+      <td><span class="tooth-num">${tooth}</span></td>
+      <td><select class="form-control perio-sel" aria-label="Mobility">${mobOpts}</select></td>
+      <td><select class="form-control perio-sel" aria-label="Furcation">${furOpts}</select></td>
+      <td>
+        <select class="form-control perio-sel" aria-label="BOP">
+          <option value="">-</option>
+          <option>Yes</option>
+          <option>No</option>
+        </select>
+      </td>
+      <td><input type="number" class="form-control" min="0" max="15" placeholder="—" aria-label="PD Mesial"></td>
+      <td><input type="number" class="form-control" min="0" max="15" placeholder="—" aria-label="PD Buccal"></td>
+      <td><input type="number" class="form-control" min="0" max="15" placeholder="—" aria-label="PD Distal"></td>
+      <td><input type="number" class="form-control" min="0" max="20" placeholder="—" aria-label="CAL Mesial"></td>
+      <td><input type="number" class="form-control" min="0" max="20" placeholder="—" aria-label="CAL Buccal"></td>
+      <td><input type="number" class="form-control" min="0" max="20" placeholder="—" aria-label="CAL Distal"></td>
+      <td><input type="number" class="form-control" min="0" max="10" placeholder="—" aria-label="Recession"></td>
+      <td><input type="text" class="form-control" placeholder="notes" style="width:80px;" aria-label="Notes"></td>
+    </tr>`;
+}
+
+/* =========================================================
+   OHI CALCULATION
+========================================================= */
+function calcOHI() {
+  const debrisSels   = document.querySelectorAll('.ohi-select[data-type="debris"]');
+  const calculusSels = document.querySelectorAll('.ohi-select[data-type="calculus"]');
+
+  let debrisSum = 0, calcSum = 0;
+  const n = debrisSels.length; // always 6
+
+  debrisSels.forEach(s   => debrisSum += Number(s.value));
+  calculusSels.forEach(s => calcSum   += Number(s.value));
+
+  const DIS   = debrisSum  / n;
+  const CIS   = calcSum    / n;
+  const total = DIS + CIS;
+
+  document.getElementById('debrisSum').textContent  = debrisSum;
+  document.getElementById('calculusSum').textContent= calcSum;
+  document.getElementById('disScore').textContent   = DIS.toFixed(2);
+  document.getElementById('cisScore').textContent   = CIS.toFixed(2);
+
+  // Live display
+  document.getElementById('dis-val').textContent   = DIS.toFixed(2);
+  document.getElementById('cis-val').textContent   = CIS.toFixed(2);
+  document.getElementById('total-val').textContent = total.toFixed(2);
+
+  applyClass('box-dis',   'dis-class',   DIS);
+  applyClass('box-cis',   'cis-class',   CIS);
+  applyClass('box-total', 'total-class', total);
+}
+
+function classify(score) {
+  if (score <= 1.2) return { label:'✅ Good',  cls:'score-good' };
+  if (score <= 3.0) return { label:'⚠️ Fair',  cls:'score-fair' };
+  return               { label:'❌ Poor',  cls:'score-poor' };
+}
+
+function applyClass(boxId, classId, score) {
+  const box  = document.getElementById(boxId);
+  const span = document.getElementById(classId);
+  const { label, cls } = classify(score);
+  box.className = `score-box ${cls}`;
+  span.textContent = label;
+}
+
+/* =========================================================
+   SECTION COLLAPSE / EXPAND
+========================================================= */
+function toggleSection(secId) {
+  const body    = document.getElementById(secId + '-body');
+  const toggle  = document.getElementById(secId + '-toggle');
+  if (!body) return;
+  const collapsed = body.classList.toggle('collapsed');
+  toggle.classList.toggle('open', !collapsed);
+}
+
+function collapseAll() {
+  document.querySelectorAll('.section-body').forEach(b => b.classList.add('collapsed'));
+  document.querySelectorAll('.section-toggle').forEach(t => t.classList.remove('open'));
+}
+
+function expandAll() {
+  document.querySelectorAll('.section-body').forEach(b => b.classList.remove('collapsed'));
+  document.querySelectorAll('.section-toggle').forEach(t => t.classList.add('open'));
+}
+
+/* =========================================================
+   CONDITIONAL RISK FACTORS
+========================================================= */
+function toggleSmoking() {
+  const isYes = document.getElementById('smk-yes').checked;
+  document.getElementById('smoking-detail').classList.toggle('visible', isYes);
+}
+
+function toggleDiabetes() {
+  const isYes = document.getElementById('dia-yes').checked;
+  document.getElementById('diabetes-detail').classList.toggle('visible', isYes);
+}
+
+/* =========================================================
+   VALIDATION
+========================================================= */
+function validateForm() {
+  let valid = true;
+  const required = [
+    { id: 'fileNo',      msg: 'File No. is required' },
+    { id: 'patientName', msg: 'Patient name is required' },
+    { id: 'studentName', msg: 'Student name is required' },
+    { id: 'studentId',   msg: 'Student ID is required'  }
+  ];
+  required.forEach(({ id }) => {
+    const el = document.getElementById(id);
+    const group = el.closest('.form-group');
+    if (!el.value.trim()) {
+      group.classList.add('has-error');
+      valid = false;
+    } else {
+      group.classList.remove('has-error');
+    }
+  });
+  return valid;
+}
+
+function validateAndPrint() {
+  if (!validateForm()) {
+    // Expand patient section so errors are visible
+    const body = document.getElementById('sec-patient-body');
+    body.classList.remove('collapsed');
+    document.getElementById('sec-patient-toggle').classList.add('open');
+    alert('Please fill in all required patient fields before printing.');
+    return;
+  }
+  window.print();
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+function resetAll() {
+  if (!confirm('Reset all data in this form? This cannot be undone.')) return;
+  document.querySelectorAll('.form-control').forEach(el => {
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else if (el.tagName === 'TEXTAREA') el.value = '';
+    else if (el.type !== 'radio' && el.type !== 'checkbox') el.value = '';
+  });
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  // Restore checked defaults
+  const halNo = document.getElementById('hal-no');
+  if (halNo) halNo.checked = true;
+  const smkNo = document.getElementById('smk-no');
+  if (smkNo) { smkNo.checked = true; toggleSmoking(); }
+  const diaNO = document.getElementById('dia-no');
+  if (diaNO) { diaNO.checked = true; toggleDiabetes(); }
+
+  document.querySelectorAll('.has-error').forEach(el => el.classList.remove('has-error'));
+  calcOHI();
+}
+
+/* =========================================================
+   SET DEFAULT DATE
+========================================================= */
+function setDefaultDate() {
+  const today = new Date().toISOString().split('T')[0];
+  const visitDate = document.getElementById('visitDate');
+  if (visitDate && !visitDate.value) visitDate.value = today;
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+document.addEventListener('DOMContentLoaded', () => {
+  buildPerioTable();
+  calcOHI();
+  setDefaultDate();
+  // Expand all sections by default
+  expandAll();
+});
+</script>
+</body>
+</html>
