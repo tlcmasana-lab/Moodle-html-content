@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moodle AI Prompt Library | Ajman University TLC</title>
+<style>
+:root{
+  --primary:#39a9dc;--secondary:#f29f00;--gray:#999999;--primary-dark:#2a8bb9;
+  --bg:#F8F8F8;--card:#FFFFFF;--text:#2D2D2D;--text2:#999999;--border:#E5E5E5;--success:#2E7D32;
+  --accent-text:#39a9dc;--soft:#EEF7FC;--nav-bg:rgba(255,255,255,.82);--chip:#FFFFFF;
+  --shadow:0 2px 10px rgba(45,45,45,.07);--shadow-hover:0 14px 34px rgba(42,139,185,.16);
+  --radius:16px;
+  --font:"Segoe UI","Segoe UI Variable",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#121619;--card:#1b2126;--text:#EEF2F4;--text2:#999999;--border:#313A41;
+  --accent-text:#39a9dc;--soft:#1f2a31;--nav-bg:rgba(22,27,31,.82);--chip:#1b2126;
+  --shadow:0 2px 10px rgba(0,0,0,.35);--shadow-hover:0 14px 34px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.55;transition:background .35s,color .35s}
+body,.card,.stat,.cat-card,.chip,.nav,.modal,input,select,textarea{transition:background-color .35s,color .35s,border-color .35s,box-shadow .25s,transform .25s}
+section{scroll-margin-top:84px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+h1,h2,h3{line-height:1.2;margin:0}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--secondary);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--primary);color:#fff;padding:10px 16px;border-radius:8px;z-index:1000}
+.skip:focus{left:8px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--border)}
+.nav-in{display:flex;align-items:center;gap:18px;height:68px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--text);flex-shrink:0}
+.brand-mark{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;letter-spacing:.5px;border:2px solid var(--secondary)}
+.brand-text{display:flex;flex-direction:column;line-height:1.15}
+.brand-text b{font-size:15px}.brand-text span{font-size:11.5px;color:var(--text2)}
+.menu{display:flex;gap:2px;margin:0 auto;padding:0;list-style:none;overflow-x:auto;scrollbar-width:none}
+.menu::-webkit-scrollbar{display:none}
+.menu a{display:block;padding:9px 14px;border-radius:10px;text-decoration:none;color:var(--text);font-size:14.5px;font-weight:600;white-space:nowrap}
+.menu a:hover{background:var(--soft);color:var(--accent-text)}
+.menu a.active{background:var(--primary);color:#fff}
+.nav-tools{display:flex;gap:8px;flex-shrink:0}
+.icon-btn{width:40px;height:40px;border-radius:11px;border:1px solid var(--border);background:var(--chip);color:var(--text);font-size:17px;display:grid;place-items:center}
+.icon-btn:hover{border-color:var(--primary);color:var(--accent-text);transform:translateY(-1px)}
+
+/* HERO */
+.hero{position:relative;background:linear-gradient(135deg,#1d6f96 0%,var(--primary-dark) 38%,var(--primary) 100%);color:#fff;padding:78px 0 70px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(242,159,0,.22),transparent 45%),radial-gradient(circle at 10% 90%,rgba(255,255,255,.07),transparent 40%)}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,transparent,var(--secondary),transparent)}
+.hero .wrap{position:relative;max-width:900px;text-align:center}
+.eyebrow{display:inline-block;font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--secondary);font-weight:700;border:1px solid rgba(242,159,0,.55);padding:6px 16px;border-radius:99px;margin-bottom:22px;background:rgba(255,255,255,.06)}
+.hero h1{font-size:clamp(34px,6vw,58px);font-weight:800;letter-spacing:-.5px}
+.hero h1 em{font-style:normal;color:var(--secondary)}
+.hero p.sub{font-size:clamp(15px,2vw,18px);max-width:760px;margin:20px auto 30px;color:rgba(255,255,255,.88)}
+.hero-search{display:flex;max-width:680px;margin:0 auto;background:rgba(255,255,255,.96);border-radius:16px;padding:7px;box-shadow:0 14px 40px rgba(0,0,0,.3);border:2px solid transparent}
+.hero-search:focus-within{border-color:var(--secondary)}
+.hero-search input{flex:1;border:0;background:transparent;font-size:17px;padding:12px 16px;color:#2D2D2D;min-width:0;outline:none;font-family:inherit}
+.hero-search input::placeholder{color:#777}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:11px;padding:10px 16px;font-size:14px;font-weight:700;text-decoration:none;transition:all .22s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 6px 16px rgba(42,139,185,.3)}
+.btn-ghost{background:transparent;color:var(--accent-text);border-color:var(--border)}
+.btn-ghost:hover{border-color:var(--primary);background:var(--soft)}
+.btn-gold{background:var(--secondary);color:#2b1a00}
+.btn-gold:hover{background:#f7b84a;transform:translateY(-1px)}
+.btn-lg{padding:15px 28px;font-size:16px;border-radius:13px}
+.hero-cta{margin-top:26px}
+.hero-stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:38px}
+.hero-stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:14px;padding:12px 24px;min-width:130px}
+.hero-stat b{display:block;font-size:26px;color:var(--secondary)}
+.hero-stat span{font-size:13px;color:rgba(255,255,255,.85)}
+
+/* SECTIONS */
+.sec{padding:56px 0 0}
+.sec-head{margin-bottom:24px}
+.sec-head h2{font-size:clamp(24px,3vw,30px);color:var(--accent-text);display:flex;align-items:center;gap:12px}
+.sec-head h2::after{content:"";height:3px;width:46px;background:var(--secondary);border-radius:3px}
+.sec-head p{color:var(--text2);margin:8px 0 0}
+
+.welcome{background:var(--card);border:1px solid var(--border);border-left:5px solid var(--secondary);border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow);margin-top:-34px;position:relative;z-index:2}
+.welcome h2{font-size:21px;color:var(--accent-text);margin-bottom:10px}
+.welcome p{margin:0 0 8px;color:var(--text)}
+.welcome p:last-child{color:var(--text2);margin:0}
+
+/* FEATURED */
+.featured{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;border-radius:22px;padding:36px;position:relative;overflow:hidden;box-shadow:0 18px 44px rgba(42,139,185,.28);border:2px solid rgba(242,159,0,.55)}
+.featured::before{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:rgba(242,159,0,.13)}
+.f-badge{display:inline-block;background:var(--secondary);color:#2b1a00;font-weight:800;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;padding:6px 14px;border-radius:99px}
+.featured h3{font-size:clamp(26px,4vw,38px);margin:16px 0 8px;position:relative}
+.featured .f-desc{font-size:17px;color:rgba(255,255,255,.9);margin:0 0 20px;position:relative}
+.f-prompt{background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:20px 22px;font-family:Consolas,"Cascadia Mono",monospace;font-size:14px;white-space:pre-wrap;line-height:1.65;max-height:230px;overflow:auto;position:relative;color:#fff}
+.f-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;position:relative}
+.featured .btn-ghost{color:#fff;border-color:rgba(255,255,255,.45)}
+.featured .btn-ghost:hover{background:rgba(255,255,255,.14);border-color:#fff}
+
+/* SEARCH & FILTER */
+.search-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.search-box{position:relative}
+.search-box input{width:100%;font-size:16px;padding:14px 44px 14px 46px;border:2px solid var(--border);border-radius:13px;background:var(--bg);color:var(--text);font-family:inherit}
+.search-box input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(57,169,220,.12)}
+.search-box .ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}
+.clear-x{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:0;border-radius:50%;background:var(--border);color:var(--text);display:none}
+.clear-x.show{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.chip{border:1.5px solid var(--border);background:var(--chip);color:var(--text);border-radius:99px;padding:8px 16px;font-size:13.5px;font-weight:600}
+.chip:hover{border-color:var(--primary);color:var(--accent-text);transform:translateY(-2px)}
+.chip[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 5px 14px rgba(57,169,220,.28)}
+
+/* STATS */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:flex;gap:16px;align-items:center;border-top:4px solid var(--secondary)}
+.stat:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
+.stat-ico{width:52px;height:52px;border-radius:14px;background:var(--soft);display:grid;place-items:center;font-size:25px;flex-shrink:0}
+.stat b{display:block;font-size:24px;color:var(--accent-text);line-height:1.15;word-break:break-word}
+.stat small{display:block;color:var(--text2);font-size:13px}
+.stat .s-sub{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* CATEGORY CARDS */
+.grid-cat{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.cat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 18px;text-align:center;box-shadow:var(--shadow);width:100%;color:var(--text)}
+.cat-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);border-color:var(--secondary)}
+.cat-card .ci{font-size:38px;display:block;margin-bottom:10px}
+.cat-card b{display:block;font-size:16px;color:var(--accent-text)}
+.cat-card span.n{display:inline-block;margin-top:8px;background:var(--soft);border:1px solid var(--border);border-radius:99px;padding:3px 12px;font-size:12.5px;color:var(--text2);font-weight:600}
+
+/* PROMPT CARDS */
+.results-info{color:var(--text2);font-size:14px;margin:0 0 16px}
+.grid-prompts{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:22px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;position:relative;animation:rise .45s ease both}
+.card::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:0 4px 4px 0;background:var(--secondary);opacity:0;transition:opacity .25s}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);border-color:rgba(242,159,0,.7)}
+.card:hover::before{opacity:1}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.badge{background:var(--primary);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.4px;padding:4px 12px;border-radius:99px}
+.badge.community{background:var(--secondary);color:#2b1a00}
+.use{font-size:12px;color:var(--text2)}
+.card h3{font-size:18.5px;margin-bottom:6px}
+.card .desc{color:var(--text2);font-size:14px;margin:0 0 12px}
+.preview{background:var(--bg);border:1px dashed var(--border);border-radius:11px;padding:12px 14px;font-family:Consolas,"Cascadia Mono",monospace;font-size:12.5px;color:var(--text2);margin-bottom:16px;flex:1;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
+.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.card-actions .btn{padding:9px 10px;font-size:13px}
+.card-actions .btn-primary{grid-column:1 / -1}
+.btn-fav[aria-pressed="true"]{background:var(--soft);border-color:var(--primary);color:var(--accent-text)}
+.empty{text-align:center;padding:44px 20px;background:var(--card);border:2px dashed var(--border);border-radius:var(--radius);color:var(--text2)}
+.empty b{display:block;font-size:19px;color:var(--text);margin-bottom:6px}
+
+/* POPULAR & RECENT */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:8px 22px;box-shadow:var(--shadow)}
+.panel h3{padding:16px 0 6px;font-size:16px;color:var(--text2);font-weight:600}
+.row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+.row:last-child{border-bottom:0}
+.rank{width:34px;height:34px;border-radius:50%;background:var(--soft);color:var(--accent-text);font-weight:800;display:grid;place-items:center;flex-shrink:0;border:1.5px solid var(--secondary)}
+.row:first-child .rank{background:var(--secondary);color:#2b1a00}
+.row-main{flex:1;min-width:0}
+.row-main b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-main span{font-size:12.5px;color:var(--text2)}
+.row .btn{padding:7px 12px;font-size:12.5px}
+
+/* SUBMIT */
+.collapse-btn{width:100%;display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;font-size:18px;font-weight:700;color:var(--accent-text);box-shadow:var(--shadow)}
+.collapse-btn:hover{border-color:var(--primary)}
+.collapse-btn .chev{transition:transform .3s}
+.collapse-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.collapse-body{display:none;background:var(--card);border:1px solid var(--border);border-top:0;border-radius:0 0 var(--radius) var(--radius);padding:24px;margin-top:-8px;box-shadow:var(--shadow)}
+.collapse-body.open{display:block;animation:rise .35s ease}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1 / -1}
+label{font-weight:700;font-size:14px}
+input[type=text],select,textarea{border:2px solid var(--border);border-radius:11px;padding:11px 14px;font-size:15px;background:var(--bg);color:var(--text);font-family:inherit;width:100%}
+textarea{min-height:170px;resize:vertical;font-family:Consolas,"Cascadia Mono",monospace;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(57,169,220,.12)}
+.err{color:#B3261E;font-size:13px;min-height:18px}
+[data-theme="dark"] .err{color:#FF9A93}
+.hint{font-size:13px;color:var(--text2)}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(5,20,30,.62);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:300}
+.overlay.open{display:flex;animation:fade .25s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal{background:var(--card);border-radius:22px;width:100%;max-width:820px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden;border:1px solid var(--border);animation:pop .3s ease}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(14px)}to{opacity:1;transform:none}}
+.modal-head{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;padding:22px 26px;border-bottom:3px solid var(--secondary)}
+.modal-head h2{font-size:23px;margin-top:8px}
+.modal-head p{margin:6px 0 0;color:rgba(255,255,255,.85);font-size:14px}
+.modal-body{padding:22px 26px;overflow:auto}
+.modal-body pre{margin:0;white-space:pre-wrap;word-wrap:break-word;font-family:Consolas,"Cascadia Mono",monospace;font-size:14px;line-height:1.7;background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:20px}
+.modal-foot{padding:16px 26px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;background:var(--card)}
+
+/* TOAST & TOP */
+.toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,30px);background:var(--success);color:#fff;padding:14px 26px;border-radius:13px;font-weight:700;box-shadow:0 12px 30px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:all .35s;z-index:400;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.to-top{position:fixed;right:24px;bottom:26px;width:50px;height:50px;border-radius:50%;border:2px solid var(--secondary);background:var(--primary);color:#fff;font-size:21px;box-shadow:0 8px 22px rgba(42,139,185,.4);opacity:0;visibility:hidden;transform:translateY(14px);transition:all .3s;z-index:200}
+.to-top.show{opacity:1;visibility:visible;transform:none}
+.to-top:hover{background:var(--primary-dark);transform:translateY(-3px)}
+
+/* FOOTER */
+footer{margin-top:72px;background:linear-gradient(135deg,#1d6f96,var(--primary-dark));color:#fff;border-top:4px solid var(--secondary);padding:48px 0 0}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:34px;padding-bottom:34px}
+footer h4{color:var(--secondary);margin:0 0 12px;font-size:13px;letter-spacing:1.6px;text-transform:uppercase}
+footer h3{font-size:22px;margin-bottom:8px}
+footer p{margin:4px 0;color:rgba(255,255,255,.86);font-size:14.5px}
+footer a{color:#fff;text-decoration:none}
+footer a:hover{color:var(--secondary)}
+footer ul{list-style:none;margin:0;padding:0}footer li{margin:6px 0;font-size:14.5px}
+.foot-bar{border-top:1px solid rgba(255,255,255,.16);padding:16px 0;text-align:center;font-size:13px;color:rgba(255,255,255,.7)}
+.ver{display:inline-block;border:1px solid var(--secondary);color:var(--secondary);padding:2px 12px;border-radius:99px;font-weight:700;font-size:13px}
+
+@media(max-width:1000px){.grid-4,.grid-cat{grid-template-columns:repeat(2,1fr)}.two-col,.foot-grid{grid-template-columns:1fr}.brand-text span{display:none}}
+@media(max-width:700px){.nav-in{flex-wrap:wrap;height:auto;padding:10px 0}.menu{order:3;width:100%;margin:0}.nav-tools{margin-left:auto}.form-grid{grid-template-columns:1fr}.featured{padding:24px}.welcome{padding:22px}.grid-prompts{grid-template-columns:1fr}.hero{padding:56px 0 60px}.hero-search{flex-direction:column;gap:6px}section{scroll-margin-top:130px}}
+@media(max-width:420px){.grid-4,.grid-cat{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media(forced-colors:active){.btn,.chip,.card,.stat,.cat-card{border:2px solid ButtonText}.chip[aria-pressed="true"]{outline:3px solid Highlight}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="nav" role="banner">
+  <div class="wrap nav-in">
+    <a class="brand" href="#home" aria-label="Moodle AI Prompt Library, Teaching and Learning Center, Ajman University">
+      <span class="brand-mark" aria-hidden="true">TLC</span>
+      <span class="brand-text"><b>Moodle AI Prompt Library</b><span>TLC &middot; Ajman University</span></span>
+    </a>
+    <nav aria-label="Main navigation" style="flex:1;min-width:0;display:flex">
+      <ul class="menu">
+        <li><a href="#home" data-nav>Home</a></li>
+        <li><a href="#featured" data-nav>Featured</a></li>
+        <li><a href="#categories" data-nav>Categories</a></li>
+        <li><a href="#popular" data-nav>Popular</a></li>
+        <li><a href="#favorites" data-nav>Favorites</a></li>
+        <li><a href="#submit" data-nav>Submit Prompt</a></li>
+      </ul>
+    </nav>
+    <div class="nav-tools">
+      <button class="icon-btn" id="navSearch" aria-label="Jump to search" title="Search">&#128269;</button>
+      <button class="icon-btn" id="themeBtn" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode">&#127769;</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero" id="home" aria-labelledby="heroTitle">
+  <div class="wrap">
+    <span class="eyebrow">Teaching and Learning Center &middot; Ajman University</span>
+    <h1 id="heroTitle">Moodle <em>AI</em> Prompt Library</h1>
+    <p class="sub">A curated collection of AI prompts designed to support Moodle development, content creation, quiz creation, rubric template development, assessment design, interactive H5P activities, and meaningful learner engagement.</p>
+    <form class="hero-search" role="search" id="heroForm">
+      <label for="heroSearch" class="sr-only">Search prompts</label>
+      <input id="heroSearch" type="search" placeholder="Search prompts, e.g. quiz, rubric, H5P, forum&hellip;" autocomplete="off">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+    <div class="hero-cta"><a href="#gallery" class="btn btn-gold btn-lg" id="browseBtn">Browse Prompts &darr;</a></div>
+    <div class="hero-stats" aria-label="Quick statistics">
+      <div class="hero-stat"><b id="hsPrompts">0</b><span>Prompts</span></div>
+      <div class="hero-stat"><b id="hsCats">0</b><span>Categories</span></div>
+      <div class="hero-stat"><b id="hsCopies">0</b><span>Total Copies</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="welcome" role="note">
+    <h2>Welcome</h2>
+    <p>Welcome to the Moodle AI Prompt Library, a curated collection of reusable prompts developed to support faculty and staff in designing engaging Moodle learning experiences, creating assessments, developing interactive activities, and enhancing student engagement.</p>
+    <p>This repository is maintained by the Teaching and Learning Center (TLC) at Ajman University.</p>
+  </div>
+
+  <section class="sec" id="featured" aria-labelledby="featTitle">
+    <div class="sec-head"><h2 id="featTitle">Featured Prompt of the Week</h2></div>
+    <div id="featuredBox"></div>
+  </section>
+
+  <section class="sec" id="search" aria-labelledby="searchTitle">
+    <div class="sec-head"><h2 id="searchTitle">Search &amp; Filter</h2></div>
+    <div class="search-panel">
+      <div class="search-box" role="search">
+        <label for="mainSearch" class="sr-only">Search by title, description, category, keywords or prompt content</label>
+        <span class="ico" aria-hidden="true">&#128269;</span>
+        <input id="mainSearch" type="search" placeholder="Search by title, description, category, keywords or prompt content&hellip;" autocomplete="off">
+        <button class="clear-x" id="clearX" aria-label="Clear search">&times;</button>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filter prompts by category"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="stats" aria-labelledby="statsTitle">
+    <div class="sec-head"><h2 id="statsTitle">Prompt Statistics</h2></div>
+    <div class="grid-4" id="statsGrid"></div>
+  </section>
+
+  <section class="sec" id="categories" aria-labelledby="catTitle">
+    <div class="sec-head"><h2 id="catTitle">Featured Categories</h2><p>Select a category to filter the gallery.</p></div>
+    <div class="grid-cat" id="catGrid"></div>
+  </section>
+
+  <section class="sec" id="gallery" aria-labelledby="galTitle">
+    <div class="sec-head"><h2 id="galTitle">Prompt Gallery</h2></div>
+    <p class="results-info" id="resultsInfo" role="status" aria-live="polite"></p>
+    <div class="grid-prompts" id="promptGrid"></div>
+  </section>
+
+  <section class="sec" id="popular" aria-labelledby="popTitle">
+    <div class="two-col">
+      <div>
+        <div class="sec-head"><h2 id="popTitle">Most Popular</h2></div>
+        <div class="panel"><h3>Top 5 most copied prompts</h3><div id="popList"></div></div>
+      </div>
+      <div id="recent">
+        <div class="sec-head"><h2>Recently Added</h2></div>
+        <div class="panel"><h3>Latest additions to the library</h3><div id="recentList"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="favorites" aria-labelledby="favTitle">
+    <div class="sec-head"><h2 id="favTitle">My Favorites</h2><p>Saved in this browser, they persist after you refresh the page.</p></div>
+    <div class="grid-prompts" id="favGrid"></div>
+  </section>
+
+  <section class="sec" id="submit" aria-labelledby="subTitle">
+    <h2 class="sr-only" id="subTitle">Submit a Prompt</h2>
+    <button class="collapse-btn" id="subToggle" aria-expanded="false" aria-controls="subBody">
+      <span>&#9998; Submit a New Prompt</span><span class="chev" aria-hidden="true">&#9660;</span>
+    </button>
+    <div class="collapse-body" id="subBody">
+      <form id="subForm" novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="fTitle">Prompt Title</label><input type="text" id="fTitle" maxlength="90" required aria-describedby="eTitle"><div class="err" id="eTitle"></div></div>
+          <div class="field"><label for="fCat">Category</label><select id="fCat" required></select></div>
+          <div class="field full"><label for="fDesc">Short Description</label><input type="text" id="fDesc" maxlength="200" required aria-describedby="eDesc"><div class="err" id="eDesc"></div></div>
+          <div class="field full"><label for="fText">Prompt Text</label><textarea id="fText" required aria-describedby="eText"></textarea><div class="err" id="eText"></div></div>
+        </div>
+        <p class="hint">Submitted prompts are stored in this browser (local storage) and appear in the gallery immediately.</p>
+        <button class="btn btn-primary btn-lg" type="submit" style="margin-top:8px">Submit Prompt</button>
+      </form>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer role="contentinfo">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h3>Moodle AI Prompt Library</h3>
+        <p>Teaching and Learning Center (TLC)</p>
+        <p>Ajman University</p>
+        <p style="margin-top:14px"><span class="ver">Version 1.0</span></p>
+      </div>
+      <div>
+        <h4>Curated by</h4>
+        <p><b>Masana Manakavalan</b></p>
+        <p>Multimedia Specialist</p>
+        <p>Teaching and Learning Center</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#featured">Featured Prompt</a></li>
+          <li><a href="#categories">Categories</a></li>
+          <li><a href="#popular">Popular Prompts</a></li>
+          <li><a href="#submit">Submit a Prompt</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bar">&copy; <span id="yr"></span> Teaching and Learning Center, Ajman University. All rights reserved.</div>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="Back to top">&uarr;</button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="overlay" id="overlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" tabindex="-1" id="modal">
+    <div class="modal-head"><span class="badge community" id="mBadge" style="background:var(--secondary);color:#2b1a00"></span><h2 id="mTitle"></h2><p id="mDesc"></p></div>
+    <div class="modal-body"><pre id="mText" tabindex="0" aria-label="Full prompt text"></pre></div>
+    <div class="modal-foot" id="mFoot"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- helpers ---------- */
+var t=function(s){return s.trim().split("\n").map(function(l){return l.trim()}).join("\n")};
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+var $=function(id){return document.getElementById(id)};
+var mem={};
+var S={
+  get:function(k,d){try{var v=localStorage.getItem("ajuTLC_"+k);if(v!==null)return JSON.parse(v)}catch(e){}return (k in mem)?mem[k]:d},
+  set:function(k,v){mem[k]=v;try{localStorage.setItem("ajuTLC_"+k,JSON.stringify(v))}catch(e){}}
+};
+
+/* ---------- categories ---------- */
+var FILTERS=["Course Design","Moodle Development","Quiz Creation","Rubric Templates","Assessment Design","H5P Activities","Content Creation","Faculty Development","Learning Outcomes","Student Engagement"];
+var CARDS=[
+  {name:"Course Design",icon:"\uD83D\uDCDA"},
+  {name:"Quiz Creation",icon:"\uD83E\uDDE0"},
+  {name:"Rubric Templates",icon:"\u2705"},
+  {name:"H5P Activities",icon:"\uD83C\uDFA5"},
+  {name:"Assessment Design",icon:"\uD83D\uDCDD"},
+  {name:"Moodle AI Prompts",icon:"\uD83E\uDD16"},
+  {name:"Moodle Book Creator",icon:"\uD83D\uDCD6"},
+  {name:"Discussion Forum Prompts",icon:"\uD83D\uDCAC"}
+];
+
+/* Illustrative starter counts so the Top 5 ranking is populated on first load.
+   Set all to 0 to start ranking from real usage only. */
+var SEED_COPIES={1:48,2:41,9:37,21:33,7:29,12:24,3:20,11:17,16:14,6:11};
+
+/* ---------- prompt data ---------- */
+var BASE=[
+{id:1,title:"Moodle Course Builder",cat:"Course Design",extra:["Moodle AI Prompts"],date:"2026-09-01",use:"Planning a new course from a single topic",
+ desc:"Generate a complete Moodle course structure from a single topic.",kw:"course structure weekly plan outcomes bloom",
+ text:t(`Act as an experienced instructional designer and Moodle expert.
+
+ Using the provided topic, generate:
+
+ 1. Course learning outcomes
+ 2. Weekly structure
+ 3. Moodle activities
+ 4. Assessment strategy
+ 5. H5P activities
+ 6. Discussion prompts
+ 7. Completion tracking recommendations
+
+ Align everything with Bloom's Taxonomy and active learning principles.`)},
+{id:2,title:"Moodle Quiz Generator",cat:"Quiz Creation",extra:["Assessment Design","Moodle AI Prompts"],date:"2026-09-02",use:"Creating a graded or practice quiz quickly",
+ desc:"Produce quiz questions with feedback, ready to import into the Moodle Quiz activity.",kw:"quiz mcq true false import gift aiken",
+ text:t(`Act as an assessment specialist and Moodle quiz expert.
+
+ Create a quiz on [TOPIC] for [COURSE LEVEL] students.
+
+ Generate [NUMBER] questions: multiple choice, true/false and short answer.
+ For each question provide:
+ - The question text
+ - Answer options with the correct answer marked
+ - Feedback for correct and incorrect answers
+ - The Bloom's Taxonomy level and the linked learning outcome
+
+ Output the quiz in Moodle GIFT format so it can be imported directly.`)},
+{id:3,title:"Moodle Question Bank Creator",cat:"Quiz Creation",extra:["Moodle Development"],date:"2026-09-03",use:"Building reusable, categorised question banks",
+ desc:"Build a categorised question bank with difficulty levels and tags.",kw:"question bank categories difficulty tags randomised",
+ text:t(`Act as a Moodle question bank designer.
+
+ For the topic [TOPIC], create a question bank structure with:
+ 1. Suggested question categories and subcategories
+ 2. [NUMBER] questions per subcategory at easy, medium and hard difficulty
+ 3. Suggested tags for each question
+ 4. Notes on which questions suit random selection in a Moodle quiz
+
+ Present the questions in Moodle XML or GIFT format.`)},
+{id:4,title:"Moodle Lesson Planner",cat:"Course Design",extra:["Moodle Development"],date:"2026-09-04",use:"Designing a single week or session",
+ desc:"Plan a structured weekly lesson with Moodle activities and timings.",kw:"lesson plan week session timing activities",
+ text:t(`Act as a Moodle instructional designer.
+
+ Plan one [DURATION]-minute lesson on [TOPIC] for [LEVEL] students in a blended course.
+ Include:
+ - Lesson objectives
+ - Pre-class activities in Moodle
+ - In-class activities with timings
+ - Post-class activities and practice
+ - The Moodle activity or resource used at each stage
+ - A quick formative check for understanding`)},
+{id:5,title:"Moodle Page HTML Generator",cat:"Content Creation",extra:["Moodle Development"],date:"2026-09-05",use:"Creating clean, accessible Moodle Page content",
+ desc:"Create clean, accessible HTML for Moodle Page and Label resources.",kw:"html page label accessible layout",
+ text:t(`Act as a front-end developer who specialises in Moodle.
+
+ Create clean, accessible HTML for a Moodle Page resource about [TOPIC].
+ Requirements:
+ - Use semantic headings starting at h3
+ - Inline-safe styling only, no external scripts
+ - Include a short introduction, key points, an example and a summary
+ - Add alt text placeholders for images
+ - Keep it compatible with the Moodle Atto and TinyMCE editors`)},
+{id:6,title:"Moodle Book Creator",cat:"Content Creation",extra:["Moodle Book Creator"],date:"2026-09-06",use:"Turning topic notes into a structured Book resource",
+ desc:"Structure chapters and sub-chapters for a Moodle Book resource.",kw:"book chapters subchapters reading content",
+ text:t(`Act as an academic content developer.
+
+ Create a Moodle Book on [TOPIC] for [AUDIENCE].
+ Provide:
+ 1. A chapter and sub-chapter outline
+ 2. Full text for each chapter (about [WORDS] words)
+ 3. A short knowledge check at the end of each chapter
+ 4. Suggestions for images, videos or H5P content in each chapter
+
+ Use clear headings and plain, academic language.`)},
+{id:7,title:"H5P Interactive Video Designer",cat:"H5P Activities",extra:["Student Engagement"],date:"2026-09-07",use:"Adding questions and prompts to a lecture video",
+ desc:"Plan interaction points and questions for an H5P Interactive Video.",kw:"h5p interactive video questions timestamps",
+ text:t(`Act as an H5P and multimedia learning specialist.
+
+ I have a [LENGTH]-minute video on [TOPIC]. Design an H5P Interactive Video by suggesting:
+ - 5 to 8 interaction points with timestamps
+ - The H5P interaction type for each (multiple choice, fill in the blanks, drag the words, etc.)
+ - The question or prompt text and feedback
+ - A summary task at the end
+
+ Keep interactions short and aligned with the learning outcomes.`)},
+{id:8,title:"H5P Branching Scenario Builder",cat:"H5P Activities",extra:["Student Engagement"],date:"2026-09-08",use:"Decision-based case studies and simulations",
+ desc:"Write a branching scenario with decision points and consequences.",kw:"h5p branching scenario decision case study",
+ text:t(`Act as a scenario-based learning designer.
+
+ Create an H5P Branching Scenario on [TOPIC] for [PROFESSION OR LEVEL].
+ Provide:
+ 1. A realistic opening scenario
+ 2. At least 4 decision points with 2 or 3 options each
+ 3. The consequence and feedback for every option
+ 4. Multiple endings (best, acceptable, poor) with reflective debrief text
+ 5. A map of the branches in table form`)},
+{id:9,title:"Rubric Template Creator",cat:"Rubric Templates",extra:["Assessment Design"],date:"2026-09-09",use:"Building a Moodle advanced grading rubric",
+ desc:"Generate an analytic rubric ready to recreate in Moodle advanced grading.",kw:"rubric criteria levels grading marking",
+ text:t(`Act as an assessment and rubric design expert.
+
+ Create an analytic rubric for the assessment [ASSESSMENT TITLE] in [COURSE].
+ - Provide [NUMBER] criteria aligned with the learning outcomes
+ - Use 4 performance levels (Excellent, Good, Satisfactory, Needs Improvement)
+ - Give clear, observable descriptors and point values for every level
+ - Present the result as a table that can be entered into the Moodle rubric grading method
+ - Total marks: [TOTAL]`)},
+{id:10,title:"Assessment Blueprint Generator",cat:"Assessment Design",extra:[],date:"2026-09-10",use:"Planning balanced assessments across a course",
+ desc:"Map assessments to outcomes, Bloom levels and weightings.",kw:"blueprint alignment weighting outcomes",
+ text:t(`Act as an assessment designer in higher education.
+
+ For the course [COURSE NAME], create an assessment blueprint that includes:
+ - A table mapping each assessment to the course learning outcomes
+ - The Bloom's Taxonomy level for each task
+ - Weightings and suggested timing across the semester
+ - A balance of formative and summative assessments
+ - The Moodle activity best suited to deliver each assessment`)},
+{id:11,title:"Learning Outcomes Generator",cat:"Learning Outcomes",extra:["Course Design"],date:"2026-09-11",use:"Writing measurable course or lesson outcomes",
+ desc:"Write measurable learning outcomes using Bloom's action verbs.",kw:"clo slo outcomes bloom verbs measurable",
+ text:t(`Act as a curriculum developer.
+
+ Write [NUMBER] measurable learning outcomes for [COURSE OR LESSON] at [LEVEL].
+ - Start each outcome with a Bloom's Taxonomy action verb
+ - Make each outcome specific and assessable
+ - Label the cognitive level of each outcome
+ - Suggest one assessment method for each outcome`)},
+{id:12,title:"Discussion Forum Generator",cat:"Student Engagement",extra:["Discussion Forum Prompts"],date:"2026-09-12",use:"Starting meaningful forum discussions",
+ desc:"Create thought-provoking forum questions with participation guidelines.",kw:"forum discussion questions participation netiquette",
+ text:t(`Act as an online learning facilitator.
+
+ Create a Moodle discussion forum activity on [TOPIC].
+ Provide:
+ 1. An engaging opening question that requires critical thinking
+ 2. Two follow-up prompts to deepen discussion
+ 3. Clear participation guidelines and expected post length
+ 4. A short grading rubric for forum contributions
+ 5. Suggested forum type (standard, Q and A, single simple discussion)`)},
+{id:13,title:"Reflective Journal Creator",cat:"Student Engagement",extra:["Assessment Design"],date:"2026-09-13",use:"Structured student reflection tasks",
+ desc:"Design guided reflection prompts for a Moodle journal or assignment.",kw:"reflection journal gibbs prompts portfolio",
+ text:t(`Act as an educational developer.
+
+ Design a reflective journal activity for the course [COURSE] covering [TOPIC OR PERIOD].
+ - Provide 6 guided reflection questions based on a recognised model (e.g. Gibbs)
+ - Add a short example of a strong reflective entry
+ - Suggest submission format and frequency in Moodle
+ - Provide a simple 4-level rubric for marking reflections`)},
+{id:14,title:"Moodle Database Activity Designer",cat:"Moodle Development",extra:[],date:"2026-09-14",use:"Student-built resource collections and glossaries",
+ desc:"Define fields, templates and rules for a Moodle Database activity.",kw:"database activity fields templates collection",
+ text:t(`Act as a Moodle developer.
+
+ Design a Moodle Database activity for [PURPOSE, e.g. student case study repository].
+ Provide:
+ - The list of fields with type (text, URL, file, menu) and whether each is required
+ - Suggested list, single and add templates
+ - Approval, rating and commenting settings
+ - Instructions to students
+ - Ideas for using the entries in later learning activities`)},
+{id:15,title:"Moodle Attendance Activity Planner",cat:"Moodle Development",extra:[],date:"2026-09-15",use:"Setting up attendance tracking for a course",
+ desc:"Plan sessions, statuses and reporting for the Attendance activity.",kw:"attendance sessions status reports",
+ text:t(`Act as a Moodle administrator.
+
+ Plan the Moodle Attendance activity for the course [COURSE] with [NUMBER] sessions per week.
+ Include:
+ - Session creation recommendations (recurring sessions, groups)
+ - Custom attendance statuses and points
+ - Settings for student self-marking, if suitable
+ - Reporting and export suggestions
+ - A short instruction note for faculty`)},
+{id:16,title:"Moodle Assignment Builder",cat:"Assessment Design",extra:["Moodle Development"],date:"2026-09-16",use:"Writing clear assignment briefs and settings",
+ desc:"Write an assignment brief with submission settings and feedback plan.",kw:"assignment brief submission feedback turnitin deadline",
+ text:t(`Act as a higher education assessment specialist.
+
+ Create a Moodle Assignment activity on [TOPIC] for [COURSE].
+ Provide:
+ 1. A clear student-facing brief with task, requirements and word count
+ 2. Submission type and recommended Moodle settings (dates, late policy, feedback types)
+ 3. Link to learning outcomes and the marking criteria
+ 4. An academic integrity note
+ 5. A plan for timely feedback`)},
+{id:17,title:"Moodle Workshop Activity Creator",cat:"Assessment Design",extra:["Student Engagement"],date:"2026-09-17",use:"Peer assessment tasks",
+ desc:"Set up a peer-assessment Workshop with assessment criteria and phases.",kw:"workshop peer assessment phases criteria",
+ text:t(`Act as a peer assessment expert in Moodle.
+
+ Design a Moodle Workshop activity for [TASK] in [COURSE].
+ Include:
+ - Submission instructions
+ - Assessment form with [NUMBER] criteria and grading scale
+ - Timeline for the setup, submission, assessment and evaluation phases
+ - Guidance for students on giving constructive feedback
+ - Settings for allocation and grade calculation`)},
+{id:18,title:"Moodle Course Landing Page Generator",cat:"Content Creation",extra:["Course Design"],date:"2026-09-18",use:"Welcoming students at the top of a course page",
+ desc:"Create a welcoming, accessible course home section with key information.",kw:"landing page welcome course home html",
+ text:t(`Act as a UX designer and Moodle specialist.
+
+ Create the content for a welcoming course landing page for [COURSE NAME].
+ Include:
+ - A friendly welcome message from the instructor
+ - Course overview and learning outcomes
+ - How the course is organised and how to get help
+ - Key dates and assessments in a simple table
+ - A clean HTML version suitable for a Moodle Page or Label`)},
+{id:19,title:"Learning Path Designer",cat:"Course Design",extra:["Learning Outcomes"],date:"2026-09-19",use:"Personalised or conditional learning journeys",
+ desc:"Design a sequenced learning path using Moodle restrictions and completion.",kw:"learning path restrict access completion conditional",
+ text:t(`Act as an adaptive learning designer.
+
+ Design a learning path for [TOPIC] with [NUMBER] stages.
+ For each stage provide:
+ - Learning outcome and activities
+ - Completion condition in Moodle
+ - Access restriction for the next stage
+ - Optional enrichment and remediation activities
+ - A short diagram described in text showing the path`)},
+{id:20,title:"Faculty Reflection Generator",cat:"Faculty Development",extra:[],date:"2026-09-20",use:"Teaching portfolios and professional development",
+ desc:"Guide faculty through reflecting on teaching practice and Moodle use.",kw:"faculty reflection teaching portfolio professional development",
+ text:t(`Act as an educational development consultant.
+
+ Help me reflect on my teaching in [COURSE] this semester.
+ Ask me 8 reflective questions about: student engagement, assessment, use of Moodle, feedback and areas to improve.
+ After I answer, summarise my strengths, identify 3 development priorities and suggest practical next steps for the next semester.`)},
+{id:21,title:"Moodle AI Tutor Prompt",cat:"Student Engagement",extra:["Moodle AI Prompts"],date:"2026-09-21",use:"A study-support chatbot for a course",
+ desc:"System prompt for an AI tutor that guides students without giving answers away.",kw:"ai tutor chatbot socratic study support",
+ text:t(`You are a friendly and supportive AI tutor for the course [COURSE NAME] at Ajman University.
+
+ Rules:
+ - Use only the course topics provided: [TOPICS]
+ - Guide students with questions and hints; do not give full answers to graded work
+ - Explain concepts in simple language and give short examples
+ - Encourage students and check understanding at the end of each reply
+ - If a question is outside the course, politely redirect to the instructor or the Moodle course page
+ - Never ask for personal information`)},
+{id:22,title:"Moodle Feedback Activity Generator",cat:"Student Engagement",extra:["Moodle Development"],date:"2026-09-22",use:"Mid-semester and end-of-course surveys",
+ desc:"Create student feedback survey questions for the Moodle Feedback activity.",kw:"feedback survey evaluation questions anonymous",
+ text:t(`Act as a survey designer.
+
+ Create a Moodle Feedback activity for [MID-SEMESTER OR END-OF-COURSE] feedback in [COURSE].
+ Provide 10 questions using a mix of rating scales and open responses covering: content clarity, Moodle experience, workload, support and suggestions.
+ Use neutral, unbiased wording and recommend anonymity and timing settings.`)},
+{id:23,title:"Moodle Forum Facilitator Prompt",cat:"Student Engagement",extra:["Discussion Forum Prompts","Moodle AI Prompts"],date:"2026-09-23",use:"Replying to students and sustaining discussion",
+ desc:"Draft facilitator replies that extend and deepen forum conversations.",kw:"forum facilitation replies moderation",
+ text:t(`Act as an experienced online facilitator.
+
+ Below are student posts from a Moodle discussion forum on [TOPIC]:
+ [PASTE POSTS]
+
+ For each post write a short facilitator reply that:
+ - Acknowledges the contribution
+ - Adds a probing follow-up question
+ - Connects the idea to another student's post or a course concept
+ Then write a closing summary post for the whole discussion.`)},
+{id:24,title:"Moodle Checklist Generator",cat:"Moodle Development",extra:["Course Design"],date:"2026-09-24",use:"Course readiness and quality assurance checks",
+ desc:"Create checklists for course setup, QA review or student progress.",kw:"checklist course readiness quality completion",
+ text:t(`Act as a Moodle quality assurance reviewer.
+
+ Create a checklist for [COURSE READINESS / WEEKLY PROGRESS / ASSESSMENT SETUP].
+ Group the items into sections (structure, content, assessment, accessibility, communication).
+ Write each item as a clear yes/no check, and suggest how to recreate it as a Moodle Checklist or activity completion.`)},
+{id:25,title:"Moodle Interactive Content Planner",cat:"H5P Activities",extra:["Content Creation"],date:"2026-09-25",use:"Deciding which interactive content type fits",
+ desc:"Match learning goals to the best H5P or Moodle interactive content types.",kw:"interactive content h5p lesson planner types",
+ text:t(`Act as an interactive learning designer.
+
+ For the unit [UNIT NAME] with these outcomes: [OUTCOMES]
+ Recommend interactive content for each outcome.
+ For every item give: the H5P or Moodle activity type, a short description, time on task, and why it suits the outcome.
+ Finish with a sequence for the unit that varies the type of interaction.`)}
+];
+
+/* ---------- state ---------- */
+var users=S.get("userPrompts",[]);
+var favs=S.get("favs",[]);
+var copies=S.get("copies",{});
+var state={q:"",cat:"All Prompts"};
+var lastFocus=null,modalId=null,FEATURED_ID=1;
+
+function all(){return BASE.concat(users)}
+function find(id){var a=all();for(var i=0;i<a.length;i++)if(String(a[i].id)===String(id))return a[i];return null}
+function copyCount(id){return (SEED_COPIES[id]||0)+(copies[id]||0)}
+function isFav(id){return favs.indexOf(String(id))>-1}
+function cats(p){return [p.cat].concat(p.extra||[])}
+
+/* ---------- actions ---------- */
+function toast(msg){
+  var el=$("toast");el.textContent=msg;el.classList.add("show");
+  clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("show")},3000);
+}
+function fallbackCopy(txt){
+  var ta=document.createElement("textarea");ta.value=txt;ta.setAttribute("readonly","");
+  ta.style.cssText="position:fixed;left:-9999px;top:0";document.body.appendChild(ta);ta.select();
+  var ok=false;try{ok=document.execCommand("copy")}catch(e){}document.body.removeChild(ta);return ok;
+}
+function doCopy(id){
+  var p=find(id);if(!p)return;
+  var done=function(ok){
+    if(ok){copies[id]=(copies[id]||0)+1;S.set("copies",copies);toast("\u2705 Prompt copied successfully");renderDynamic()}
+    else toast("Copy was blocked by the browser. Open the prompt and select the text to copy.");
+  };
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(p.text).then(function(){done(true)},function(){done(fallbackCopy(p.text))});
+  }else done(fallbackCopy(p.text));
+}
+function toggleFav(id){
+  id=String(id);var i=favs.indexOf(id);
+  if(i>-1){favs.splice(i,1);toast("Removed from favorites")}else{favs.push(id);toast("\u2605 Added to favorites")}
+  S.set("favs",favs);renderAll();refreshModal();
+}
+function download(id){
+  var p=find(id);if(!p)return;
+  var body=p.title+"\n"+Array(p.title.length+1).join("=")+"\n\n"+p.text+"\n\n---\nMoodle AI Prompt Library | Teaching and Learning Center, Ajman University";
+  var blob=new Blob([body],{type:"text/plain;charset=utf-8"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=p.title.replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"").toLowerCase()+".txt";
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+  toast("\u2B07 Download started");
+}
+
+/* ---------- modal ---------- */
+function openModal(id){
+  var p=find(id);if(!p)return;modalId=id;lastFocus=document.activeElement;
+  $("mTitle").textContent=p.title;$("mDesc").textContent=p.desc;$("mText").textContent=p.text;
+  $("mBadge").textContent=p.cat;
+  refreshModal();
+  var o=$("overlay");o.classList.add("open");o.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";setTimeout(function(){$("modal").focus()},30);
+}
+function refreshModal(){
+  if(modalId===null)return;
+  var f=isFav(modalId);
+  $("mFoot").innerHTML=
+   '<button class="btn btn-primary" data-act="copy" data-id="'+esc(modalId)+'">\uD83D\uDCCB Copy Prompt</button>'+
+   '<button class="btn btn-ghost btn-fav" data-act="fav" data-id="'+esc(modalId)+'" aria-pressed="'+f+'">'+(f?"\u2605 Favorited":"\u2606 Favorite")+'</button>'+
+   '<button class="btn btn-ghost" data-act="dl" data-id="'+esc(modalId)+'">\u2B07 Download TXT</button>'+
+   '<button class="btn btn-ghost" data-act="close">Close</button>';
+}
+function closeModal(){
+  var o=$("overlay");o.classList.remove("open");o.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";modalId=null;
+  if(lastFocus&&lastFocus.focus)lastFocus.focus();
+}
+
+/* ---------- rendering ---------- */
+function btns(p,cls){
+  var f=isFav(p.id);
+  return '<button class="btn btn-primary" data-act="copy" data-id="'+esc(p.id)+'" aria-label="Copy prompt: '+esc(p.title)+'">\uD83D\uDCCB Copy Prompt</button>'+
+   '<button class="btn btn-ghost" data-act="expand" data-id="'+esc(p.id)+'" aria-label="Expand prompt: '+esc(p.title)+'">\u2922 Expand</button>'+
+   '<button class="btn btn-ghost btn-fav" data-act="fav" data-id="'+esc(p.id)+'" aria-pressed="'+f+'" aria-label="'+(f?"Remove from favorites: ":"Add to favorites: ")+esc(p.title)+'">'+(f?"\u2605 Favorited":"\u2606 Favorite")+'</button>'+
+   '<button class="btn btn-ghost" data-act="dl" data-id="'+esc(p.id)+'" aria-label="Download TXT: '+esc(p.title)+'">\u2B07 Download TXT</button>';
+}
+function cardHTML(p,i){
+  var prev=p.text.replace(/\s+/g," ");if(prev.length>190)prev=prev.slice(0,190)+"\u2026";
+  return '<article class="card" style="animation-delay:'+Math.min(i*35,350)+'ms" aria-labelledby="t'+esc(p.id)+'">'+
+   '<div class="card-top"><span class="badge'+(p.user?" community":"")+'">'+esc(p.cat)+'</span><span class="use">\uD83C\uDFAF '+esc(p.use||"General use")+'</span></div>'+
+   '<h3 id="t'+esc(p.id)+'">'+esc(p.title)+'</h3><p class="desc">'+esc(p.desc)+'</p>'+
+   '<div class="preview" aria-label="Prompt preview">'+esc(prev)+'</div>'+
+   '<div class="card-actions">'+btns(p)+'</div></article>';
+}
+function matches(p){
+  if(state.cat!=="All Prompts"&&cats(p).indexOf(state.cat)<0)return false;
+  var q=state.q.toLowerCase().trim();if(!q)return true;
+  var hay=(p.title+" "+p.desc+" "+cats(p).join(" ")+" "+(p.kw||"")+" "+p.text).toLowerCase();
+  return q.split(/\s+/).every(function(w){return hay.indexOf(w)>-1});
+}
+function renderFeatured(){
+  var p=find(FEATURED_ID);if(!p)return;var f=isFav(p.id);
+  $("featuredBox").innerHTML='<article class="featured"><span class="f-badge">\u2605 Featured Prompt of the Week</span>'+
+   '<h3>'+esc(p.title)+'</h3><p class="f-desc">'+esc(p.desc)+'</p>'+
+   '<div class="f-prompt" tabindex="0" role="region" aria-label="Featured prompt text">'+esc(p.text)+'</div>'+
+   '<div class="f-actions">'+
+   '<button class="btn btn-gold btn-lg" data-act="copy" data-id="'+p.id+'">\uD83D\uDCCB Copy Prompt</button>'+
+   '<button class="btn btn-ghost btn-lg btn-fav" data-act="fav" data-id="'+p.id+'" aria-pressed="'+f+'">'+(f?"\u2605 Favorited":"\u2606 Favorite")+'</button>'+
+   '<button class="btn btn-ghost btn-lg" data-act="expand" data-id="'+p.id+'">\u2922 Expand</button>'+
+   '<button class="btn btn-ghost btn-lg" data-act="dl" data-id="'+p.id+'">\u2B07 Download TXT</button></div></article>';
+}
+function renderChips(){
+  $("chips").innerHTML=["All Prompts"].concat(FILTERS).map(function(c){
+    return '<button class="chip" data-chip="'+esc(c)+'" aria-pressed="'+(state.cat===c)+'">'+esc(c)+'</button>';
+  }).join("");
+}
+function renderCatCards(){
+  $("catGrid").innerHTML=CARDS.map(function(c){
+    var n=all().filter(function(p){return cats(p).indexOf(c.name)>-1}).length;
+    return '<button class="cat-card" data-cat="'+esc(c.name)+'" aria-label="'+esc(c.name)+', '+n+' prompts. Filter gallery"><span class="ci" aria-hidden="true">'+c.icon+'</span><b>'+esc(c.name)+'</b><span class="n">'+n+(n===1?" prompt":" prompts")+'</span></button>';
+  }).join("");
+}
+function renderGallery(){
+  var list=all().filter(matches);
+  $("resultsInfo").textContent="Showing "+list.length+" of "+all().length+" prompts"+(state.cat!=="All Prompts"?" in \u201C"+state.cat+"\u201D":"")+(state.q?" matching \u201C"+state.q+"\u201D":"");
+  $("promptGrid").innerHTML=list.length?list.map(cardHTML).join(""):
+   '<div class="empty" style="grid-column:1/-1"><b>No prompts found</b>Try a different keyword or choose another category.</div>';
+}
+function newest(){
+  return all().slice().sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:(String(b.id)>String(a.id)?1:-1)});
+}
+function topCopied(){
+  return all().slice().sort(function(a,b){return copyCount(b.id)-copyCount(a.id)});
+}
+function renderStats(){
+  var n=all().length,top=topCopied()[0],nw=newest()[0],total=0;
+  all().forEach(function(p){total+=copyCount(p.id)});
+  $("statsGrid").innerHTML=
+   stat("\uD83D\uDCDA",n,"Total Prompts","across all categories")+
+   stat("\uD83D\uDDC2\uFE0F",FILTERS.length,"Total Categories","filterable topic areas")+
+   stat("\uD83D\uDD25",esc(top.title),"Most Copied Prompt",copyCount(top.id)+" copies")+
+   stat("\u2728",esc(nw.title),"Newest Prompt",fmtDate(nw.date));
+  $("hsPrompts").textContent=n;$("hsCats").textContent=FILTERS.length;$("hsCopies").textContent=total;
+}
+function stat(i,v,l,s){return '<div class="stat"><div class="stat-ico" aria-hidden="true">'+i+'</div><div><b>'+v+'</b><small>'+l+'</small><div class="s-sub">'+s+'</div></div></div>'}
+function fmtDate(d){var x=new Date(d+"T00:00:00");return isNaN(x)?d:x.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}
+function renderPopular(){
+  $("popList").innerHTML=topCopied().slice(0,5).map(function(p,i){
+    return '<div class="row"><span class="rank" aria-label="Rank '+(i+1)+'">'+(i+1)+'</span><div class="row-main"><b>'+esc(p.title)+'</b><span>'+esc(p.cat)+' \u00B7 '+copyCount(p.id)+' copies</span></div>'+
+    '<button class="btn btn-ghost" data-act="copy" data-id="'+esc(p.id)+'" aria-label="Quick copy: '+esc(p.title)+'">Copy</button></div>';
+  }).join("");
+}
+function renderRecent(){
+  $("recentList").innerHTML=newest().slice(0,6).map(function(p){
+    return '<div class="row"><div class="row-main"><b>'+esc(p.title)+'</b><span>'+esc(p.cat)+' \u00B7 Added '+fmtDate(p.date)+'</span></div>'+
+    '<button class="btn btn-ghost" data-act="copy" data-id="'+esc(p.id)+'" aria-label="Quick copy: '+esc(p.title)+'">\uD83D\uDCCB Copy</button></div>';
+  }).join("");
+}
+function renderFavs(){
+  var list=all().filter(function(p){return isFav(p.id)});
+  $("favGrid").innerHTML=list.length?list.map(cardHTML).join(""):
+   '<div class="empty" style="grid-column:1/-1"><b>No favorites yet</b>Select \u2606 Favorite on any prompt to save it here.</div>';
+}
+function renderDynamic(){renderStats();renderPopular()}
+function renderAll(){renderFeatured();renderChips();renderCatCards();renderGallery();renderDynamic();renderRecent();renderFavs()}
+
+/* ---------- events ---------- */
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-act]");
+  if(b){
+    var a=b.getAttribute("data-act"),id=b.getAttribute("data-id");
+    if(a==="copy")doCopy(id);else if(a==="fav")toggleFav(id);else if(a==="expand")openModal(id);
+    else if(a==="dl")download(id);else if(a==="close")closeModal();
+    return;
+  }
+  var ch=e.target.closest("[data-chip]");
+  if(ch){state.cat=ch.getAttribute("data-chip");renderChips();renderGallery();return}
+  var cc=e.target.closest("[data-cat]");
+  if(cc){state.cat=cc.getAttribute("data-cat");
+    // card-only categories are not chips; chips will show none pressed, which is fine
+    renderChips();renderGallery();$("gallery").scrollIntoView({behavior:"smooth"});return}
+});
+$("overlay").addEventListener("mousedown",function(e){if(e.target===this)closeModal()});
+document.addEventListener("keydown",function(e){
+  if(!$("overlay").classList.contains("open"))return;
+  if(e.key==="Escape"){closeModal();return}
+  if(e.key==="Tab"){
+    var f=$("modal").querySelectorAll("button,[tabindex='0']");if(!f.length)return;
+    var first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&(document.activeElement===first||document.activeElement===$("modal"))){e.preventDefault();last.focus()}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+  }
+});
+
+function setQuery(v,from){
+  state.q=v;
+  if(from!=="main")$("mainSearch").value=v;
+  if(from!=="hero")$("heroSearch").value=v;
+  $("clearX").classList.toggle("show",!!v);
+  renderGallery();
+}
+$("mainSearch").addEventListener("input",function(){setQuery(this.value,"main")});
+$("heroSearch").addEventListener("input",function(){setQuery(this.value,"hero")});
+$("heroForm").addEventListener("submit",function(e){e.preventDefault();$("gallery").scrollIntoView({behavior:"smooth"})});
+$("clearX").addEventListener("click",function(){setQuery("");$("mainSearch").focus()});
+$("navSearch").addEventListener("click",function(){$("search").scrollIntoView({behavior:"smooth"});setTimeout(function(){$("mainSearch").focus()},450)});
+
+/* theme */
+function applyTheme(th){
+  document.documentElement.setAttribute("data-theme",th);
+  var b=$("themeBtn");b.innerHTML=th==="dark"?"\u2600\uFE0F":"\uD83C\uDF19";
+  b.setAttribute("aria-pressed",th==="dark");b.setAttribute("aria-label",th==="dark"?"Switch to light mode":"Switch to dark mode");
+}
+$("themeBtn").addEventListener("click",function(){
+  var th=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
+  applyTheme(th);S.set("theme",th);
+});
+
+/* back to top + active nav */
+var topBtn=$("toTop");
+window.addEventListener("scroll",function(){topBtn.classList.toggle("show",window.scrollY>500)},{passive:true});
+topBtn.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"})});
+if("IntersectionObserver" in window){
+  var links=[].slice.call(document.querySelectorAll("[data-nav]"));
+  var io=new IntersectionObserver(function(en){
+    en.forEach(function(x){if(x.isIntersecting){
+      links.forEach(function(l){var on=l.getAttribute("href")==="#"+x.target.id;l.classList.toggle("active",on);if(on)l.setAttribute("aria-current","true");else l.removeAttribute("aria-current")});
+    }});
+  },{rootMargin:"-40% 0px -55% 0px"});
+  ["home","featured","categories","popular","favorites","submit"].forEach(function(id){io.observe($(id))});
+}
+
+/* submit form */
+var sel=$("fCat");sel.innerHTML=FILTERS.map(function(c){return '<option>'+esc(c)+'</option>'}).join("");
+$("subToggle").addEventListener("click",function(){
+  var open=this.getAttribute("aria-expanded")==="true";
+  this.setAttribute("aria-expanded",!open);$("subBody").classList.toggle("open",!open);
+});
+$("subForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var ti=$("fTitle").value.trim(),de=$("fDesc").value.trim(),tx=$("fText").value.trim(),ok=true;
+  $("eTitle").textContent=ti?"":(ok=false,"Please enter a title.");
+  $("eDesc").textContent=de?"":(ok=false,"Please enter a short description.");
+  $("eText").textContent=tx.length>=20?"":(ok=false,"Please enter the prompt text (at least 20 characters).");
+  $("fTitle").setAttribute("aria-invalid",!ti);$("fDesc").setAttribute("aria-invalid",!de);$("fText").setAttribute("aria-invalid",tx.length<20);
+  if(!ok)return;
+  var d=new Date(),iso=d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);
+  users.push({id:"u"+Date.now(),title:ti,desc:de,cat:sel.value,extra:[],kw:"community submitted",use:"Community-submitted prompt",text:tx,date:iso,user:true});
+  S.set("userPrompts",users);this.reset();
+  state.q="";state.cat="All Prompts";$("mainSearch").value="";$("heroSearch").value="";$("clearX").classList.remove("show");
+  renderAll();toast("\u2705 Prompt submitted and added to the gallery");
+  $("gallery").scrollIntoView({behavior:"smooth"});
+});
+
+/* init */
+$("yr").textContent=new Date().getFullYear();
+applyTheme(S.get("theme","light"));
+renderAll();
+})();
+</script>
+</body>
+</html>
