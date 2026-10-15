@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Faculty Professional Development Framework | Ajman University</title>
+<meta name="description" content="Ajman University Faculty Professional Development Framework: complete competency themes, earn badges, track progress and achieve Bronze Tier Recognition.">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#39A9DC;          /* brand primary: fills, rings, accents */
+  --blue-d:#1A78A6;        /* AA-contrast blue for text and buttons with white text */
+  --blue-dd:#12597D;
+  --blue-l:#EAF6FC;
+  --orange:#F29F00;        /* brand accent: highlights, badges, CTAs */
+  --orange-d:#8A5600;      /* AA-contrast orange for text */
+  --orange-l:#FFF5E0;
+  --grey:#999999;
+  --grey-d:#5C5C5C;
+  --grey-l:#F4F6F8;
+  --line:#E4E8EC;
+  --text:#000000;
+  --bg:#FFFFFF;
+  --radius:16px;
+  --shadow:0 2px 10px rgba(0,0,0,.06);
+  --shadow-h:0 12px 30px rgba(26,120,166,.18);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--text);background:var(--bg);line-height:1.6}
+h1,h2,h3,h4,h5{font-weight:700;letter-spacing:-.01em}
+a{color:var(--blue-d)}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px;border-radius:6px}
+.skip-link{position:absolute;left:-999px;top:8px;background:var(--blue-d);color:#fff;padding:10px 16px;border-radius:8px;z-index:3000}
+.skip-link:focus{left:8px}
+
+/* Buttons */
+.btn{border-radius:10px;font-weight:600;padding:.6rem 1.15rem;transition:transform .2s,box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--blue-d);border-color:var(--blue-d);color:#fff}
+.btn-primary:hover,.btn-primary:focus{background:var(--blue-dd);border-color:var(--blue-dd);color:#fff}
+.btn-outline-primary{color:var(--blue-d);border-color:var(--blue-d)}
+.btn-outline-primary:hover{background:var(--blue-d);border-color:var(--blue-d);color:#fff}
+.btn-accent{background:var(--orange);border-color:var(--orange);color:#000}
+.btn-accent:hover,.btn-accent:focus{background:#d98f00;border-color:#d98f00;color:#000}
+.btn-accent:disabled{background:#f3dca8;border-color:#f3dca8;color:#6b5a2e;opacity:1}
+
+/* Navbar */
+.navbar{background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.navbar .nav-link{color:#222;font-weight:500;font-size:.93rem;padding:.5rem .7rem;border-radius:8px}
+.navbar .nav-link:hover,.navbar .nav-link.active{color:var(--blue-d);background:var(--blue-l)}
+.brand-logo{height:40px;display:flex;align-items:center;gap:10px;font-weight:700;color:var(--blue-d);text-decoration:none}
+.brand-logo .ph{width:40px;height:40px;border-radius:10px}
+.nav-progress{position:absolute;left:0;bottom:-1px;height:3px;background:linear-gradient(90deg,var(--blue),var(--orange));width:0;transition:width .15s}
+
+/* Image placeholders */
+.ph{position:relative;overflow:hidden;background:var(--blue-l);display:flex;align-items:center;justify-content:center}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .ph-label{display:none}
+.ph.missing{border:2px dashed var(--blue);color:var(--blue-dd)}
+.ph.missing .ph-label{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.72rem;font-weight:600;text-align:center;padding:6px;word-break:break-all}
+.ph.missing .ph-label i{font-size:1.4rem;color:var(--blue)}
+.ph.contain img{object-fit:contain}
+
+/* Sections */
+section{padding:84px 0}
+.section-alt{background:var(--grey-l)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--blue-d);font-weight:700;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+.section-title{font-size:clamp(1.7rem,3vw,2.3rem);margin:.4rem 0 .6rem;color:#000}
+.section-title::after{content:"";display:block;width:56px;height:4px;border-radius:4px;background:var(--orange);margin-top:12px}
+.section-sub{color:var(--grey-d);max-width:680px}
+.card-x{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s,border-color .25s;height:100%}
+.card-x:hover{transform:translateY(-6px);box-shadow:var(--shadow-h);border-color:var(--blue)}
+
+/* Hero */
+.hero{padding:70px 0 90px;background:radial-gradient(1000px 420px at 85% -10%,var(--blue-l),transparent 70%),radial-gradient(600px 300px at 0% 100%,var(--orange-l),transparent 70%),#fff}
+.hero h1{font-size:clamp(2rem,4.6vw,3.4rem);line-height:1.12;color:#000}
+.hero h1 span{color:var(--blue-d)}
+.hero-art{aspect-ratio:4/3;border-radius:24px;box-shadow:0 20px 50px rgba(26,120,166,.18)}
+.hero-chip{position:absolute;background:#fff;border-radius:14px;box-shadow:var(--shadow-h);padding:10px 14px;font-weight:600;font-size:.85rem;display:flex;align-items:center;gap:10px;animation:float 5s ease-in-out infinite}
+.hero-chip i{color:var(--orange);font-size:1.2rem}
+.hero-chip.c1{left:-14px;bottom:18%}
+.hero-chip.c2{right:-10px;top:10%;animation-delay:1.4s}
+@keyframes float{50%{transform:translateY(-8px)}}
+.stat-pill{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 18px;box-shadow:var(--shadow)}
+.stat-pill b{font-size:1.5rem;color:var(--blue-d);display:block;line-height:1.1}
+.stat-pill small{color:var(--grey-d)}
+
+/* Journey */
+.journey{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:48px}
+.journey::before{content:"";position:absolute;top:34px;left:10%;right:10%;height:4px;background:var(--line);border-radius:4px}
+.journey-fill{position:absolute;top:34px;left:10%;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--orange));width:0;transition:width .5s ease;z-index:1}
+.j-step{position:relative;text-align:center;z-index:2}
+.j-node{width:68px;height:68px;border-radius:50%;margin:0 auto 14px;background:#fff;border:4px solid var(--line);display:grid;place-items:center;font-size:1.4rem;color:var(--grey-d);transition:all .3s;cursor:pointer}
+.j-step:hover .j-node,.j-step.done .j-node{border-color:var(--blue);color:var(--blue-d);transform:scale(1.08);box-shadow:0 8px 20px rgba(57,169,220,.3)}
+.j-step.done .j-node{background:var(--blue-l)}
+.j-step.final.done .j-node{border-color:var(--orange);color:#8A5600;background:var(--orange-l);box-shadow:0 8px 20px rgba(242,159,0,.35)}
+.j-step h3{font-size:1rem;margin-bottom:4px}
+.j-step p{font-size:.85rem;color:var(--grey-d);margin:0}
+.j-step .j-state{display:inline-block;margin-top:8px;font-size:.72rem;font-weight:700;border-radius:20px;padding:2px 10px;background:var(--grey-l);color:var(--grey-d)}
+.j-step.done .j-state{background:var(--blue-l);color:var(--blue-dd)}
+.j-step.final.done .j-state{background:var(--orange-l);color:var(--orange-d)}
+@media(max-width:991px){
+  .journey{grid-template-columns:1fr;gap:6px}
+  .journey::before,.journey-fill{top:0;bottom:0;left:33px;right:auto;width:4px;height:auto}
+  .journey-fill{height:0;width:4px}
+  .j-step{display:flex;text-align:left;gap:16px;align-items:flex-start;padding-bottom:18px}
+  .j-node{margin:0;flex:none}
+}
+
+/* Accordions */
+.accordion-item{border:1px solid var(--line);border-radius:14px!important;margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
+.accordion-button{font-weight:600;gap:14px;background:#fff;color:#000}
+.accordion-button:not(.collapsed){background:var(--blue-l);color:var(--blue-dd);box-shadow:none}
+.accordion-button:focus{box-shadow:0 0 0 3px rgba(242,159,0,.55)}
+.step-num{width:38px;height:38px;border-radius:12px;background:var(--blue-d);color:#fff;display:grid;place-items:center;flex:none}
+.accordion-body{color:#222}
+.step-illus{width:100%;aspect-ratio:16/10;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue-l),#fff);color:var(--blue);font-size:4rem}
+
+/* Themes */
+.theme-img{aspect-ratio:16/9;border-radius:var(--radius) var(--radius) 0 0}
+.theme-card .body{padding:20px}
+.badge-count{display:inline-flex;align-items:center;gap:6px;background:var(--orange-l);color:var(--orange-d);font-weight:700;font-size:.8rem;border-radius:20px;padding:4px 12px}
+.theme-select{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--blue-dd)}
+.theme-card.picked{border-color:var(--blue);box-shadow:0 0 0 3px rgba(57,169,220,.35)}
+.picker-bar{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;box-shadow:var(--shadow)}
+
+/* Badges */
+.badge-card{text-align:center;padding:28px 20px}
+.badge-img{width:140px;height:140px;margin:0 auto 16px;border-radius:50%;border:5px solid var(--orange);box-shadow:0 0 0 6px var(--orange-l),0 10px 24px rgba(242,159,0,.25);transition:transform .5s}
+.badge-card:hover .badge-img{transform:rotateY(180deg) scale(1.05)}
+.badge-card.earned .badge-img{border-color:var(--orange);animation:glow 2.5s infinite}
+.badge-card:not(.earned) .badge-img{filter:grayscale(.85);opacity:.85;border-color:var(--grey)}
+@keyframes glow{50%{box-shadow:0 0 0 10px rgba(242,159,0,.25),0 10px 30px rgba(242,159,0,.45)}}
+.earned-tag{display:none;color:var(--orange-d);font-weight:700;font-size:.8rem}
+.badge-card.earned .earned-tag{display:inline-block}
+
+/* Tracker */
+.ring-wrap{position:relative;width:170px;height:170px;margin:0 auto}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{stroke:var(--line)}
+.ring-fg{stroke:var(--blue);stroke-linecap:round;transition:stroke-dashoffset .8s ease}
+.ring-txt{position:absolute;inset:0;display:grid;place-items:center;font-size:2rem;font-weight:800;color:var(--blue-dd)}
+.progress{height:14px;border-radius:20px;background:var(--line)}
+.progress-bar{background:linear-gradient(90deg,var(--blue),var(--blue-d));transition:width .8s ease;border-radius:20px}
+.status-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:30px;font-weight:700;font-size:.85rem}
+.st-none{background:var(--grey-l);color:var(--grey-d)}
+.st-prog{background:var(--blue-l);color:var(--blue-dd)}
+.st-done{background:var(--orange-l);color:var(--orange-d)}
+.check-item{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px;cursor:pointer;transition:all .2s;background:#fff}
+.check-item:hover{border-color:var(--blue);background:var(--blue-l)}
+.check-item input{width:22px;height:22px;accent-color:var(--blue-d);flex:none;cursor:pointer}
+.check-item.checked{border-color:var(--blue);background:var(--blue-l)}
+.check-item.checked .ci-title{text-decoration:line-through;color:var(--grey-d)}
+.ci-title{font-weight:600}
+.ci-meta{font-size:.8rem;color:var(--grey-d)}
+
+/* Calculator */
+.act-item{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px;cursor:pointer;background:#fff;transition:all .2s}
+.act-item:hover{border-color:var(--blue);background:var(--blue-l)}
+.act-item.checked{border-color:var(--orange);background:var(--orange-l)}
+.act-item input{width:22px;height:22px;accent-color:var(--blue-d);flex:none}
+.pts{margin-left:auto;font-weight:800;color:var(--orange-d);background:#fff;border:1px solid var(--orange);border-radius:20px;padding:2px 12px;font-size:.85rem;white-space:nowrap}
+.act-icon{width:40px;height:40px;border-radius:10px;background:var(--blue-l);color:var(--blue-d);display:grid;place-items:center;flex:none}
+.big-num{font-size:3rem;font-weight:800;color:var(--blue-dd);line-height:1}
+#selList li{margin-bottom:4px}
+
+/* Programmes */
+.prog-img{height:140px;border-radius:var(--radius) var(--radius) 0 0}
+.prog-card .body{padding:20px;display:flex;flex-direction:column;height:calc(100% - 140px)}
+.recog{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;color:var(--orange-d);background:var(--orange-l);border-radius:20px;padding:3px 12px;width:fit-content}
+
+/* Bronze */
+.bronze{background:linear-gradient(135deg,var(--orange-l),#fff 50%,var(--blue-l));border:1px solid var(--line);border-radius:28px;padding:48px 28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.bronze-badge{width:210px;height:210px;margin:0 auto;border-radius:50%;border:8px solid var(--orange);box-shadow:0 0 0 10px var(--orange-l),0 18px 40px rgba(242,159,0,.35);filter:grayscale(1);opacity:.55;transition:all .8s}
+.bronze.unlocked .bronze-badge{filter:none;opacity:1;animation:pop .9s cubic-bezier(.2,1.4,.4,1),glow 2.6s 1s infinite}
+@keyframes pop{0%{transform:scale(.3) rotate(-30deg)}100%{transform:scale(1) rotate(0)}}
+.bronze .locked-note{display:block}
+.bronze .win-note{display:none}
+.bronze.unlocked .locked-note{display:none}
+.bronze.unlocked .win-note{display:block}
+.req-row{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:30px;padding:6px 14px;font-size:.85rem;font-weight:600;margin:4px}
+.req-row.ok{border-color:var(--blue);color:var(--blue-dd);background:var(--blue-l)}
+.confetti{position:absolute;top:-20px;width:10px;height:14px;opacity:.9;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(560px) rotate(720deg);opacity:0}}
+
+/* Support & resources */
+.support-img{aspect-ratio:4/3;border-radius:20px;box-shadow:var(--shadow-h)}
+.contact-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+.contact-row .ic{width:44px;height:44px;border-radius:12px;background:var(--blue-l);color:var(--blue-d);display:grid;place-items:center;flex:none}
+.res-card{display:block;padding:24px;text-decoration:none;color:inherit}
+.res-card .ic{width:52px;height:52px;border-radius:14px;background:var(--blue-l);color:var(--blue-d);display:grid;place-items:center;font-size:1.3rem;margin-bottom:14px;transition:all .25s}
+.res-card:hover .ic{background:var(--blue-d);color:#fff}
+.res-card h3{font-size:1.05rem}
+.res-card p{color:var(--grey-d);font-size:.88rem;margin:0}
+
+/* Footer */
+footer{background:var(--grey-l);border-top:4px solid var(--blue);padding:56px 0 24px}
+footer a{color:#222;text-decoration:none}
+footer a:hover{color:var(--blue-d);text-decoration:underline}
+footer h3{font-size:.9rem;text-transform:uppercase;letter-spacing:.06em;color:var(--blue-dd)}
+.social a{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--line);display:inline-grid;place-items:center;margin-right:8px;color:var(--blue-d);transition:all .2s}
+.social a:hover{background:var(--blue-d);color:#fff;transform:translateY(-3px)}
+
+/* Floating */
+#toTop{position:fixed;right:20px;bottom:20px;width:48px;height:48px;border-radius:50%;border:0;background:var(--orange);color:#000;box-shadow:var(--shadow-h);opacity:0;visibility:hidden;transition:all .3s;z-index:1500}
+#toTop.show{opacity:1;visibility:visible}
+#toTop:hover{transform:translateY(-4px)}
+.toast-x{position:fixed;left:50%;bottom:24px;transform:translate(-50%,120px);background:#000;color:#fff;padding:12px 20px;border-radius:12px;z-index:3000;transition:transform .35s;max-width:90vw}
+.toast-x.show{transform:translate(-50%,0)}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+@media print{
+  .navbar,#toTop,.no-print,.hero-chip,.toast-x{display:none!important}
+  section{padding:24px 0;break-inside:avoid}
+  body{font-size:11pt}
+  .card-x,.bronze{box-shadow:none}
+  [data-aos]{opacity:1!important;transform:none!important}
+  .accordion-collapse{display:block!important;height:auto!important}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============ NAVIGATION ============ -->
+<nav class="navbar navbar-expand-xl sticky-top" aria-label="Main navigation">
+  <div class="container position-relative">
+    <a class="brand-logo" href="#home" aria-label="Ajman University home">
+      <div class="ph" data-ph><img src="images/au-logo.png" alt="Ajman University logo"><span class="ph-label"><i class="fa-regular fa-image"></i>au-logo.png</span></div>
+      <span class="d-none d-sm-inline">Ajman University <small class="text-secondary fw-medium">| TLC</small></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-xl-center gap-xl-1">
+        <li class="nav-item"><a class="nav-link" href="#journey">Journey</a></li>
+        <li class="nav-item"><a class="nav-link" href="#guide">Get Started</a></li>
+        <li class="nav-item"><a class="nav-link" href="#themes">Themes</a></li>
+        <li class="nav-item"><a class="nav-link" href="#badges">Badges</a></li>
+        <li class="nav-item"><a class="nav-link" href="#tracker">Tracker</a></li>
+        <li class="nav-item"><a class="nav-link" href="#calculator">Activities</a></li>
+        <li class="nav-item"><a class="nav-link" href="#programmes">Programmes</a></li>
+        <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+        <li class="nav-item"><a class="nav-link" href="#support">Support</a></li>
+        <li class="nav-item ms-xl-2"><button class="btn btn-sm btn-outline-primary no-print" id="printBtn" type="button"><i class="fa-solid fa-print me-1"></i>Print</button></li>
+      </ul>
+    </div>
+    <div class="nav-progress" id="navProgress" aria-hidden="true"></div>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ============ 1. HERO ============ -->
+<section class="hero" id="home" aria-labelledby="heroTitle">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="ph" data-ph style="width:72px;height:72px;border-radius:16px"><img src="images/au-logo.png" alt="Ajman University logo"><span class="ph-label"><i class="fa-regular fa-image"></i>au-logo.png</span></div>
+          <span class="eyebrow"><i class="fa-solid fa-graduation-cap"></i> Teaching &amp; Learning Center</span>
+        </div>
+        <h1 id="heroTitle">Faculty <span>Professional Development</span> Framework</h1>
+        <p class="lead text-secondary mt-3" style="color:#444!important">Your pathway to professional growth, digital learning excellence, and tier recognition.</p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="#journey" class="btn btn-accent btn-lg"><i class="fa-solid fa-rocket me-2"></i>Get Started</a>
+          <a href="#tracker" class="btn btn-outline-primary btn-lg"><i class="fa-solid fa-chart-line me-2"></i>Track My Progress</a>
+        </div>
+        <div class="d-flex flex-wrap gap-3 mt-5">
+          <div class="stat-pill"><b data-count="3">0</b><small>Themes to choose</small></div>
+          <div class="stat-pill"><b data-count="6">0</b><small>Required badges</small></div>
+          <div class="stat-pill"><b data-count="5">0</b><small>Competency themes</small></div>
+          <div class="stat-pill"><b data-count="1">0</b><small>Bronze Tier goal</small></div>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="position-relative">
+          <div class="ph hero-art" data-ph><img src="assets/images/hero-learning.png" alt="Faculty members engaged in professional learning"><span class="ph-label"><i class="fa-regular fa-image"></i>assets/images/hero-learning.png<br>Hero illustration placeholder</span></div>
+          <div class="hero-chip c1"><i class="fa-solid fa-medal"></i> Earn competency badges</div>
+          <div class="hero-chip c2"><i class="fa-solid fa-chart-simple"></i> Track your progress</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. JOURNEY ============ -->
+<section id="journey" aria-labelledby="journeyTitle">
+  <div class="container">
+    <span class="eyebrow"><i class="fa-solid fa-route"></i> Learning journey</span>
+    <h2 class="section-title" id="journeyTitle">Your pathway to Bronze Tier</h2>
+    <p class="section-sub">Five milestones take you from choosing themes to recognition. Steps light up automatically as you use the tracker and calculator below.</p>
+    <div class="journey" id="journeyMap">
+      <div class="journey-fill" id="journeyFill"></div>
+      <div class="j-step" data-j="0" data-aos="fade-up" data-aos-delay="0"><button class="j-node border-0" type="button" aria-label="Step 1: Choose 3 competency themes, go to themes" data-go="#themes"><i class="fa-solid fa-list-check"></i></button><div><h3>1. Choose 3 Competency Themes</h3><p>Pick the themes that match your teaching goals.</p><span class="j-state">Not started</span></div></div>
+      <div class="j-step" data-j="1" data-aos="fade-up" data-aos-delay="100"><button class="j-node border-0" type="button" aria-label="Step 2: Complete required courses, go to tracker" data-go="#tracker"><i class="fa-solid fa-book-open-reader"></i></button><div><h3>2. Complete Required Courses</h3><p>Work through learning activities in each theme.</p><span class="j-state">Not started</span></div></div>
+      <div class="j-step" data-j="2" data-aos="fade-up" data-aos-delay="200"><button class="j-node border-0" type="button" aria-label="Step 3: Earn theme badges, go to badges" data-go="#badges"><i class="fa-solid fa-award"></i></button><div><h3>3. Earn Theme Badges</h3><p>Collect all 6 required competency badges.</p><span class="j-state">Not started</span></div></div>
+      <div class="j-step" data-j="3" data-aos="fade-up" data-aos-delay="300"><button class="j-node border-0" type="button" aria-label="Step 4: Discipline-specific activity, go to calculator" data-go="#calculator"><i class="fa-solid fa-microphone-lines"></i></button><div><h3>4. Discipline-Specific Activity</h3><p>Reach the activity points target in your field.</p><span class="j-state">Not started</span></div></div>
+      <div class="j-step final" data-j="4" data-aos="fade-up" data-aos-delay="400"><button class="j-node border-0" type="button" aria-label="Step 5: Bronze Tier recognition, go to achievement" data-go="#bronze"><i class="fa-solid fa-trophy"></i></button><div><h3>5. Achieve Bronze Tier</h3><p>Receive your recognition and certificate.</p><span class="j-state">Locked</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. GETTING STARTED ============ -->
+<section id="guide" class="section-alt" aria-labelledby="guideTitle">
+  <div class="container">
+    <div class="row g-5 align-items-start">
+      <div class="col-lg-5" data-aos="fade-right">
+        <span class="eyebrow"><i class="fa-solid fa-compass"></i> Getting started</span>
+        <h2 class="section-title" id="guideTitle">Six steps to complete the framework</h2>
+        <p class="section-sub">Follow these steps in order. Open each one for what to do and where to go.</p>
+        <div class="step-illus mt-4" aria-hidden="true"><i class="fa-solid fa-person-chalkboard"></i></div>
+      </div>
+      <div class="col-lg-7" data-aos="fade-left">
+        <div class="accordion" id="stepsAcc">
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#s1" aria-expanded="true" aria-controls="s1"><span class="step-num"><i class="fa-solid fa-right-to-bracket"></i></span>Step 1: Login to TLC Portal</button></h3>
+            <div id="s1" class="accordion-collapse collapse show" data-bs-parent="#stepsAcc"><div class="accordion-body">Sign in to the TLC Portal with your university credentials. Your profile stores enrolments, badges and submitted evidence. <em>Placeholder: add portal URL.</em></div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s2" aria-expanded="false" aria-controls="s2"><span class="step-num"><i class="fa-solid fa-magnifying-glass"></i></span>Step 2: Browse Professional Development Catalogue</button></h3>
+            <div id="s2" class="accordion-collapse collapse" data-bs-parent="#stepsAcc"><div class="accordion-body">Explore the catalogue of courses, workshops and programmes. Filter by competency theme to see the badges each pathway leads to.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s3" aria-expanded="false" aria-controls="s3"><span class="step-num"><i class="fa-solid fa-list-check"></i></span>Step 3: Select 3 Competency Themes</button></h3>
+            <div id="s3" class="accordion-collapse collapse" data-bs-parent="#stepsAcc"><div class="accordion-body">Choose any three of the five themes. Use the theme picker in the <a href="#themes">Competency Themes</a> section to record your selection.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s4" aria-expanded="false" aria-controls="s4"><span class="step-num"><i class="fa-solid fa-laptop-code"></i></span>Step 4: Complete Required Learning Activities</button></h3>
+            <div id="s4" class="accordion-collapse collapse" data-bs-parent="#stepsAcc"><div class="accordion-body">Complete the required courses and activities in each chosen theme, then add a discipline-specific activity from the <a href="#calculator">Activity Calculator</a>.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s5" aria-expanded="false" aria-controls="s5"><span class="step-num"><i class="fa-solid fa-award"></i></span>Step 5: Earn Required Badges</button></h3>
+            <div id="s5" class="accordion-collapse collapse" data-bs-parent="#stepsAcc"><div class="accordion-body">Completing a pathway awards its competency badge. Six badges are required in total. Tick them off in the <a href="#tracker">Progress Tracker</a>.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s6" aria-expanded="false" aria-controls="s6"><span class="step-num"><i class="fa-solid fa-file-circle-check"></i></span>Step 6: Submit Supporting Evidence</button></h3>
+            <div id="s6" class="accordion-collapse collapse" data-bs-parent="#stepsAcc"><div class="accordion-body">Upload certificates, attendance records or reflections using the submission forms. The TLC team verifies your evidence before confirming your tier.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. THEMES ============ -->
+<section id="themes" aria-labelledby="themesTitle">
+  <div class="container">
+    <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> Competency themes</span>
+    <h2 class="section-title" id="themesTitle">Choose your 3 competency themes</h2>
+    <p class="section-sub">Select the cards that fit your teaching goals. Your choice updates the journey and tracker.</p>
+    <div class="picker-bar d-flex flex-wrap align-items-center justify-content-between gap-3 my-4" role="status" aria-live="polite">
+      <div><i class="fa-solid fa-circle-check text-primary me-2"></i><strong id="pickCount">0</strong> of 3 themes selected: <span id="pickNames" class="text-secondary">none yet</span></div>
+      <button class="btn btn-sm btn-outline-primary" id="pickReset" type="button"><i class="fa-solid fa-rotate-left me-1"></i>Clear selection</button>
+    </div>
+    <div class="row g-4" id="themeGrid">
+      <div class="col-md-6 col-lg-4" data-aos="fade-up"><article class="card-x theme-card" data-theme="Learning Design">
+        <div class="ph theme-img" data-ph><img src="images/theme-learning-design.png" alt="Learning Design theme illustration"><span class="ph-label"><i class="fa-regular fa-image"></i>images/theme-learning-design.png</span></div>
+        <div class="body"><h3 class="h5">Learning Design</h3><p class="text-secondary small">Theme description placeholder: design aligned outcomes, activities and materials.</p>
+        <div class="d-flex justify-content-between align-items-center mb-3"><span class="badge-count"><i class="fa-solid fa-medal"></i> 2 badges</span><label class="theme-select"><input class="form-check-input m-0" type="checkbox" aria-label="Select Learning Design theme"> Select</label></div>
+        <button class="btn btn-primary w-100" type="button" data-pathway="Learning Design">View Pathway <i class="fa-solid fa-arrow-right ms-1"></i></button></div></article></div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="80"><article class="card-x theme-card" data-theme="Assessment &amp; Feedback for Learning">
+        <div class="ph theme-img" data-ph><img src="images/theme-assessment.png" alt="Assessment and feedback theme illustration"><span class="ph-label"><i class="fa-regular fa-image"></i>images/theme-assessment.png</span></div>
+        <div class="body"><h3 class="h5">Assessment &amp; Feedback for Learning</h3><p class="text-secondary small">Theme description placeholder: authentic assessment and timely, useful feedback.</p>
+        <div class="d-flex justify-content-between align-items-center mb-3"><span class="badge-count"><i class="fa-solid fa-medal"></i> 2 badges</span><label class="theme-select"><input class="form-check-input m-0" type="checkbox" aria-label="Select Assessment and Feedback theme"> Select</label></div>
+        <button class="btn btn-primary w-100" type="button" data-pathway="Assessment &amp; Feedback for Learning">View Pathway <i class="fa-solid fa-arrow-right ms-1"></i></button></div></article></div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="160"><article class="card-x theme-card" data-theme="Inclusive Teaching &amp; Learner Support">
+        <div class="ph theme-img" data-ph><img src="images/theme-inclusive.png" alt="Inclusive teaching theme illustration"><span class="ph-label"><i class="fa-regular fa-image"></i>images/theme-inclusive.png</span></div>
+        <div class="body"><h3 class="h5">Inclusive Teaching &amp; Learner Support</h3><p class="text-secondary small">Theme description placeholder: support diverse learners and learning needs.</p>
+        <div class="d-flex justify-content-between align-items-center mb-3"><span class="badge-count"><i class="fa-solid fa-medal"></i> 2 badges</span><label class="theme-select"><input class="form-check-input m-0" type="checkbox" aria-label="Select Inclusive Teaching theme"> Select</label></div>
+        <button class="btn btn-primary w-100" type="button" data-pathway="Inclusive Teaching &amp; Learner Support">View Pathway <i class="fa-solid fa-arrow-right ms-1"></i></button></div></article></div>
+      <div class="col-md-6 col-lg-6" data-aos="fade-up"><article class="card-x theme-card" data-theme="Digital Pedagogy &amp; Information Literacy in Teaching">
+        <div class="ph theme-img" data-ph><img src="images/theme-digital.png" alt="Digital pedagogy theme illustration"><span class="ph-label"><i class="fa-regular fa-image"></i>images/theme-digital.png</span></div>
+        <div class="body"><h3 class="h5">Digital Pedagogy &amp; Information Literacy in Teaching</h3><p class="text-secondary small">Theme description placeholder: purposeful technology use and information literacy.</p>
+        <div class="d-flex justify-content-between align-items-center mb-3"><span class="badge-count"><i class="fa-solid fa-medal"></i> 2 badges</span><label class="theme-select"><input class="form-check-input m-0" type="checkbox" aria-label="Select Digital Pedagogy theme"> Select</label></div>
+        <button class="btn btn-primary w-100" type="button" data-pathway="Digital Pedagogy &amp; Information Literacy in Teaching">View Pathway <i class="fa-solid fa-arrow-right ms-1"></i></button></div></article></div>
+      <div class="col-md-6 col-lg-6" data-aos="fade-up" data-aos-delay="80"><article class="card-x theme-card" data-theme="Reflective Practice &amp; Teaching Improvement">
+        <div class="ph theme-img" data-ph><img src="images/theme-reflective.png" alt="Reflective practice theme illustration"><span class="ph-label"><i class="fa-regular fa-image"></i>images/theme-reflective.png</span></div>
+        <div class="body"><h3 class="h5">Reflective Practice &amp; Teaching Improvement</h3><p class="text-secondary small">Theme description placeholder: evidence-informed reflection and continuous improvement.</p>
+        <div class="d-flex justify-content-between align-items-center mb-3"><span class="badge-count"><i class="fa-solid fa-medal"></i> 2 badges</span><label class="theme-select"><input class="form-check-input m-0" type="checkbox" aria-label="Select Reflective Practice theme"> Select</label></div>
+        <button class="btn btn-primary w-100" type="button" data-pathway="Reflective Practice &amp; Teaching Improvement">View Pathway <i class="fa-solid fa-arrow-right ms-1"></i></button></div></article></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. BADGES ============ -->
+<section id="badges" class="section-alt" aria-labelledby="badgesTitle">
+  <div class="container">
+    <span class="eyebrow"><i class="fa-solid fa-award"></i> Badge gallery</span>
+    <h2 class="section-title" id="badgesTitle">Competency badges</h2>
+    <p class="section-sub">One badge represents each competency theme. Select <em>Earn Badge</em> to mark one as earned on this device (demo only; official badges are issued via the TLC Portal).</p>
+    <div class="row g-4 mt-2 justify-content-center" id="badgeGrid">
+      <div class="col-sm-6 col-lg-4" data-aos="zoom-in"><article class="card-x badge-card" data-badge="ld"><div class="ph badge-img" data-ph><img src="images/badge-learning-design.png" alt="Learning Design badge"><span class="ph-label"><i class="fa-solid fa-medal"></i>badge-learning-design.png</span></div><h3 class="h5">Learning Design</h3><p class="small text-secondary">Awarded for designing aligned, learner-centred courses.</p><p class="earned-tag mb-2"><i class="fa-solid fa-circle-check"></i> Earned</p><br><button class="btn btn-accent earn-btn" type="button" aria-pressed="false"><i class="fa-solid fa-star me-1"></i><span>Earn Badge</span></button></article></div>
+      <div class="col-sm-6 col-lg-4" data-aos="zoom-in" data-aos-delay="80"><article class="card-x badge-card" data-badge="as"><div class="ph badge-img" data-ph><img src="images/badge-assessment.png" alt="Assessment and Feedback badge"><span class="ph-label"><i class="fa-solid fa-medal"></i>badge-assessment.png</span></div><h3 class="h5">Assessment &amp; Feedback</h3><p class="small text-secondary">Awarded for effective assessment and meaningful feedback.</p><p class="earned-tag mb-2"><i class="fa-solid fa-circle-check"></i> Earned</p><br><button class="btn btn-accent earn-btn" type="button" aria-pressed="false"><i class="fa-solid fa-star me-1"></i><span>Earn Badge</span></button></article></div>
+      <div class="col-sm-6 col-lg-4" data-aos="zoom-in" data-aos-delay="160"><article class="card-x badge-card" data-badge="in"><div class="ph badge-img" data-ph><img src="images/badge-inclusive.png" alt="Inclusive Teaching badge"><span class="ph-label"><i class="fa-solid fa-medal"></i>badge-inclusive.png</span></div><h3 class="h5">Inclusive Teaching</h3><p class="small text-secondary">Awarded for inclusive practice and learner support.</p><p class="earned-tag mb-2"><i class="fa-solid fa-circle-check"></i> Earned</p><br><button class="btn btn-accent earn-btn" type="button" aria-pressed="false"><i class="fa-solid fa-star me-1"></i><span>Earn Badge</span></button></article></div>
+      <div class="col-sm-6 col-lg-4" data-aos="zoom-in"><article class="card-x badge-card" data-badge="di"><div class="ph badge-img" data-ph><img src="images/badge-digital.png" alt="Digital Pedagogy badge"><span class="ph-label"><i class="fa-solid fa-medal"></i>badge-digital.png</span></div><h3 class="h5">Digital Pedagogy</h3><p class="small text-secondary">Awarded for digital teaching and information literacy.</p><p class="earned-tag mb-2"><i class="fa-solid fa-circle-check"></i> Earned</p><br><button class="btn btn-accent earn-btn" type="button" aria-pressed="false"><i class="fa-solid fa-star me-1"></i><span>Earn Badge</span></button></article></div>
+      <div class="col-sm-6 col-lg-4" data-aos="zoom-in" data-aos-delay="80"><article class="card-x badge-card" data-badge="re"><div class="ph badge-img" data-ph><img src="images/badge-reflective.png" alt="Reflective Practice badge"><span class="ph-label"><i class="fa-solid fa-medal"></i>badge-reflective.png</span></div><h3 class="h5">Reflective Practice</h3><p class="small text-secondary">Awarded for reflection and teaching improvement.</p><p class="earned-tag mb-2"><i class="fa-solid fa-circle-check"></i> Earned</p><br><button class="btn btn-accent earn-btn" type="button" aria-pressed="false"><i class="fa-solid fa-star me-1"></i><span>Earn Badge</span></button></article></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. TRACKER ============ -->
+<section id="tracker" aria-labelledby="trackerTitle">
+  <div class="container">
+    <span class="eyebrow"><i class="fa-solid fa-chart-line"></i> Progress tracker</span>
+    <h2 class="section-title" id="trackerTitle">Track your required badges</h2>
+    <p class="section-sub">Tick each required badge as you earn it. Your progress is saved in this browser.</p>
+    <div class="row g-4 mt-2">
+      <div class="col-lg-7" data-aos="fade-right">
+        <div class="card-x p-4" id="checkList" role="group" aria-label="Required badges checklist"></div>
+      </div>
+      <div class="col-lg-5" data-aos="fade-left">
+        <div class="card-x p-4 text-center" aria-live="polite">
+          <h3 class="h5 mb-3">Progress summary</h3>
+          <div class="ring-wrap">
+            <svg width="170" height="170" viewBox="0 0 170 170" aria-hidden="true"><circle class="ring-bg" cx="85" cy="85" r="74" fill="none" stroke-width="14"/><circle class="ring-fg" id="ringFg" cx="85" cy="85" r="74" fill="none" stroke-width="14" stroke-dasharray="464.96" stroke-dashoffset="464.96"/></svg>
+            <div class="ring-txt" id="ringTxt">0%</div>
+          </div>
+          <div class="progress mt-4" role="progressbar" aria-label="Badge completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pbWrap"><div class="progress-bar" id="pbBar" style="width:0%"></div></div>
+          <div class="row text-center mt-4 g-2">
+            <div class="col-4"><div class="big-num" style="font-size:2rem">6</div><small class="text-secondary">Required</small></div>
+            <div class="col-4"><div class="big-num" style="font-size:2rem" id="doneNum">0</div><small class="text-secondary">Completed</small></div>
+            <div class="col-4"><div class="big-num" style="font-size:2rem" id="pctNum">0%</div><small class="text-secondary">Progress</small></div>
+          </div>
+          <div class="mt-4"><span class="status-chip st-none" id="statusChip"><i class="fa-regular fa-circle"></i> Not Started</span></div>
+          <div class="d-flex flex-wrap gap-2 justify-content-center mt-4 no-print">
+            <button class="btn btn-primary btn-sm" id="dlChecklist" type="button"><i class="fa-solid fa-download me-1"></i>Download checklist</button>
+            <button class="btn btn-outline-primary btn-sm" id="resetAll" type="button"><i class="fa-solid fa-rotate-left me-1"></i>Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. CALCULATOR ============ -->
+<section id="calculator" class="section-alt" aria-labelledby="calcTitle">
+  <div class="container">
+    <span class="eyebrow"><i class="fa-solid fa-calculator"></i> Activity calculator</span>
+    <h2 class="section-title" id="calcTitle">Discipline-specific activity calculator</h2>
+    <p class="section-sub">Select the activities you have completed to see your points. Point values and the target below are illustrative placeholders; confirm them with TLC.</p>
+    <div class="row g-4 mt-2">
+      <div class="col-lg-7" data-aos="fade-right"><div class="card-x p-4" id="actList" role="group" aria-label="Discipline-specific activities"></div></div>
+      <div class="col-lg-5" data-aos="fade-left">
+        <div class="card-x p-4" aria-live="polite">
+          <h3 class="h5">Your results</h3>
+          <div class="d-flex align-items-end gap-2 mt-3"><span class="big-num" id="ptsNum">0</span><span class="text-secondary mb-1">/ <span id="ptsTarget">6</span> points</span></div>
+          <div class="progress my-3" role="progressbar" aria-label="Activity points" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="ptsWrap"><div class="progress-bar" id="ptsBar" style="width:0%;background:linear-gradient(90deg,var(--orange),#d98f00)"></div></div>
+          <p class="mb-1 fw-semibold">Selected activities (<span id="selCount">0</span>)</p>
+          <ul class="small text-secondary ps-3" id="selList"><li>None selected</li></ul>
+          <span class="status-chip st-none" id="actStatus"><i class="fa-regular fa-circle"></i> Not Started</span>
+          <div class="mt-3"><button class="btn btn-outline-primary btn-sm no-print" id="actReset" type="button"><i class="fa-solid fa-rotate-left me-1"></i>Clear</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. PROGRAMMES ============ -->
+<section id="programmes" aria-labelledby="progTitle">
+  <div class="container">
+    <span class="eyebrow"><i class="fa-solid fa-diagram-project"></i> Structured programmes</span>
+    <h2 class="section-title" id="progTitle">Structured development programmes</h2>
+    <p class="section-sub">Recognised programmes that support your pathway and external recognition.</p>
+    <div class="row g-4 mt-2">
+      <div class="col-md-6 col-xl-3" data-aos="fade-up"><article class="card-x prog-card"><div class="ph prog-img contain" data-ph><img src="images/advance-he.png" alt="Advance HE logo"><span class="ph-label"><i class="fa-regular fa-image"></i>images/advance-he.png</span></div><div class="body"><span class="recog mb-2"><i class="fa-solid fa-certificate"></i> Recognition level: Placeholder</span><h3 class="h5">Advance HE Fellowship</h3><p class="small text-secondary flex-grow-1">Programme description placeholder.</p><div class="d-flex gap-2"><button class="btn btn-accent btn-sm flex-fill" type="button" data-apply="Advance HE Fellowship">Apply</button><button class="btn btn-outline-primary btn-sm flex-fill" type="button" data-more="Advance HE Fellowship">Learn More</button></div></div></article></div>
+      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="80"><article class="card-x prog-card"><div class="ph prog-img contain" data-ph><img src="images/aulift.png" alt="AU LIFT logo"><span class="ph-label"><i class="fa-regular fa-image"></i>images/aulift.png</span></div><div class="body"><span class="recog mb-2"><i class="fa-solid fa-certificate"></i> Recognition level: Placeholder</span><h3 class="h5">AU LIFT</h3><p class="small text-secondary flex-grow-1">Programme description placeholder.</p><div class="d-flex gap-2"><button class="btn btn-accent btn-sm flex-fill" type="button" data-apply="AU LIFT">Apply</button><button class="btn btn-outline-primary btn-sm flex-fill" type="button" data-more="AU LIFT">Learn More</button></div></div></article></div>
+      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="160"><article class="card-x prog-card"><div class="ph prog-img contain" data-ph><img src="images/moodle-essentials.png" alt="Essentials of Moodle logo"><span class="ph-label"><i class="fa-regular fa-image"></i>images/moodle-essentials.png</span></div><div class="body"><span class="recog mb-2"><i class="fa-solid fa-certificate"></i> Recognition level: Placeholder</span><h3 class="h5">Essentials of Moodle</h3><p class="small text-secondary flex-grow-1">Programme description placeholder.</p><div class="d-flex gap-2"><button class="btn btn-accent btn-sm flex-fill" type="button" data-apply="Essentials of Moodle">Apply</button><button class="btn btn-outline-primary btn-sm flex-fill" type="button" data-more="Essentials of Moodle">Learn More</button></div></div></article></div>
+      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="240"><article class="card-x prog-card"><div class="ph prog-img contain" data-ph><img src="images/nearpod.png" alt="Nearpod logo"><span class="ph-label"><i class="fa-regular fa-image"></i>images/nearpod.png</span></div><div class="body"><span class="recog mb-2"><i class="fa-solid fa-certificate"></i> Recognition level: Placeholder</span><h3 class="h5">Nearpod Certified Educator</h3><p class="small text-secondary flex-grow-1">Programme description placeholder.</p><div class="d-flex gap-2"><button class="btn btn-accent btn-sm flex-fill" type="button" data-apply="Nearpod Certified Educator">Apply</button><button class="btn btn-outline-primary btn-sm flex-fill" type="button" data-more="Nearpod Certified Educator">Learn More</button></div></div></article></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. BRONZE ============ -->
+<section id="bronze" class="section-alt" aria-labelledby="bronzeTitle">
+  <div class="container">
+    <div class="bronze text-center" id="bronzePanel" data-aos="zoom-in">
+      <span class="eyebrow justify-content-center"><i class="fa-solid fa-trophy"></i> Achievement</span>
+      <h2 class="section-title d-inline-block" id="bronzeTitle" style="display:block">Bronze Tier Recognition</h2>
+      <div class="ph bronze-badge my-4" data-ph><img src="images/bronze-tier-badge.png" alt="Bronze Tier badge"><span class="ph-label"><i class="fa-solid fa-trophy"></i>images/bronze-tier-badge.png</span></div>
+      <div class="locked-note" aria-live="polite">
+        <p class="lead mb-2">Complete all requirements to unlock your Bronze Tier recognition.</p>
+        <div id="reqChips"></div>
+      </div>
+      <div class="win-note" aria-live="polite">
+        <h3 class="h3" style="color:var(--orange-d)"><i class="fa-solid fa-star"></i> Congratulations!</h3>
+        <p class="lead mx-auto" style="max-width:640px">You have met every requirement of the Faculty Professional Development Framework and achieved <strong>Bronze Tier Recognition</strong>. Thank you for your commitment to teaching excellence.</p>
+      </div>
+      <button class="btn btn-accent btn-lg mt-3 no-print" id="certBtn" type="button" disabled><i class="fa-solid fa-file-arrow-down me-2"></i>Download Certificate</button>
+      <p class="small text-secondary mt-2 mb-0">Certificate download is a placeholder. Official certificates are issued by TLC after evidence verification.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. FAQ ============ -->
+<section id="faq" aria-labelledby="faqTitle">
+  <div class="container" style="max-width:860px">
+    <span class="eyebrow"><i class="fa-solid fa-circle-question"></i> FAQ</span>
+    <h2 class="section-title" id="faqTitle">Frequently asked questions</h2>
+    <div class="accordion mt-4" id="faqAcc">
+      <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#f1" aria-expanded="true" aria-controls="f1">How do I earn badges?</button></h3><div id="f1" class="accordion-collapse collapse show" data-bs-parent="#faqAcc"><div class="accordion-body">Complete the required courses and activities in a competency theme. The badge is issued once the activities are completed and verified. FAQ answer placeholder: confirm details with TLC.</div></div></div>
+      <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f2" aria-expanded="false" aria-controls="f2">How many themes should I select?</button></h3><div id="f2" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">Select three of the five competency themes. Between them they account for the six required badges.</div></div></div>
+      <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f3" aria-expanded="false" aria-controls="f3">How do I achieve Bronze Tier?</button></h3><div id="f3" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">Choose three themes, complete the required courses, earn the required badges, and complete a discipline-specific activity. Then submit your evidence for verification.</div></div></div>
+      <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f4" aria-expanded="false" aria-controls="f4">How are activities verified?</button></h3><div id="f4" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">The TLC team reviews the supporting evidence you submit (certificates, programmes, attendance or reflections). Verification process placeholder: add turnaround time.</div></div></div>
+      <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f5" aria-expanded="false" aria-controls="f5">Where can I seek support?</button></h3><div id="f5" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">Contact the Teaching and Learning Center using the details in the <a href="#support">Support</a> section, or book a consultation.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. SUPPORT ============ -->
+<section id="support" class="section-alt" aria-labelledby="supportTitle">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6" data-aos="fade-right"><div class="ph support-img" data-ph><img src="images/tlc-support-team.png" alt="Teaching and Learning Center support team"><span class="ph-label"><i class="fa-regular fa-image"></i>images/tlc-support-team.png<br>TLC team photo placeholder</span></div></div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <span class="eyebrow"><i class="fa-solid fa-headset"></i> Support</span>
+        <h2 class="section-title" id="supportTitle">Contact the TLC team</h2>
+        <p class="section-sub mb-4">We help you choose pathways, resolve portal issues and prepare your evidence.</p>
+        <div class="contact-row"><span class="ic"><i class="fa-solid fa-envelope"></i></span><div><strong>Contact email</strong><br><a href="mailto:tlc@example.edu">tlc@example.edu</a> <small class="text-secondary">(placeholder)</small></div></div>
+        <div class="contact-row"><span class="ic"><i class="fa-solid fa-clock"></i></span><div><strong>Support hours</strong><br><span class="text-secondary">Sunday to Thursday, 8:00 to 16:00 (placeholder)</span></div></div>
+        <a class="btn btn-accent btn-lg mt-2" href="mailto:tlc@example.edu?subject=Consultation%20request"><i class="fa-solid fa-calendar-check me-2"></i>Book a Consultation</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. RESOURCES ============ -->
+<section id="resources" aria-labelledby="resTitle">
+  <div class="container">
+    <span class="eyebrow"><i class="fa-solid fa-bolt"></i> Quick resources</span>
+    <h2 class="section-title" id="resTitle">Quick access</h2>
+    <div class="row g-4 mt-2">
+      <div class="col-sm-6 col-lg" data-aos="fade-up"><a class="card-x res-card" href="#"><div class="ic"><i class="fa-solid fa-book"></i></div><h3>Learning Catalogue</h3><p>Browse courses and workshops.</p></a></div>
+      <div class="col-sm-6 col-lg" data-aos="fade-up" data-aos-delay="60"><a class="card-x res-card" href="#badges"><div class="ic"><i class="fa-solid fa-award"></i></div><h3>Badge Gallery</h3><p>View all competency badges.</p></a></div>
+      <div class="col-sm-6 col-lg" data-aos="fade-up" data-aos-delay="120"><a class="card-x res-card" href="#programmes"><div class="ic"><i class="fa-solid fa-sitemap"></i></div><h3>Programme Directory</h3><p>Structured programmes.</p></a></div>
+      <div class="col-sm-6 col-lg" data-aos="fade-up" data-aos-delay="180"><a class="card-x res-card" href="#"><div class="ic"><i class="fa-solid fa-file-pen"></i></div><h3>Submission Forms</h3><p>Submit your evidence.</p></a></div>
+      <div class="col-sm-6 col-lg" data-aos="fade-up" data-aos-delay="240"><a class="card-x res-card" href="#"><div class="ic"><i class="fa-solid fa-folder-open"></i></div><h3>TLC Resources</h3><p>Guides and templates.</p></a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ 13. FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="d-flex align-items-center gap-3 mb-3"><div class="ph" data-ph style="width:56px;height:56px;border-radius:12px"><img src="images/au-logo.png" alt="Ajman University logo"><span class="ph-label"><i class="fa-regular fa-image"></i>au-logo.png</span></div><div><strong>Ajman University</strong><br><span class="text-secondary small">Teaching and Learning Center</span></div></div>
+        <p class="small text-secondary">Supporting faculty to achieve excellence in teaching and learning.</p>
+        <div class="social" aria-label="Social media">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-4"><h3>Quick links</h3><ul class="list-unstyled small lh-lg"><li><a href="#journey">Learning journey</a></li><li><a href="#themes">Competency themes</a></li><li><a href="#tracker">Progress tracker</a></li><li><a href="#programmes">Programmes</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div class="col-6 col-lg-4"><h3>Contact</h3><ul class="list-unstyled small lh-lg"><li><i class="fa-solid fa-envelope me-2 text-primary"></i>tlc@example.edu</li><li><i class="fa-solid fa-phone me-2 text-primary"></i>+971 0 000 0000</li><li><i class="fa-solid fa-location-dot me-2 text-primary"></i>Ajman, United Arab Emirates</li></ul></div>
+    </div>
+    <hr class="my-4">
+    <p class="small text-secondary mb-0 text-center">&copy; <span id="yr"></span> Ajman University, Teaching and Learning Center. All rights reserved.</p>
+  </div>
+</footer>
+
+<button id="toTop" type="button" aria-label="Back to top" class="no-print"><i class="fa-solid fa-arrow-up"></i></button>
+<div class="toast-x" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(s,c){return (c||document).querySelector(s)}, $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Config (edit here) ---------- */
+var BADGES=[
+  {id:'b1',title:'Theme 1: Core badge',meta:'First selected theme'},
+  {id:'b2',title:'Theme 1: Applied badge',meta:'First selected theme'},
+  {id:'b3',title:'Theme 2: Core badge',meta:'Second selected theme'},
+  {id:'b4',title:'Theme 2: Applied badge',meta:'Second selected theme'},
+  {id:'b5',title:'Theme 3: Core badge',meta:'Third selected theme'},
+  {id:'b6',title:'Theme 3: Applied badge',meta:'Third selected theme'}
+];
+var ACTIVITIES=[
+  {id:'a1',name:'Conference Attendance',pts:1,icon:'fa-users'},
+  {id:'a2',name:'Poster Presentation',pts:2,icon:'fa-image'},
+  {id:'a3',name:'Workshop Participation',pts:1,icon:'fa-people-group'},
+  {id:'a4',name:'Workshop Delivery',pts:3,icon:'fa-chalkboard-user'},
+  {id:'a5',name:'Professional Certification',pts:4,icon:'fa-certificate'},
+  {id:'a6',name:'Panel Discussion',pts:2,icon:'fa-comments'},
+  {id:'a7',name:'Keynote Speaking',pts:4,icon:'fa-microphone'},
+  {id:'a8',name:'Research Presentation',pts:3,icon:'fa-flask'}
+];
+var POINT_TARGET=6;
+var KEY='auPdFramework.v1';
+
+/* ---------- State ---------- */
+var state={themes:[],badges:[],acts:[],earned:[]};
+function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){state.themes=s.themes||[];state.badges=s.badges||[];state.acts=s.acts||[];state.earned=s.earned||[]}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('show')},2800)}
+function toggle(arr,v,on){var i=arr.indexOf(v);if(on&&i<0)arr.push(v);if(!on&&i>-1)arr.splice(i,1)}
+
+/* ---------- Image placeholders ---------- */
+$$('[data-ph]').forEach(function(box){
+  var img=$('img',box);
+  function miss(){box.classList.add('missing');if(img)img.style.display='none'}
+  if(!img){miss();return}
+  img.addEventListener('error',miss);
+  if(img.complete&&img.naturalWidth===0)miss();
+});
+
+/* ---------- Tracker ---------- */
+var checkList=$('#checkList');
+BADGES.forEach(function(b){
+  var l=document.createElement('label');l.className='check-item';l.setAttribute('data-id',b.id);
+  l.innerHTML='<input type="checkbox" value="'+b.id+'"><span class="act-icon"><i class="fa-solid fa-medal"></i></span><span><span class="ci-title d-block">'+b.title+'</span><span class="ci-meta">'+b.meta+'</span></span>';
+  checkList.appendChild(l);
+});
+checkList.addEventListener('change',function(e){
+  if(e.target.type!=='checkbox')return;
+  toggle(state.badges,e.target.value,e.target.checked);save();render();
+  if(state.badges.length===BADGES.length)toast('All 6 required badges complete. Well done!');
+});
+
+/* ---------- Calculator ---------- */
+var actList=$('#actList');
+ACTIVITIES.forEach(function(a){
+  var l=document.createElement('label');l.className='act-item';
+  l.innerHTML='<input type="checkbox" value="'+a.id+'"><span class="act-icon"><i class="fa-solid '+a.icon+'"></i></span><span class="fw-semibold">'+a.name+'</span><span class="pts">+'+a.pts+' pt'+(a.pts>1?'s':'')+'</span>';
+  actList.appendChild(l);
+});
+$('#ptsTarget').textContent=POINT_TARGET;
+actList.addEventListener('change',function(e){
+  if(e.target.type!=='checkbox')return;
+  toggle(state.acts,e.target.value,e.target.checked);save();render();
+});
+
+/* ---------- Themes ---------- */
+$$('.theme-card').forEach(function(card){
+  var cb=$('input[type=checkbox]',card);
+  cb.addEventListener('change',function(){
+    var name=card.getAttribute('data-theme');
+    if(cb.checked&&state.themes.length>=3&&state.themes.indexOf(name)<0){cb.checked=false;toast('You can select up to 3 themes. Clear one first.');return}
+    toggle(state.themes,name,cb.checked);save();render();
+  });
+});
+$$('[data-pathway]').forEach(function(b){b.addEventListener('click',function(){toast('Pathway link placeholder: '+b.getAttribute('data-pathway').replace(/&amp;/g,'&'))})});
+$('#pickReset').addEventListener('click',function(){state.themes=[];save();render()});
+
+/* ---------- Badge gallery ---------- */
+$$('.badge-card').forEach(function(card){
+  var id=card.getAttribute('data-badge'),btn=$('.earn-btn',card);
+  btn.addEventListener('click',function(){
+    var on=state.earned.indexOf(id)<0;toggle(state.earned,id,on);save();render();
+    toast(on?'Badge marked as earned (demo).':'Badge unmarked.');
+  });
+});
+
+/* ---------- Programmes ---------- */
+$$('[data-apply]').forEach(function(b){b.addEventListener('click',function(){toast('Application link placeholder: '+b.getAttribute('data-apply'))})});
+$$('[data-more]').forEach(function(b){b.addEventListener('click',function(){toast('Programme details placeholder: '+b.getAttribute('data-more'))})});
+
+/* ---------- Render ---------- */
+var CIRC=2*Math.PI*74;
+function chip(el,cls,icon,txt){el.className='status-chip '+cls;el.innerHTML='<i class="'+icon+'"></i> '+txt}
+function render(){
+  /* themes */
+  $$('.theme-card').forEach(function(c){var on=state.themes.indexOf(c.getAttribute('data-theme'))>-1;c.classList.toggle('picked',on);$('input',c).checked=on});
+  $('#pickCount').textContent=state.themes.length;
+  $('#pickNames').textContent=state.themes.length?state.themes.map(function(t){return t.replace(/&amp;/g,'&')}).join(', '):'none yet';
+  /* badges gallery */
+  $$('.badge-card').forEach(function(c){var on=state.earned.indexOf(c.getAttribute('data-badge'))>-1;c.classList.toggle('earned',on);var b=$('.earn-btn',c);b.setAttribute('aria-pressed',on);$('span',b).textContent=on?'Badge Earned':'Earn Badge'});
+  /* tracker */
+  var done=state.badges.length,total=BADGES.length,pct=Math.round(done/total*100);
+  $$('.check-item',checkList).forEach(function(l){var on=state.badges.indexOf(l.getAttribute('data-id'))>-1;l.classList.toggle('checked',on);$('input',l).checked=on});
+  $('#doneNum').textContent=done;$('#pctNum').textContent=pct+'%';$('#ringTxt').textContent=pct+'%';
+  $('#ringFg').style.strokeDashoffset=CIRC*(1-pct/100);
+  $('#pbBar').style.width=pct+'%';$('#pbWrap').setAttribute('aria-valuenow',pct);
+  var st=$('#statusChip');
+  if(done===0)chip(st,'st-none','fa-regular fa-circle','Not Started');
+  else if(done<total)chip(st,'st-prog','fa-solid fa-spinner','In Progress');
+  else chip(st,'st-done','fa-solid fa-circle-check','Completed');
+  /* calculator */
+  var pts=0,names=[];
+  $$('.act-item',actList).forEach(function(l,i){var a=ACTIVITIES[i],on=state.acts.indexOf(a.id)>-1;l.classList.toggle('checked',on);$('input',l).checked=on;if(on){pts+=a.pts;names.push(a.name+' (+'+a.pts+')')}});
+  var ap=Math.min(100,Math.round(pts/POINT_TARGET*100));
+  $('#ptsNum').textContent=pts;$('#ptsBar').style.width=ap+'%';$('#ptsWrap').setAttribute('aria-valuenow',ap);
+  $('#selCount').textContent=names.length;
+  $('#selList').innerHTML=names.length?names.map(function(n){return '<li>'+n+'</li>'}).join(''):'<li>None selected</li>';
+  var as=$('#actStatus');
+  if(pts===0)chip(as,'st-none','fa-regular fa-circle','Not Started');
+  else if(pts<POINT_TARGET)chip(as,'st-prog','fa-solid fa-spinner','In Progress ('+(POINT_TARGET-pts)+' pts to go)');
+  else chip(as,'st-done','fa-solid fa-circle-check','Completed');
+  /* journey */
+  var s=[state.themes.length===3, done>0, done===total, pts>=POINT_TARGET, false];
+  s[4]=s[0]&&s[2]&&s[3];
+  var lastDone=-1;s.forEach(function(v,i){if(v)lastDone=i});
+  $$('.j-step').forEach(function(el,i){
+    el.classList.toggle('done',s[i]);
+    var t=$('.j-state',el);
+    t.textContent=s[i]?'Complete':(i===4?'Locked':(i===1&&done>0?'In progress':(i===0&&state.themes.length>0?state.themes.length+'/3 selected':(i===3&&pts>0?'In progress':'Not started'))));
+  });
+  var count=s.filter(Boolean).length;
+  var fill=$('#journeyFill'),mobile=window.innerWidth<992;
+  if(mobile){fill.style.width='4px';fill.style.height=(count/5*100)+'%'}
+  else{fill.style.height='4px';fill.style.width=(count/5*80)+'%'}
+  /* bronze */
+  var reqs=[['Themes selected (3)',s[0]],['Courses started',s[1]],['6 badges earned',s[2]],['Discipline activity',s[3]]];
+  $('#reqChips').innerHTML=reqs.map(function(r){return '<span class="req-row '+(r[1]?'ok':'')+'"><i class="fa-solid '+(r[1]?'fa-circle-check':'fa-circle')+'"></i>'+r[0]+'</span>'}).join('');
+  var panel=$('#bronzePanel'),was=panel.classList.contains('unlocked');
+  panel.classList.toggle('unlocked',s[4]);$('#certBtn').disabled=!s[4];
+  if(s[4]&&!was)celebrate();
+}
+function celebrate(){
+  if(reduce)return;
+  var p=$('#bronzePanel'),cols=['#F29F00','#39A9DC','#1A78A6','#FFD27A'];
+  for(var i=0;i<40;i++){var c=document.createElement('span');c.className='confetti';c.style.left=Math.random()*100+'%';c.style.background=cols[i%4];c.style.animationDuration=(2+Math.random()*2)+'s';c.style.animationDelay=Math.random()*.6+'s';p.appendChild(c);setTimeout(function(n){return function(){n.remove()}}(c),5000)}
+}
+
+/* ---------- Buttons ---------- */
+$('#certBtn').addEventListener('click',function(){toast('Certificate download placeholder: connect to your certificate service.')});
+$('#printBtn').addEventListener('click',function(){window.print()});
+$('#resetAll').addEventListener('click',function(){state.badges=[];save();render();toast('Tracker reset.')});
+$('#actReset').addEventListener('click',function(){state.acts=[];save();render()});
+$('#dlChecklist').addEventListener('click',function(){
+  var L=['Ajman University | Faculty Professional Development Framework','Progress checklist ('+new Date().toLocaleDateString()+')','',
+    'Selected themes: '+(state.themes.length?state.themes.map(function(t){return t.replace(/&amp;/g,'&')}).join('; '):'none'),'','Required badges ('+state.badges.length+'/'+BADGES.length+')'];
+  BADGES.forEach(function(b){L.push((state.badges.indexOf(b.id)>-1?'[x] ':'[ ] ')+b.title)});
+  L.push('','Discipline-specific activities: '+$('#ptsNum').textContent+' / '+POINT_TARGET+' points');
+  ACTIVITIES.forEach(function(a){L.push((state.acts.indexOf(a.id)>-1?'[x] ':'[ ] ')+a.name+' (+'+a.pts+')')});
+  var blob=new Blob([L.join('\r\n')],{type:'text/plain'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='au-pd-framework-checklist.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},500);
+  toast('Checklist downloaded.');
+});
+$$('[data-go]').forEach(function(b){b.addEventListener('click',function(){var t=$(b.getAttribute('data-go'));if(t)t.scrollIntoView({behavior:reduce?'auto':'smooth'})})});
+
+/* ---------- Scroll behaviours ---------- */
+var toTop=$('#toTop'),np=$('#navProgress');
+function onScroll(){
+  var y=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+  toTop.classList.toggle('show',y>500);np.style.width=(h>0?y/h*100:0)+'%';
+}
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+toTop.addEventListener('click',function(){window.scrollTo({top:0,behavior:reduce?'auto':'smooth'})});
+window.addEventListener('resize',render);
+/* close mobile menu on link click */
+$$('#navMenu .nav-link').forEach(function(a){a.addEventListener('click',function(){var m=$('#navMenu');if(m.classList.contains('show')&&window.bootstrap)bootstrap.Collapse.getOrCreateInstance(m).hide()})});
+/* scrollspy */
+var links=$$('.navbar .nav-link'),secs=links.map(function(a){return $(a.getAttribute('href'))});
+if('IntersectionObserver' in window){
+  var spy=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){var on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('active',on);if(on)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current')})}})},{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(function(s){if(s)spy.observe(s)});
+}
+/* animated counters */
+function countUp(el){
+  var end=+el.getAttribute('data-count'),dur=reduce?0:1200,t0=performance.now();
+  (function step(t){var p=dur?Math.min(1,(t-t0)/dur):1;el.textContent=Math.round(end*p);if(p<1)requestAnimationFrame(step)})(t0);
+}
+if('IntersectionObserver' in window){
+  var co=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){countUp(e.target);co.unobserve(e.target)}})},{threshold:.5});
+  $$('[data-count]').forEach(function(el){co.observe(el)});
+}else{$$('[data-count]').forEach(countUp)}
+
+/* AOS (optional library) */
+if(window.AOS)AOS.init({duration:reduce?0:650,once:true,offset:60,disable:reduce});
+$('#yr').textContent=new Date().getFullYear();
+
+load();render();
+})();
+</script>
+</body>
+</html>
